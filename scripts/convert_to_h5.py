@@ -48,7 +48,7 @@ def main_pipeline(filepath_in, filepath_out):
     # Exclude Unsuported values:
     if 'tag' in mdata:
         mdata.pop('tag')
-        warn('tags not yet supported, ask Nick if you need them.')
+        warn('tags not yet supported.')
 
     # Extract Datasets
     datasets = {}
@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
 
     output_file_dir = select_save_dir_from_gui()
-    output_file_paths = [Path(output_file_dir) / Path(inpath).with_suffix('.h5') for inpath in input_file_paths]
+    output_file_paths = [Path(output_file_dir) / Path(inpath).with_suffix('.h5').name for inpath in input_file_paths]
 
     for input_file, output_file, in tqdm(zip(input_file_paths, output_file_paths)):
         main_pipeline(filepath_in=input_file, filepath_out=output_file)

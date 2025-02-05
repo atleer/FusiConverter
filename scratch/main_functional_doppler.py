@@ -7,8 +7,14 @@ import h5py
 os.chdir(Path(__file__).parent.parent)
 
 # %%
-data = io.loadmat(r'data\raw\Test_longRec__FUS_113940.mat')
+data = io.loadmat(r'data\raw\Tag1_longRec__FUS_172709.mat')
 data
+
+# %%
+data.keys()
+
+# %%
+data['metadata']['tag'].item().item()[0]
 
 # %%
 data['I']
