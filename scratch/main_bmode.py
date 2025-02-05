@@ -22,6 +22,18 @@ data['bmode']
 # %%
 mdata = data['metadata']
 mdata 
+
+# %%
+name = mdata.dtype.names[0]
+value = mdata[name].item().flatten()
+if value.size == 1:
+    value = value.item()
+
+
+
+# name = mdata.dtype.names[1]
+# mdata[name].item().flatten()
+
 # %%
 imageDim = mdata['imageDim'][0][0][0][0].item()
 
