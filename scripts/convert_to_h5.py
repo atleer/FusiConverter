@@ -1,10 +1,11 @@
-from pathlib import Path
 import sys
 import tkinter as tk
+from pathlib import Path
 from tkinter import filedialog
 from warnings import warn
-from scipy import io
+
 import h5py
+from scipy import io
 from tqdm import tqdm
 
 

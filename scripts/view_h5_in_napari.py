@@ -1,13 +1,11 @@
-from pathlib import Path
 import sys
 import tkinter as tk
+from pathlib import Path
 from tkinter import filedialog
-from warnings import warn
-import numpy as np
-from scipy import io
+
 import h5py
 import napari
-
+import numpy as np
 
 
 def select_files_from_gui(title=None, defaultextension='.mat'):
@@ -44,6 +42,3 @@ for name, image in images.items():
 
 
 napari.run()
-
-# viewer = napari.view_image("Intensity Image")
-
