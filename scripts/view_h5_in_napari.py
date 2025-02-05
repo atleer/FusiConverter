@@ -1,19 +1,11 @@
 import sys
-import tkinter as tk
 from pathlib import Path
-from tkinter import filedialog
 
 import h5py
 import napari
 import numpy as np
 
-
-def select_files_from_gui(title=None, defaultextension='.mat'):
-    root = tk.Tk()
-    root.withdraw()  # Hide the main window
-    file_path = filedialog.askopenfilenames(title=title, defaultextension=defaultextension)  # Open file dialog
-    return file_path
-
+from utils import select_files_from_gui
 
 
 h5_filepaths = select_files_from_gui("Select FuSI H5 Files to View")
