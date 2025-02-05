@@ -4,6 +4,7 @@ from pathlib import Path
 import h5py
 import napari
 import numpy as np
+from tqdm import tqdm
 
 from utils import select_files_from_gui
 
@@ -17,13 +18,11 @@ if not h5_filepaths:
 
 # Load images
 images = {}
-for h5_filepath in h5_filepaths:
+for h5_filepath in tqdm(h5_filepaths, desc='Loading Images...'):
     with h5py.File(h5_filepath) as data:
         filename = Path(h5_filepath).stem
-        image = np.abs(data['image'])
         image_type = data.attrs['imageType']
-        name = f'{image_type}_{filename}'
-        images[name] = image
+        images[f'{image_type}_{filename}' ] = np.abs(data['image'])
 
 
 # View in Napari
