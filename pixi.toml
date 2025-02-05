@@ -1,0 +1,22 @@
+[project]
+authors = ["Nicholas A. Del Grosso <delgrosso.nick@gmail.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "convert_fus_files"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = "3.12.*"
+h5netcdf = ">=1.5.0,<2"
+
+[pypi-dependencies]
+xarray = ">=2025.1.2, <2026"
+numpy = ">=2.2.2, <3"
+pandas = ">=2.2.3, <3"
+matplotlib = ">=3.10.0, <4"
+napari = { version = ">=0.5.6, <0.6", extras = ["pyqt5"] }
+h5py = ">=3.12.1, <4"
+ipykernel = ">=6.29.5, <7"
