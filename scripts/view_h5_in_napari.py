@@ -15,7 +15,6 @@ if not h5_filepaths:
     sys.exit()
 
 
-
 # Load images
 images = {}
 for h5_filepath in tqdm(h5_filepaths, desc='Loading Images...'):
