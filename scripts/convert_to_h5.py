@@ -38,7 +38,6 @@ def main_pipeline(filepath_in, filepath_out):
     # Load up Metadata
     mdata = {}
     for name in data['metadata'].dtype.names:
-        print(name)
         mdata[name] = data['metadata'][name].item().flatten()
 
     # Fix Spelling
