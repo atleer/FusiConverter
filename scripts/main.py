@@ -33,9 +33,10 @@ for image_name in ['bmode', 'doppler', 'I']:
     if image_name in data.keys():
         print(f'Found {image_name} image.')
         break
-    else:
-        raise ValueError("Could not find image data in file.")
-
+else:
+    raise ValueError("Could not find image data in file.")
+    # import pdb
+    # pdb.set_trace()
 
 # Load up Metadata
 mdata = {}
