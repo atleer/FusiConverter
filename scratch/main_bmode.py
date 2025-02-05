@@ -1,6 +1,7 @@
 # %%
 import os
 from pathlib import Path
+from warnings import warn
 from scipy import io
 import h5py
 
@@ -30,7 +31,7 @@ if value.size == 1:
     value = value.item()
 
 
-
+warn('Tags not yet supported.')
 # name = mdata.dtype.names[1]
 # mdata[name].item().flatten()
 

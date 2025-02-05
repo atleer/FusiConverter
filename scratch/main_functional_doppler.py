@@ -14,5 +14,21 @@ data
 data['I']
 
 # %%
-data['metadata']
+mdata = data['metadata']
+mdata
 
+
+# %%
+mdata.dtype.names
+
+
+time = mdata.pop('time')
+
+# %%
+mdata['time'].item().flatten()
+
+# %%
+mdata['t0'].item().flatten()
+
+# %%
+'time' in mdata.dtype.names
