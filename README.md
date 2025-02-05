@@ -7,3 +7,12 @@ View the resulting HDF5 Files at https://myhdf5.hdfgroup.org/
 
 ## Setup
 
+```
+pixi install
+```
+
+May need to type:
+
+```
+pixi run python -m ipykernel install --name fusi
+```
