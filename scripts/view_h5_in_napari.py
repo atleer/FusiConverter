@@ -22,7 +22,6 @@ for h5_filepath in tqdm(h5_filepaths, desc='Loading Images...'):
         filename = Path(h5_filepath).stem
         image_type = data.attrs['imageType']
         images[f'{image_type}_{filename}' ] = np.abs(data['image'])
-        images[f'log_{image_type}_{filename}' ] = np.log(np.abs(data['image']))
 
 
 # View in Napari
