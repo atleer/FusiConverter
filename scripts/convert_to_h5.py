@@ -1,3 +1,4 @@
+# %%
 import sys
 import tkinter as tk
 from pathlib import Path
@@ -9,13 +10,18 @@ from scipy import io
 from tqdm import tqdm
 
 from utils import select_files_from_gui, select_save_dir_from_gui
-
+# %%
 
 
 
 def main_pipeline(filepath_in, filepath_out):
     # Load the Matlab data
+    # %%
+    # filepath_in = r"C:\Users\delgr\Downloads\Rat_coronal_Stim_10-20.mat"
     data = io.loadmat(filepath_in)
+    data
+
+    # %%
 
     # Get Image Data, so it's put in a consistent variable name.
     for image_name in ['bmode', 'doppler', 'I']:
@@ -26,8 +32,10 @@ def main_pipeline(filepath_in, filepath_out):
 
     # Load up Metadata
     mdata = {}
-    for name in data['metadata'].dtype.names:
-        mdata[name] = data['metadata'][name].item().flatten()
+    if 'metadata' in data:
+        for name in data['metadata'].dtype.names:
+            mdata[name] = data['metadata'][name].item().flatten()
+            
 
     # Fix Spelling
     if 'origen' in mdata:
@@ -42,7 +50,7 @@ def main_pipeline(filepath_in, filepath_out):
     # Extract Datasets
     datasets = {}
     datasets['image'] = data[image_name]
-    for name in ['time', 't0']:
+    for name in ['time', 't0', 'time0']:
         if name in mdata:
             datasets[name] = mdata.pop(name)
 
@@ -55,6 +63,10 @@ def main_pipeline(filepath_in, filepath_out):
             if value.size == 1:
                 value = value.item()
             f.attrs[name] = value
+
+        if not mdata and image_name == 'I':
+            f.attrs['imageType'] = 'I'
+            
 
 
 
