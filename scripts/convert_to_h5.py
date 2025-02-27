@@ -50,7 +50,7 @@ def main_pipeline(filepath_in, filepath_out):
     # Extract Datasets
     datasets = {}
     datasets['image'] = data[image_name]
-    for name in ['time', 't0', 'time0']:
+    for name in ['time', 't0', 'time0', 'voxelSize']:
         if name in mdata:
             datasets[name] = mdata.pop(name)
 
