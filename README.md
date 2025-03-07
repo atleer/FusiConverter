@@ -22,3 +22,8 @@ May need to type:
 ```
 pixi run python -m ipykernel install --name fusi
 ```
+
+
+## Contributors
+
+  - Therese Alich
