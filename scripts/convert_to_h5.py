@@ -24,7 +24,7 @@ def main_pipeline(filepath_in, filepath_out):
     # %%
 
     # Get Image Data, so it's put in a consistent variable name.
-    for image_name in ['bmode', 'doppler', 'I']:
+    for image_name in ['bmode', 'doppler', 'Ihq']:
         if image_name in data.keys():
             break
     else:
