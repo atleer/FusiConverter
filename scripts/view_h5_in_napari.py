@@ -17,7 +17,7 @@ from src.utils import *
 from src.widgets import CropWidget
 
 
-h5_filepaths = select_files_from_gui("Select FuSI H5 Files to View")
+h5_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI H5 Files to View")
 if not h5_filepaths:
     print("No Files Selected.  Quitting...")
     sys.exit()
@@ -28,17 +28,27 @@ for h5_filepath in tqdm(h5_filepaths, desc='Loading Images...'):
     with h5py.File(h5_filepath) as data:
         filename = Path(h5_filepath).stem
         image_type = data.attrs['imageType']
-        images[f'{image_type}_{filename}' ] = np.abs(data['image'])
+        images[f'{image_type}_{filename}'] = (np.abs(data['image']), get_voxel_size_mm(data))
+
+# Optionally load the Allen CCF atlas as an additional layer
+atlas_path = prompt_load_atlas()
+if atlas_path:
+    print(f"Loading atlas from {atlas_path}...")
+    images['Atlas'] = load_atlas_image(atlas_path)
 
 # View in Napari
 print("Launching Napari Image Viewer...")
 viewer = napari.Viewer()
-for name, image in images.items():
-    viewer.add_image(name=name, data=image)
-
+for name, (image, scale) in images.items():
+    if scale is None:
+        print(f"No voxel size found for '{name}', displaying at raw voxel scale.")
+        scale = (1,) * image.ndim
+    elif image.ndim > len(scale): # only needed if the image has more dimensions than the scale (e.g. a time dimension).
+        # Non-spatial trailing axes (e.g. time) get a scale of 1.
+        scale = tuple(scale) + (1,) * (image.ndim - len(scale))
+    viewer.add_image(name=name, data=image, scale=scale)
 
 crop_widget = CropWidget(viewer)
 viewer.window.add_dock_widget(crop_widget, area='right')
-
 
 napari.run()
