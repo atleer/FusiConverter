@@ -1,18 +1,20 @@
 # %%
 import sys
-import tkinter as tk
 from pathlib import Path
-from tkinter import filedialog
 from warnings import warn
 
 import h5py
 from scipy import io
 from tqdm import tqdm
+import os
 
-from utils import select_files_from_gui, select_save_dir_from_gui
+root_dir = Path(__file__).parent.parent
+print(root_dir)
+os.chdir(root_dir)
+sys.path.insert(0, root_dir)
+
+from src.utils import select_files_from_gui, select_save_dir_from_gui
 # %%
-
-
 
 def main_pipeline(filepath_in, filepath_out):
     # Load the Matlab data
