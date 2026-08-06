@@ -9,9 +9,8 @@ from tqdm import tqdm
 import os
 
 root_dir = Path(__file__).parent.parent
-print(root_dir)
 os.chdir(root_dir)
-sys.path.insert(0, root_dir)
+sys.path.insert(0, str(root_dir))
 
 from src.utils import select_files_from_gui, select_save_dir_from_gui
 # %%
@@ -19,14 +18,13 @@ from src.utils import select_files_from_gui, select_save_dir_from_gui
 def main_pipeline(filepath_in, filepath_out):
     # Load the Matlab data
     # %%
-    # filepath_in = r"C:\Users\delgr\Downloads\Rat_coronal_Stim_10-20.mat"
     data = io.loadmat(filepath_in)
     data
 
     # %%
 
     # Get Image Data, so it's put in a consistent variable name.
-    for image_name in ['bmode', 'doppler', 'Ihq']:
+    for image_name in ['bmode', 'doppler', 'Ihq', 'I']:
         if image_name in data.keys():
             break
     else:
