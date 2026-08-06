@@ -14,7 +14,7 @@ os.chdir(root_dir)
 sys.path.insert(0, str(root_dir))
 
 from src.utils import *
-from src.widgets import CropWidget, LandmarkWidget
+from src.widgets import CropWidget, LandmarkWidget, RegistrationWidget
 
 
 h5_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI H5 Files to View")
@@ -57,5 +57,8 @@ viewer.window.add_dock_widget(crop_widget, area='right')
 
 landmark_widget = LandmarkWidget(viewer)
 viewer.window.add_dock_widget(landmark_widget, area='right')
+
+registration_widget = RegistrationWidget(viewer)
+viewer.window.add_dock_widget(registration_widget, area='right')
 
 napari.run()

@@ -1,11 +1,15 @@
 import json
+from datetime import datetime, timezone
 from pathlib import Path
+from warnings import warn
 
 import numpy as np
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import napari
 import nibabel as nib
+from scipy import io as sio
+from scipy.ndimage import affine_transform
 
 
 def select_files_from_gui(title=None, defaultextension='.mat') -> tuple[str, ...]:
@@ -101,8 +105,137 @@ def get_or_create_landmarks_layer(viewer, image_layer) -> napari.layers.Points:
         metadata={'source_path': source_path},
     )
     points_layer.events.data.connect(lambda event: save_landmarks(points_layer))
+    points_layer.events.features.connect(lambda event: save_landmarks(points_layer))
     return points_layer
 
+
+## Registration: matching landmarks and fitting a similarity transform
+
+def match_named_points(landmarks_a: dict, landmarks_b: dict) -> tuple[list[str], np.ndarray, np.ndarray]:
+    names = sorted(set(landmarks_a) & set(landmarks_b))
+    pts_a = np.array([landmarks_a[name] for name in names], dtype=float)
+    pts_b = np.array([landmarks_b[name] for name in names], dtype=float)
+    return names, pts_a, pts_b
+
+
+def fit_similarity_transform(moving_mm: np.ndarray, fixed_mm: np.ndarray) -> np.ndarray:
+    """Closed-form (Umeyama) similarity fit: rotation + uniform scale + translation.
+
+    Returns a 4x4 homogeneous matrix mapping moving_mm points onto fixed_mm points.
+    """
+    if len(moving_mm) < 3:
+        raise ValueError(f"Need at least 3 matched landmark pairs, got {len(moving_mm)}.")
+
+    moving_centroid = moving_mm.mean(axis=0)
+    fixed_centroid = fixed_mm.mean(axis=0)
+    moving_centered = moving_mm - moving_centroid
+    fixed_centered = fixed_mm - fixed_centroid
+
+    covariance = (fixed_centered.T @ moving_centered) / len(moving_mm)
+    U, S, Vt = np.linalg.svd(covariance)
+    d = np.sign(np.linalg.det(U @ Vt)) or 1.0
+    correction = np.diag([1.0, 1.0, d])
+    rotation = U @ correction @ Vt
+
+    moving_variance = (moving_centered ** 2).sum(axis=1).mean()
+    scale = np.sum(S * np.diag(correction)) / moving_variance
+    translation = fixed_centroid - scale * rotation @ moving_centroid
+
+    matrix = np.eye(4)
+    matrix[:3, :3] = scale * rotation
+    matrix[:3, 3] = translation
+    return matrix
+
+
+def transform_residuals_mm(matrix: np.ndarray, moving_mm: np.ndarray, fixed_mm: np.ndarray) -> np.ndarray:
+    moving_homog = np.hstack([moving_mm, np.ones((len(moving_mm), 1))])
+    transformed = (matrix @ moving_homog.T).T[:, :3]
+    return np.linalg.norm(transformed - fixed_mm, axis=1)
+
+
+def get_registration_json_path(hq_source_path) -> Path:
+    return Path(f'{hq_source_path}.registration.json')
+
+
+def save_registration(
+    hq_source_path, atlas_source_path, matrix_mm, hq_voxel_size_mm, atlas_voxel_size_mm,
+    landmark_names, residuals_mm,
+) -> Path:
+    json_path = get_registration_json_path(hq_source_path)
+    registration = {
+        'model': 'similarity',
+        'hq_source': str(hq_source_path),
+        'atlas_source': str(atlas_source_path),
+        'hq_voxel_size_mm': [float(v) for v in hq_voxel_size_mm],
+        'atlas_voxel_size_mm': [float(v) for v in atlas_voxel_size_mm],
+        'landmark_names': list(landmark_names),
+        'matrix_mm': np.asarray(matrix_mm).tolist(),
+        'residuals_mm': dict(zip(landmark_names, np.asarray(residuals_mm).tolist())),
+        'rms_error_mm': float(np.sqrt(np.mean(np.square(residuals_mm)))),
+        'created': datetime.now(timezone.utc).isoformat(),
+    }
+    with open(json_path, 'w') as f:
+        json.dump(registration, f, indent=2)
+    return json_path
+
+
+def load_registration(json_path) -> dict:
+    with open(json_path) as f:
+        registration = json.load(f)
+    registration['matrix_mm'] = np.array(registration['matrix_mm'])
+    return registration
+
+
+def resample_volume_to_atlas(
+    volume: np.ndarray, source_voxel_size_mm, matrix_mm: np.ndarray, atlas_shape, atlas_voxel_size_mm,
+) -> np.ndarray:
+    """Resample a 3D volume from its own voxel grid onto the atlas voxel grid via matrix_mm
+    (source physical mm -> atlas physical mm), using scipy's backward-mapping convention.
+    """
+    source_scale = np.diag(list(source_voxel_size_mm) + [1.0])
+    atlas_scale_inv = np.diag([1 / s for s in atlas_voxel_size_mm] + [1.0])
+    # source voxel index -> atlas voxel index
+    voxel_to_voxel = atlas_scale_inv @ matrix_mm @ source_scale
+    voxel_to_voxel_inv = np.linalg.inv(voxel_to_voxel)
+
+    return affine_transform(
+        volume,
+        voxel_to_voxel_inv[:3, :3],
+        offset=voxel_to_voxel_inv[:3, 3],
+        output_shape=atlas_shape,
+        order=1,
+        mode='constant',
+        cval=0.0,
+    )
+
+
+def load_mat_image(filepath) -> tuple[np.ndarray, dict]:
+    """Load a raw (non-HQ) .mat recording's image data + flattened metadata.
+
+    Standalone variant of the loader in scripts/convert_to_h5.py, extended with the
+    'I' variable name (seen in this dataset's T_*.mat files) per CLAUDE.md's documented
+    .mat quirks. Kept separate to avoid touching convert_to_h5.py's existing behavior.
+    """
+    data = sio.loadmat(filepath)
+
+    for image_name in ['bmode', 'doppler', 'Ihq', 'I']:
+        if image_name in data:
+            break
+    else:
+        raise ValueError(f"Could not find image data in '{filepath}'.")
+
+    mdata = {}
+    if 'metadata' in data:
+        for name in data['metadata'].dtype.names:
+            mdata[name] = data['metadata'][name].item().flatten()
+
+    if 'origen' in mdata:
+        mdata['origin'] = mdata.pop('origen')
+    if 'tag' in mdata:
+        mdata.pop('tag')
+        warn('tags not yet supported.')
+
+    return data[image_name], mdata
 
 
 # Function to crop image in spatial dimensions (no temporal)

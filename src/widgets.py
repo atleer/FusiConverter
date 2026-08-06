@@ -2,7 +2,16 @@ import napari
 import numpy as np
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox
 
-from src.utils import crop_image, apply_log_normalization, get_or_create_landmarks_layer
+from src.utils import (
+    crop_image,
+    apply_log_normalization,
+    get_or_create_landmarks_layer,
+    load_landmarks,
+    match_named_points,
+    fit_similarity_transform,
+    transform_residuals_mm,
+    save_registration,
+)
 
 ## Crop Widget
 class CropWidget(QWidget):
@@ -82,3 +91,91 @@ class LandmarkWidget(QWidget):
         points_layer.current_properties = {'name': np.array([name])}
         self.viewer.layers.selection.active = points_layer
         points_layer.mode = 'add'
+
+
+## Registration Widget
+class RegistrationWidget(QWidget):
+    def __init__(self, viewer):
+        super().__init__()
+        self.viewer = viewer
+        self.setLayout(QVBoxLayout())
+
+        self.layout().addWidget(QLabel('Moving (HQ) Layer:'))
+        self.moving_combo = QComboBox()
+        self.layout().addWidget(self.moving_combo)
+
+        self.layout().addWidget(QLabel('Fixed (Atlas) Layer:'))
+        self.fixed_combo = QComboBox()
+        self.layout().addWidget(self.fixed_combo)
+
+        self._refresh_layer_choices()
+        self.viewer.layers.events.inserted.connect(self._refresh_layer_choices)
+        self.viewer.layers.events.removed.connect(self._refresh_layer_choices)
+
+        compute_button = QPushButton('Compute && Preview Registration')
+        compute_button.clicked.connect(self.compute_registration)
+        self.layout().addWidget(compute_button)
+
+        self.status_label = QLabel('')
+        self.status_label.setWordWrap(True)
+        self.layout().addWidget(self.status_label)
+
+    def _refresh_layer_choices(self, event=None):
+        image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
+        for combo in (self.moving_combo, self.fixed_combo):
+            current = combo.currentText()
+            combo.blockSignals(True)
+            combo.clear()
+            combo.addItems(image_layer_names)
+            if current in image_layer_names:
+                combo.setCurrentText(current)
+            combo.blockSignals(False)
+
+    def compute_registration(self):
+        moving_name = self.moving_combo.currentText()
+        fixed_name = self.fixed_combo.currentText()
+        if not moving_name or not fixed_name or moving_name == fixed_name:
+            self.status_label.setText("Pick two different layers (HQ and Atlas).")
+            return
+        moving_layer = self.viewer.layers[moving_name]
+        fixed_layer = self.viewer.layers[fixed_name]
+
+        moving_source = moving_layer.metadata.get('source_path')
+        fixed_source = fixed_layer.metadata.get('source_path')
+        if moving_source is None or fixed_source is None:
+            self.status_label.setText("Both layers need a known source file.")
+            return
+
+        moving_landmarks = load_landmarks(moving_source)
+        fixed_landmarks = load_landmarks(fixed_source)
+        names, moving_pts, fixed_pts = match_named_points(moving_landmarks, fixed_landmarks)
+        if len(names) < 3:
+            self.status_label.setText(
+                f"Need >=3 matching landmark names on both layers, found {len(names)}."
+            )
+            return
+
+        moving_mm = moving_pts * np.array(moving_layer.scale[:3])
+        fixed_mm = fixed_pts * np.array(fixed_layer.scale[:3])
+
+        matrix_mm = fit_similarity_transform(moving_mm, fixed_mm)
+        residuals_mm = transform_residuals_mm(matrix_mm, moving_mm, fixed_mm)
+
+        moving_layer.affine = matrix_mm
+
+        json_path = save_registration(
+            hq_source_path=moving_source,
+            atlas_source_path=fixed_source,
+            matrix_mm=matrix_mm,
+            hq_voxel_size_mm=moving_layer.scale[:3],
+            atlas_voxel_size_mm=fixed_layer.scale[:3],
+            landmark_names=names,
+            residuals_mm=residuals_mm,
+        )
+
+        rms = float(np.sqrt(np.mean(np.square(residuals_mm))))
+        max_err = float(np.max(residuals_mm))
+        self.status_label.setText(
+            f"Registered using {len(names)} landmarks. RMS error: {rms:.3f} mm, "
+            f"max: {max_err:.3f} mm.\nSaved to {json_path}"
+        )
