@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 import numpy as np
 import tkinter as tk
 from tkinter import filedialog, messagebox
@@ -54,6 +57,51 @@ def get_voxel_size_mm(h5_file) -> tuple[float, ...] | None:
     if 'voxelSize' not in h5_file:
         return None
     return tuple(h5_file['voxelSize'][()])
+
+
+def get_landmarks_json_path(source_path) -> Path:
+    return Path(f'{source_path}.landmarks.json')
+
+
+def load_landmarks(source_path) -> dict[str, list[float]]:
+    json_path = get_landmarks_json_path(source_path)
+    if not json_path.exists():
+        return {}
+    with open(json_path) as f:
+        return json.load(f)
+
+
+def save_landmarks(points_layer) -> None:
+    source_path = points_layer.metadata.get('source_path')
+    if source_path is None:
+        return
+    names = points_layer.features['name'].tolist()
+    landmarks = {name: coords.tolist() for name, coords in zip(names, points_layer.data)}
+    with open(get_landmarks_json_path(source_path), 'w') as f:
+        json.dump(landmarks, f, indent=2)
+
+
+def get_or_create_landmarks_layer(viewer, image_layer) -> napari.layers.Points:
+    points_name = f'{image_layer.name}_landmarks'
+    if points_name in viewer.layers:
+        return viewer.layers[points_name]
+
+    source_path = image_layer.metadata.get('source_path')
+    if source_path is None:
+        print(f"'{image_layer.name}' has no known source file; landmarks won't be saved to disk.")
+    saved_landmarks = load_landmarks(source_path) if source_path else {}
+
+    points_layer = viewer.add_points(
+        data=np.array(list(saved_landmarks.values())) if saved_landmarks else None,
+        name=points_name,
+        ndim=image_layer.ndim,
+        scale=image_layer.scale,
+        features={'name': np.array(list(saved_landmarks.keys()), dtype=object)},
+        text='name',
+        metadata={'source_path': source_path},
+    )
+    points_layer.events.data.connect(lambda event: save_landmarks(points_layer))
+    return points_layer
 
 
 

@@ -1,4 +1,8 @@
-from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton
+import napari
+import numpy as np
+from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox
+
+from src.utils import crop_image, apply_log_normalization, get_or_create_landmarks_layer
 
 ## Crop Widget
 class CropWidget(QWidget):
@@ -29,3 +33,52 @@ class CropWidget(QWidget):
         y_range = self.y_range_input.text()
         crop_image(self.viewer, z_range, x_range, y_range)
         apply_log_normalization(self.viewer)
+
+## Landmark Widget
+class LandmarkWidget(QWidget):
+    def __init__(self, viewer):
+        super().__init__()
+        self.viewer = viewer
+        self.setLayout(QVBoxLayout())
+
+        self.layout().addWidget(QLabel('Target Image Layer:'))
+        self.layer_combo = QComboBox()
+        self.layout().addWidget(self.layer_combo)
+        self._refresh_layer_choices()
+        self.viewer.layers.events.inserted.connect(self._refresh_layer_choices)
+        self.viewer.layers.events.removed.connect(self._refresh_layer_choices)
+
+        self.layout().addWidget(QLabel('Landmark Name:'))
+        self.name_input = QLineEdit()
+        self.layout().addWidget(self.name_input)
+
+        add_button = QPushButton('Add Landmark')
+        add_button.clicked.connect(self.add_landmark)
+        self.layout().addWidget(add_button)
+
+    def _refresh_layer_choices(self, event=None):
+        current = self.layer_combo.currentText()
+        image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
+        self.layer_combo.blockSignals(True)
+        self.layer_combo.clear()
+        self.layer_combo.addItems(image_layer_names)
+        if current in image_layer_names:
+            self.layer_combo.setCurrentText(current)
+        self.layer_combo.blockSignals(False)
+
+    def add_landmark(self):
+        layer_name = self.layer_combo.currentText()
+        if not layer_name or layer_name not in self.viewer.layers:
+            print("No image layer selected.")
+            return
+        image_layer = self.viewer.layers[layer_name]
+
+        name = self.name_input.text().strip()
+        if not name:
+            print("Enter a landmark name first.")
+            return
+
+        points_layer = get_or_create_landmarks_layer(self.viewer, image_layer)
+        points_layer.current_properties = {'name': np.array([name])}
+        self.viewer.layers.selection.active = points_layer
+        points_layer.mode = 'add'
