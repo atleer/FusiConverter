@@ -11,6 +11,7 @@ from src.utils import (
     fit_similarity_transform,
     transform_residuals_mm,
     save_registration,
+    resample_volume_to_atlas,
 )
 
 ## Crop Widget
@@ -116,9 +117,15 @@ class RegistrationWidget(QWidget):
         compute_button.clicked.connect(self.compute_registration)
         self.layout().addWidget(compute_button)
 
+        preview_button = QPushButton('Preview Registered HQ (resampled, for 2D)')
+        preview_button.clicked.connect(self.preview_resampled)
+        self.layout().addWidget(preview_button)
+
         self.status_label = QLabel('')
         self.status_label.setWordWrap(True)
         self.layout().addWidget(self.status_label)
+
+        self._last_registration = None
 
     def _refresh_layer_choices(self, event=None):
         image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
@@ -162,6 +169,11 @@ class RegistrationWidget(QWidget):
         residuals_mm = transform_residuals_mm(matrix_mm, moving_mm, fixed_mm)
 
         moving_layer.affine = matrix_mm
+        self._last_registration = {
+            'moving_layer': moving_layer,
+            'fixed_layer': fixed_layer,
+            'matrix_mm': matrix_mm,
+        }
 
         json_path = save_registration(
             hq_source_path=moving_source,
@@ -178,4 +190,30 @@ class RegistrationWidget(QWidget):
         self.status_label.setText(
             f"Registered using {len(names)} landmarks. RMS error: {rms:.3f} mm, "
             f"max: {max_err:.3f} mm.\nSaved to {json_path}"
+        )
+
+    def preview_resampled(self):
+        if self._last_registration is None:
+            self.status_label.setText("Compute a registration first.")
+            return
+
+        moving_layer = self._last_registration['moving_layer']
+        fixed_layer = self._last_registration['fixed_layer']
+        matrix_mm = self._last_registration['matrix_mm']
+
+        resampled = resample_volume_to_atlas(
+            moving_layer.data,
+            source_voxel_size_mm=moving_layer.scale[:3],
+            matrix_mm=matrix_mm,
+            atlas_shape=fixed_layer.data.shape,
+            atlas_voxel_size_mm=fixed_layer.scale[:3],
+        )
+        self.viewer.add_image(
+            resampled,
+            name=f'{moving_layer.name}_registered_preview',
+            scale=fixed_layer.scale,
+        )
+        self.status_label.setText(
+            f"Added '{moving_layer.name}_registered_preview' (axis-aligned in atlas space, "
+            "safe to scrub in 2D)."
         )
