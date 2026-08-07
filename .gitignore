@@ -6,3 +6,5 @@ __pycache__
 
 # Don't worry about lockfile this early in the project
 pixi.lock
+
+.obsidian
