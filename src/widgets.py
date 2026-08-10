@@ -78,7 +78,7 @@ class AddLandmark(QWidget):
             print("Enter a landmark name first")
             return
 
-        points_layer = get_or_create_landmarks(self.viewer, image_layer)
+        points_layer = get_or_create_landmarks_layer(self.viewer, image_layer)
         points_layer.current_properties = {'name': np.array([name])} # TODO: What does this do?
         self.viewer.layers.selection.active = points_layer
         points_layer.mode = 'add'

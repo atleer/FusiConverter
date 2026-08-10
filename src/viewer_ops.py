@@ -50,14 +50,11 @@ def apply_log_normalization(viewer):
     # Add the normalized image as a new layer
     viewer.add_image(normalized_data, name=f'LogNorm_{layer.name}')
 
-def get_landmarks_json_path(source_path) -> Path:
-    return Path(f'{source_path}.landmarks.json')
-
 def load_landmarks(source_path):
-    json_path = get_landmarks_json_path(source_path)
+    json_path = Path(f'{source_path}.landmarks.json')
     if not json_path.exists():
         return {}
-    with open(source_path) as f:
+    with open(json_path) as f:
         return json.load(f)
 
 def save_landmarks(points_layer):
@@ -66,10 +63,11 @@ def save_landmarks(points_layer):
         return
     names = points_layer.features['name']
     landmarks = {name: coords.tolist() for name, coords, in zip(names, points_layer.data)}
-    with open(get_landmarks_json_path(source_path), 'w') as f:
+    print('landmark names', names)
+    with open(Path(f'{source_path}.landmarks.json'), 'w') as f:
         json.dump(landmarks, f, indent=2)
 
-def get_or_create_landmarks(viewer, image_layer) -> napari.layers.Points:
+def get_or_create_landmarks_layer(viewer, image_layer) -> napari.layers.Points:
     points_name = f'{image_layer.name}_landmarks'
     if points_name in viewer.layers:
         return viewer.layers[points_name]
@@ -87,6 +85,6 @@ def get_or_create_landmarks(viewer, image_layer) -> napari.layers.Points:
         text='name',
         metadata={'source_path': source_path},
     )
-    points_layer.events.data.connect(lambda event: save_landmarks(points_layer))
+    #points_layer.events.data.connect(lambda event: save_landmarks(points_layer))
     #
     return points_layer
