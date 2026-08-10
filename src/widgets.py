@@ -1,6 +1,7 @@
+import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox
-from src.viewer_ops import *
+from src.viewer_ops import save_landmarks, get_or_create_landmarks_layer, apply_log_normalization, crop_image
 
 ## Crop Widget
 class CropWidget(QWidget):
@@ -53,6 +54,10 @@ class AddLandmark(QWidget):
         add_button.clicked.connect(self.add_landmark)
         self.layout().addWidget(add_button)
 
+        save_button = QPushButton('Save Landmarks')
+        save_button.clicked.connect(self.save)
+        self.layout().addWidget(save_button)
+
 
     def _refresh_layer_choices(self):
         current = self.layer_combo.currentText()
@@ -82,4 +87,7 @@ class AddLandmark(QWidget):
         points_layer.current_properties = {'name': np.array([name])} # TODO: What does this do?
         self.viewer.layers.selection.active = points_layer
         points_layer.mode = 'add'
+
+    def save(self):
+        return NotImplementedError
               
