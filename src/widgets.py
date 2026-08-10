@@ -1,4 +1,5 @@
-from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton
+import napari
+from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox
 from src.viewer_ops import *
 
 ## Crop Widget
@@ -50,6 +51,7 @@ class AddLandmark(QWidget):
 
         add_button = QPushButton('Add Landmark')
         add_button.clicked.connect(self.add_landmark)
+        self.layout().addWidget(add_button)
 
 
     def _refresh_layer_choices(self):
@@ -63,5 +65,21 @@ class AddLandmark(QWidget):
         self.layer_combo.blockSignals(False)
 
     def add_landmark(self):
-        return NotImplementedError
+        layer_name = self.layer_combo.currentText()
+        print(layer_name)
+        if layer_name not in self.viewer.layers:
+            print("No image layer selected")
+            return
+        image_layer = self.viewer.layers[layer_name]
+        print(image_layer)
+
+        name = self.name_input.text().strip()
+        if not name:
+            print("Enter a landmark name first")
+            return
+
+        points_layer = get_or_create_landmarks(self.viewer, image_layer)
+        points_layer.current_properties = {'name': np.array([name])} # TODO: What does this do?
+        self.viewer.layers.selection.active = points_layer
+        points_layer.mode = 'add'
               

@@ -1,5 +1,7 @@
 import napari
 import numpy as np
+from pathlib import Path
+import json
 
 
 # Function to crop image in spatial dimensions (no temporal)
@@ -47,3 +49,44 @@ def apply_log_normalization(viewer):
     
     # Add the normalized image as a new layer
     viewer.add_image(normalized_data, name=f'LogNorm_{layer.name}')
+
+def get_landmarks_json_path(source_path) -> Path:
+    return Path(f'{source_path}.landmarks.json')
+
+def load_landmarks(source_path):
+    json_path = get_landmarks_json_path(source_path)
+    if not json_path.exists():
+        return {}
+    with open(source_path) as f:
+        return json.load(f)
+
+def save_landmarks(points_layer):
+    source_path = points_layer.metadata.get('source_path')
+    if source_path is None:
+        return
+    names = points_layer.features['name']
+    landmarks = {name: coords.tolist() for name, coords, in zip(names, points_layer.data)}
+    with open(get_landmarks_json_path(source_path), 'w') as f:
+        json.dump(landmarks, f, indent=2)
+
+def get_or_create_landmarks(viewer, image_layer) -> napari.layers.Points:
+    points_name = f'{image_layer.name}_landmarks'
+    if points_name in viewer.layers:
+        return viewer.layers[points_name]
+
+    source_path = image_layer.metadata.get('source_path')
+
+    saved_landmarks = load_landmarks(source_path)
+
+    points_layer = viewer.add_points(
+        data = np.array(list(saved_landmarks.values())),
+        name = points_name, # takes its name from the filename - atlas or HQ volume
+        ndim=image_layer.ndim,
+        scale=image_layer.scale,
+        features={'name': np.array(list(saved_landmarks.keys()), dtype=object)}, # TODO: what is this?
+        text='name',
+        metadata={'source_path': source_path},
+    )
+    points_layer.events.data.connect(lambda event: save_landmarks(points_layer))
+    #
+    return points_layer
