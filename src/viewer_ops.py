@@ -84,6 +84,4 @@ def get_or_create_landmarks_layer(viewer, image_layer) -> napari.layers.Points:
         text='name',
         metadata={'source_path': source_path},
     )
-    # points_layer.events.data.connect(lambda event: save_landmarks(points_layer)) # automatic save of landmarks each time one is added or moved, no overwrite, just append
-    # points_layer.events.features.connect(lambda event: save_landmarks(points_layer))
     return points_layer
