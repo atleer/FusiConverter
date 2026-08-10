@@ -39,6 +39,7 @@ atlas_path = prompt_load_atlas()
 if atlas_path:
     print(f"Loading atlas from {atlas_path}...")
     images['Atlas'] = load_atlas_image(atlas_path)
+    image_sources['Atlas'] = atlas_path
 
 # View in Napari
 print("Launching Napari Image Viewer...")
