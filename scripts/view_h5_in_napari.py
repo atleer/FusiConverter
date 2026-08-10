@@ -14,6 +14,7 @@ os.chdir(root_dir)
 sys.path.insert(0, str(root_dir))
 
 from src.utils import *
+from src.viewer_ops import *
 from src.widgets import CropWidget, AddLandmark
 
 
