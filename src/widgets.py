@@ -1,4 +1,5 @@
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton
+from src.viewer_ops import *
 
 ## Crop Widget
 class CropWidget(QWidget):
