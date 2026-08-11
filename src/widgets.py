@@ -1,7 +1,8 @@
 import numpy as np
 import napari
-from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox
+from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
 from src.viewer_ops import save_landmarks, get_or_create_landmarks_layer, apply_log_normalization, crop_image
+from pathlib import Path
 
 ## Crop Widget
 class CropWidget(QWidget):
@@ -71,20 +72,23 @@ class AddLandmark(QWidget):
 
     def add_landmark(self):
         layer_name = self.layer_combo.currentText()
-        print(layer_name)
+        print(type(layer_name))
         if layer_name not in self.viewer.layers:
             print("No image layer selected")
             return
         image_layer = self.viewer.layers[layer_name]
-        print(image_layer)
+        print(type(image_layer))
 
-        name = self.name_input.text().strip()
-        if not name:
+        landmark_name = self.name_input.text().strip()
+        if not landmark_name:
             print("Enter a landmark name first")
             return
 
         points_layer = get_or_create_landmarks_layer(self.viewer, image_layer)
-        points_layer.current_properties = {'name': np.array([name])} # TODO: What does this do?
+        points_layer.current_properties = {
+            'landmark_name': np.array([landmark_name]),
+            'from_disk': np.array([False]),
+            } # TODO: What does this do?
         self.viewer.layers.selection.active = points_layer
         points_layer.mode = 'add'
 
@@ -100,7 +104,41 @@ class AddLandmark(QWidget):
             print(f'No landmarks layer for {image_layer.name}. Add a landmark first.')
             return
 
-        save_landmarks(self.viewer.layers[points_name])
+        # check with user if they want to overwrite or append
+        points_layer = self.viewer.layers[points_name]
+        json_path = Path(f"{points_layer.metadata.get('source_path')}.landmarks.json")
+        mode = 'overwrite'
+        if json_path.exists():
+            mode = self._ask_save_mode(json_path)
+            if mode is None: # user cancelled
+                return
+
+        # write new landmarks to disk
+        save_landmarks(self.viewer.layers[points_name], mode=mode)
+        print(f'Saved landmarks to {json_path} ({mode})')
+
+    def _ask_save_mode(self, json_path):
+        """Ask whether to append new landmarks to existing landmarks file or overwrite it"""
+
+        box = QMessageBox(self)
+        box.setWindowTitle('Save Landmarks')
+        box.setIcon(QMessageBox.Question)
+        box.setText(f'{json_path.name} already exists')
+        box.setInformativeText(
+            'Append keeps landmarks that are already in the file. \n' \
+            'Overwrite replaces the file with the landmarks currently in the viewer.'
+        )
+        append_button = box.addButton('Append', QMessageBox.AcceptRole)
+        overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
+        box.addButton('Cancel', QMessageBox.RejectRole)
+        box.exec_()
+
+        clicked = box.clickedButton()
+        if clicked is append_button:
+            return 'append'
+        if clicked is overwrite_button:
+            return 'overwrite'
+        return None
 
     # def _selected_image_layer(self):
     #     layer_name = self.layer_combo.currentText()

@@ -57,12 +57,30 @@ def load_landmarks(source_path):
     with open(json_path) as f:
         return json.load(f)
 
-def save_landmarks(points_layer):
+def save_landmarks(points_layer, mode='overwrite'):
     source_path = points_layer.metadata.get('source_path')
 
-    names = points_layer.features['name']
-    landmarks = {name: coords.tolist() for name, coords, in zip(names, points_layer.data)}
-    print('landmark names', names)
+    landmark_names = points_layer.features['landmark_name']
+    landmarks = {landmark_name: coords.tolist() for landmark_name, coords, in zip(landmark_names, points_layer.data)}
+    print('landmark names', landmark_names)
+
+    """TODO: Go through this implmentation of overwrite"""
+    # features = points_layer.features
+    # landmarks = {}
+    # for landmark_name, coords, from_disk in zip(
+    #     features['landmark_name'], points_layer.data, features['from_disk']
+    # ):
+    #     # overwrite = only the landmarks added in this session
+    #     if mode == 'overwrite' and from_disk:
+    #         continue
+    #     landmarks[landmark_name] = coords.tolist()
+
+    if mode == 'append':
+        # if new landmarks have same name as landmarks on disk, new landmarks take precedence and will overwrite landmarks on disk
+        merged = load_landmarks(source_path)
+        merged.update(landmarks)
+        landmarks = merged
+
     with open(Path(f'{source_path}.landmarks.json'), 'w') as f:
         json.dump(landmarks, f, indent=2)
 
@@ -73,15 +91,18 @@ def get_or_create_landmarks_layer(viewer, image_layer) -> napari.layers.Points:
 
     source_path = image_layer.metadata.get('source_path')
 
-    saved_landmarks = load_landmarks(source_path)
+    saved_landmarks = load_landmarks(source_path) # this causes new landmarks to be appended
 
     points_layer = viewer.add_points(
         data = np.array(list(saved_landmarks.values())),
         name = points_name, # takes its name from the filename - atlas or HQ volume
         ndim=image_layer.ndim,
         scale=image_layer.scale,
-        features={'name': np.array(list(saved_landmarks.keys()), dtype=object)}, # TODO: what is this?
-        text='name',
+        features={
+            'landmark_name': np.array(list(saved_landmarks.keys()), dtype=object),
+            'from_disk': np.ones(len(saved_landmarks), dtype=bool),
+            },
+        text='landmark_name',
         metadata={'source_path': source_path},
     )
     return points_layer
