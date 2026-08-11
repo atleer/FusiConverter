@@ -89,7 +89,8 @@ class AddLandmark(QWidget):
         points_layer.mode = 'add'
 
     def save(self):
-        image_layer = self._selected_image_layer()
+        layer_name = self.layer_combo.currentText()
+        image_layer = self.viewer.layers[layer_name]
         if image_layer is None:
             return
 
@@ -101,9 +102,9 @@ class AddLandmark(QWidget):
 
         save_landmarks(self.viewer.layers[points_name])
 
-    def _selected_image_layer(self):
-        layer_name = self.layer_combo.currentText()
-        if layer_name not in self.viewer.layers:
-            print('No image layer selected')
-            return None
-        return self.viewer.layers[layer_name]
+    # def _selected_image_layer(self):
+    #     layer_name = self.layer_combo.currentText()
+    #     if layer_name not in self.viewer.layers:
+    #         print('No image layer selected')
+    #         return None
+    #     return self.viewer.layers[layer_name]
