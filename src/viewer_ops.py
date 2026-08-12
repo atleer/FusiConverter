@@ -54,6 +54,51 @@ def get_or_create_landmarks_layer(viewer, image_layer) -> napari.layers.Points:
     )
     return points_layer
 
+def match_landmarks(landmarks_a: dict, landmarks_b: dict):
+    """Gets the landmarks in common between layers a and b and their respective coordinates"""
+    names = sorted(set(landmarks_a) & set(landmarks_b))
+    coords_a = np.array([landmarks_a[name] for name in names], dtype=float)
+    coords_b = np.array([landmarks_b[name] for name in names], dtype=float)
+    return names, coords_a, coords_b
+
+def fit_similarity_transform(moving_mm: np.ndarray, fixed_mm: np.ndarray):
+    """Closed-form similarity fit: rotation + uniform scaling + translation.
+    
+    Returns a 4x4 homogeneous matrix mapping moving_mm points onto fixed_mm points.
+    """
+
+    if len(moving_mm) < 3:
+        raise ValueError(f"Need at least 3 matched landmark pairs, got {len(moving_mm)}.")
+
+    moving_centroid = moving_mm.mean(axis=0)
+    fixed_centroid = fixed_mm.mean(axis=0)
+    moving_centered = moving_mm - moving_centroid
+    fixed_centered = fixed_mm - fixed_centroid
+
+    covariance = (fixed_centered.T @ moving_centered) / len(moving_mm)
+
+    U, S, Vt = np.linalg.svd(covariance)
+    d = np.sign(np.linalg.det(U @ Vt)) or 1.0
+    correction = np.diag([1.0, 1.0, d])
+    rotation = U @ correction @ Vt
+
+    moving_variance = (moving_centered ** 2).sum(axis=1).mean()
+    scale = np.sum(S * np.diag(correction)) / moving_variance
+    translation = fixed_centroid - scale * rotation @ moving_centroid
+
+    matrix = np.eye(4)
+    matrix[:3, :3] = scale * rotation
+    matrix[:3, 3] = translation
+    return matrix
+
+def transform_residuals_mm(matrix: np.ndarray, moving_mm: np.ndarray, fixed_mm: np.ndarray) -> np.ndarray:
+    moving_homog = np.hstack([moving_mm, np.ones((len(moving_mm), 1))])
+    transformed = (matrix @ moving_homog.T).T[:, :3]
+    return np.linalg.norm(transformed - fixed_mm, axis = 1)
+
+def get_registration_json_path(hq_source_path) -> Path:
+    return Path(f'{hq_source_path}.registration.json')
+
 # # Function to crop image in spatial dimensions (no temporal)
 # def crop_image(viewer, z_range, x_range, y_range):
 #     layer = viewer.layers.selection.active

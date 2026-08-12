@@ -1,7 +1,7 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
-from src.viewer_ops import save_landmarks, get_or_create_landmarks_layer # apply_log_normalization, crop_image
+from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals_mm # apply_log_normalization, crop_image
 from pathlib import Path
 
 class AddLandmark(QWidget):
@@ -52,10 +52,12 @@ class AddLandmark(QWidget):
 
         # add the landmark
         points_layer = get_or_create_landmarks_layer(self.viewer, image_layer)
-        points_layer.current_properties = {
+        # clear the selection so you can write back onto selected points
+        points_layer.selected_data = set()
+        points_layer.feature_defaults = {
             'landmark_name': np.array([landmark_name]),
             'from_disk': np.array([False]),
-            } # stamps the landmark name the user entered onto the point
+        } # stamps the landmark name the user entered onto the *next* point added
         self.viewer.layers.selection.active = points_layer # makes the points layer the activated layer in napari
         points_layer.mode = 'add'
 
@@ -108,14 +110,94 @@ class AddLandmark(QWidget):
             return 'overwrite'
         return None
 
-# class RegistrationWidget(Qwidget):
-#     def __init__(self, viewer):
-#         super().__init__()
-#         self.viewer = viewer
-#         self.setLayout(QVBoxLayout())
+class RegistrationWidget(QWidget):
+    def __init__(self, viewer):
+        super().__init__()
+        self.viewer = viewer
+        self.setLayout(QVBoxLayout())
 
-#         self.layout().addWidget(Qlabel('Layer to be moved (HQ file)'))
-#         self.moving_combo
+        self.layout().addWidget(QLabel('Layer to be moved (HQ file)'))
+        self.moving_layer = QComboBox()
+        self.layout().addWidget(self.moving_layer)
+
+        self.layout().addWidget(QLabel("Fixed layer (Atlas)"))
+        self.fixed_layer = QComboBox()
+        self.layout().addWidget(self.fixed_layer)
+
+        self._refresh_layer_choices()
+        self.viewer.layers.events.inserted.connect(self._refresh_layer_choices)
+        self.viewer.layers.events.removed.connect(self._refresh_layer_choices)
+
+        compute_button = QPushButton('Compute Registration')
+        compute_button.clicked.connect(self.compute_registration)
+        self.layout().addWidget(compute_button)
+
+        self.status_label = QLabel('')
+        self.status_label.setWordWrap(True)
+        self.layout().addWidget(self.status_label)
+
+    def _refresh_layer_choices(self):
+        """Used to refresh widget when a new layer is added or removed in napari so that it shows up in dropdown menu where you pick a layer to add the landmark to"""
+        image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
+        for hq_and_atlas in (self.moving_layer, self.fixed_layer):
+            current = hq_and_atlas.currentText()
+            hq_and_atlas.blockSignals(True)
+            hq_and_atlas.clear()
+            hq_and_atlas.addItems(image_layer_names)
+            if current in image_layer_names:
+                hq_and_atlas.setCurrentText(current)
+            hq_and_atlas.blockSignals(False)
+
+    def compute_registration(self):
+        moving_layer_name = self.moving_layer.currentText()
+        fixed_layer_name = self.fixed_layer.currentText()
+        if not moving_layer_name or not fixed_layer_name or moving_layer_name == fixed_layer_name:
+            self.status_label.setText("Pick two different layers (HQ and Atlas).")
+            return
+        moving_layer = self.viewer.layers[moving_layer_name]
+        fixed_layer = self.viewer.layers[fixed_layer_name]
+
+        source_path_moving = moving_layer.metadata.get('source_path')
+        source_path_fixed = fixed_layer.metadata.get('source_path')
+
+        moving_landmarks = load_landmarks(source_path_moving)
+        fixed_landmarks = load_landmarks(source_path_fixed)
+
+        names, moving_pts, fixed_pts = match_landmarks(moving_landmarks, fixed_landmarks)
+        
+        if len(names) < 3:
+            self.status_label.setText(
+                f"Need >=3 matching landmark names on both layers, found {len(names)}."
+            )
+            return
+
+        print('moving_layer.scale[:3]:', moving_layer.scale[:3])
+
+        # TODO: why is this scaled?
+        moving_mm = moving_landmarks * np.array(moving_layer.scale[:3])
+        fixed_mm = fixed_landmarks * np.array(fixed_layer.scale[:3])
+
+        matrix_mm = fit_similarity_transform(moving_mm, fixed_mm)
+        residuals_mm = transform_residuals_mm(matrix_mm, moving_mm, fixed_mm)
+
+        moving_layer.affine = matrix_mm
+        self._last_registration = {
+            'moving_layer': moving_layer,
+            'fixed_layer': fixed_layer,
+            'matrix_mm': matrix_mm,
+        }
+
+
+
+
+
+
+
+    
+
+
+
+
 
 ## Crop Widget
 # class CropWidget(QWidget):
