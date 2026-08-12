@@ -11,8 +11,8 @@ class AddLandmark(QWidget):
         self.setLayout(QVBoxLayout())
 
         self.layout().addWidget(QLabel('Target Image Layer:'))
-        self.layer_combo = QComboBox() # adds a blank dropdown menu
-        self.layout().addWidget(self.layer_combo)
+        self.layer_landmarks_added = QComboBox() # adds a blank dropdown menu
+        self.layout().addWidget(self.layer_landmarks_added)
         self._refresh_layer_choices()
         self.viewer.layers.events.inserted.connect(self._refresh_layer_choices) # refresh widget when a new layer is added to napari so that it shows up in dropdown menu
         self.viewer.layers.events.removed.connect(self._refresh_layer_choices) # refresh widget when a new layer is removed from napari so that it shows up in dropdown menu
@@ -32,17 +32,17 @@ class AddLandmark(QWidget):
 
     def _refresh_layer_choices(self):
         """Used to refresh widget when a new layer is added or removed in napari so that it shows up in dropdown menu where you pick a layer to add the landmark to"""
-        current = self.layer_combo.currentText()
+        current = self.layer_landmarks_added.currentText()
         image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
-        self.layer_combo.blockSignals(True)
-        self.layer_combo.clear()
-        self.layer_combo.addItems(image_layer_names)
+        self.layer_landmarks_added.blockSignals(True)
+        self.layer_landmarks_added.clear()
+        self.layer_landmarks_added.addItems(image_layer_names)
         if current in image_layer_names:
-            self.layer_combo.setCurrentText(current)
-        self.layer_combo.blockSignals(False)
+            self.layer_landmarks_added.setCurrentText(current)
+        self.layer_landmarks_added.blockSignals(False)
 
     def add_landmark(self):
-        layer_name = self.layer_combo.currentText() # text string containing name of currently selected layer
+        layer_name = self.layer_landmarks_added.currentText() # text string containing name of currently selected layer
         image_layer = self.viewer.layers[layer_name] # the currently selected layer as an object (e.g. the atlas or the recorded image)
 
         landmark_name = self.name_input.text().strip() # get name of landmark
@@ -61,7 +61,7 @@ class AddLandmark(QWidget):
 
     def save(self):
         """Write the landmarks to file"""
-        layer_name = self.layer_combo.currentText() # text string containing name of currently selected layer
+        layer_name = self.layer_landmarks_added.currentText() # text string containing name of currently selected layer
         image_layer = self.viewer.layers[layer_name]  # the currently selected layer (e.g. the atlas or the recorded image)
         if image_layer is None:
             return
@@ -108,6 +108,14 @@ class AddLandmark(QWidget):
             return 'overwrite'
         return None
 
+# class RegistrationWidget(Qwidget):
+#     def __init__(self, viewer):
+#         super().__init__()
+#         self.viewer = viewer
+#         self.setLayout(QVBoxLayout())
+
+#         self.layout().addWidget(Qlabel('Layer to be moved (HQ file)'))
+#         self.moving_combo
 
 ## Crop Widget
 # class CropWidget(QWidget):
