@@ -1,38 +1,8 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
-from src.viewer_ops import save_landmarks, get_or_create_landmarks_layer, apply_log_normalization, crop_image
+from src.viewer_ops import save_landmarks, get_or_create_landmarks_layer # apply_log_normalization, crop_image
 from pathlib import Path
-
-## Crop Widget
-class CropWidget(QWidget):
-    def __init__(self, viewer):
-        super().__init__()
-        self.viewer = viewer
-        self.setLayout(QVBoxLayout())
-
-        self.layout().addWidget(QLabel('Z Range (e.g., 0:10):'))
-        self.z_range_input = QLineEdit()
-        self.layout().addWidget(self.z_range_input)
-
-        self.layout().addWidget(QLabel('X Range (e.g., 0:100):'))
-        self.x_range_input = QLineEdit()
-        self.layout().addWidget(self.x_range_input)
-
-        self.layout().addWidget(QLabel('Y Range (e.g., 0:100):'))
-        self.y_range_input = QLineEdit()
-        self.layout().addWidget(self.y_range_input)
-
-        crop_button = QPushButton('Crop Image & Log-Norm')
-        crop_button.clicked.connect(self.crop)
-        self.layout().addWidget(crop_button)
-
-    def crop(self):
-        z_range = self.z_range_input.text()
-        x_range = self.x_range_input.text()
-        y_range = self.y_range_input.text()
-        crop_image(self.viewer, z_range, x_range, y_range)
-        apply_log_normalization(self.viewer)
 
 class AddLandmark(QWidget):
     def __init__(self, viewer):
@@ -41,14 +11,14 @@ class AddLandmark(QWidget):
         self.setLayout(QVBoxLayout())
 
         self.layout().addWidget(QLabel('Target Image Layer:'))
-        self.layer_combo = QComboBox()
-        self.layout().addWidget(self.layer_combo) # adds a blank dropdown menu
+        self.layer_combo = QComboBox() # adds a blank dropdown menu
+        self.layout().addWidget(self.layer_combo)
         self._refresh_layer_choices()
-        self.viewer.layers.events.inserted.connect(self._refresh_layer_choices) # refresh when a new layer is added to napari so that it shows up in dropdown menu
-        self.viewer.layers.events.removed.connect(self._refresh_layer_choices) # refresh when a new layer is removed from napari so that it shows up in dropdown menu
+        self.viewer.layers.events.inserted.connect(self._refresh_layer_choices) # refresh widget when a new layer is added to napari so that it shows up in dropdown menu
+        self.viewer.layers.events.removed.connect(self._refresh_layer_choices) # refresh widget when a new layer is removed from napari so that it shows up in dropdown menu
 
-        self.layout().addWidget(QLabel('Landmark Name:'))
-        self.name_input = QLineEdit()
+        self.layout().addWidget(QLabel('Landmark Name:')) # Adds text "Landmark Name" above open field
+        self.name_input = QLineEdit() # Adds open field to enter name for landmark
         self.layout().addWidget(self.name_input)
 
         add_button = QPushButton('Add Landmark')
@@ -61,6 +31,7 @@ class AddLandmark(QWidget):
 
 
     def _refresh_layer_choices(self):
+        """Used to refresh widget when a new layer is added or removed in napari so that it shows up in dropdown menu where you pick a layer to add the landmark to"""
         current = self.layer_combo.currentText()
         image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
         self.layer_combo.blockSignals(True)
@@ -71,37 +42,33 @@ class AddLandmark(QWidget):
         self.layer_combo.blockSignals(False)
 
     def add_landmark(self):
-        layer_name = self.layer_combo.currentText()
-        print(type(layer_name))
-        if layer_name not in self.viewer.layers:
-            print("No image layer selected")
-            return
-        image_layer = self.viewer.layers[layer_name]
-        print(type(image_layer))
+        layer_name = self.layer_combo.currentText() # text string containing name of currently selected layer
+        image_layer = self.viewer.layers[layer_name] # the currently selected layer as an object (e.g. the atlas or the recorded image)
 
-        landmark_name = self.name_input.text().strip()
+        landmark_name = self.name_input.text().strip() # get name of landmark
         if not landmark_name:
             print("Enter a landmark name first")
             return
 
+        # add the landmark
         points_layer = get_or_create_landmarks_layer(self.viewer, image_layer)
         points_layer.current_properties = {
             'landmark_name': np.array([landmark_name]),
             'from_disk': np.array([False]),
-            } # TODO: What does this do?
-        self.viewer.layers.selection.active = points_layer
+            } # stamps the landmark name the user entered onto the point
+        self.viewer.layers.selection.active = points_layer # makes the points layer the activated layer in napari
         points_layer.mode = 'add'
 
     def save(self):
-        layer_name = self.layer_combo.currentText()
-        image_layer = self.viewer.layers[layer_name]
+        """Write the landmarks to file"""
+        layer_name = self.layer_combo.currentText() # text string containing name of currently selected layer
+        image_layer = self.viewer.layers[layer_name]  # the currently selected layer (e.g. the atlas or the recorded image)
         if image_layer is None:
             return
 
-        points_name = f'{image_layer.name}_landmarks'
-
+        points_name = f'{image_layer.name}_landmarks' # base of file name
         if points_name not in self.viewer.layers:
-            print(f'No landmarks layer for {image_layer.name}. Add a landmark first.')
+            print(f'No landmarks layer for {image_layer.name} to save. Add a landmark first.')
             return
 
         # check with user if they want to overwrite or append
@@ -126,7 +93,8 @@ class AddLandmark(QWidget):
         box.setText(f'{json_path.name} already exists')
         box.setInformativeText(
             'Append keeps landmarks that are already in the file. \n' \
-            'Overwrite replaces the file with the landmarks currently in the viewer.'
+            'Overwrite keeps only the landmarks you added in this session;\n' \
+            'landmarks loaded from file are discarded.'
         )
         append_button = box.addButton('Append', QMessageBox.AcceptRole)
         overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
@@ -140,9 +108,33 @@ class AddLandmark(QWidget):
             return 'overwrite'
         return None
 
-    # def _selected_image_layer(self):
-    #     layer_name = self.layer_combo.currentText()
-    #     if layer_name not in self.viewer.layers:
-    #         print('No image layer selected')
-    #         return None
-    #     return self.viewer.layers[layer_name]
+
+## Crop Widget
+# class CropWidget(QWidget):
+#     def __init__(self, viewer):
+#         super().__init__()
+#         self.viewer = viewer
+#         self.setLayout(QVBoxLayout())
+
+#         self.layout().addWidget(QLabel('Z Range (e.g., 0:10):'))
+#         self.z_range_input = QLineEdit()
+#         self.layout().addWidget(self.z_range_input)
+
+#         self.layout().addWidget(QLabel('X Range (e.g., 0:100):'))
+#         self.x_range_input = QLineEdit()
+#         self.layout().addWidget(self.x_range_input)
+
+#         self.layout().addWidget(QLabel('Y Range (e.g., 0:100):'))
+#         self.y_range_input = QLineEdit()
+#         self.layout().addWidget(self.y_range_input)
+
+#         crop_button = QPushButton('Crop Image & Log-Norm')
+#         crop_button.clicked.connect(self.crop)
+#         self.layout().addWidget(crop_button)
+
+#     def crop(self):
+#         z_range = self.z_range_input.text()
+#         x_range = self.x_range_input.text()
+#         y_range = self.y_range_input.text()
+#         crop_image(self.viewer, z_range, x_range, y_range)
+#         apply_log_normalization(self.viewer)
