@@ -2,6 +2,9 @@ import napari
 import numpy as np
 from pathlib import Path
 import json
+from datetime import datetime, timezone
+from scipy.ndimage import affine_transform
+
 
 def load_landmarks(source_path):
     """Load landmarks that have already been written to file, if there are any"""
@@ -61,21 +64,21 @@ def match_landmarks(landmarks_a: dict, landmarks_b: dict):
     coords_b = np.array([landmarks_b[name] for name in names], dtype=float)
     return names, coords_a, coords_b
 
-def fit_similarity_transform(moving_mm: np.ndarray, fixed_mm: np.ndarray):
-    """Closed-form similarity fit: rotation + uniform scaling + translation.
+def fit_similarity_transform(moving: np.ndarray, fixed: np.ndarray):
+    """Applies Kabsch-Umeyama Algorithm to transform data to be aligned atlas: rotation + uniform scaling + translation.
     
-    Returns a 4x4 homogeneous matrix mapping moving_mm points onto fixed_mm points.
+    Returns a 4x4 homogeneous matrix mapping moving (landmarks on recorded data) points onto fixed (landmarks in atlas) points.
     """
 
-    if len(moving_mm) < 3:
-        raise ValueError(f"Need at least 3 matched landmark pairs, got {len(moving_mm)}.")
+    if len(moving) < 3:
+        raise ValueError(f"Need at least 3 matched landmark pairs, got {len(moving)}.")
 
-    moving_centroid = moving_mm.mean(axis=0)
-    fixed_centroid = fixed_mm.mean(axis=0)
-    moving_centered = moving_mm - moving_centroid
-    fixed_centered = fixed_mm - fixed_centroid
+    moving_centroid = moving.mean(axis=0)
+    fixed_centroid = fixed.mean(axis=0)
+    moving_centered = moving - moving_centroid
+    fixed_centered = fixed - fixed_centroid
 
-    covariance = (fixed_centered.T @ moving_centered) / len(moving_mm)
+    covariance = (fixed_centered.T @ moving_centered) / len(moving)
 
     U, S, Vt = np.linalg.svd(covariance)
     d = np.sign(np.linalg.det(U @ Vt)) or 1.0
@@ -91,10 +94,47 @@ def fit_similarity_transform(moving_mm: np.ndarray, fixed_mm: np.ndarray):
     transform_matrix[:3, 3] = translation
     return transform_matrix
 
-def transform_residuals_mm(matrix: np.ndarray, moving_mm: np.ndarray, fixed_mm: np.ndarray) -> np.ndarray:
-    moving_homog = np.hstack([moving_mm, np.ones((len(moving_mm), 1))])
-    transformed = (matrix @ moving_homog.T).T[:, :3]
-    return np.linalg.norm(transformed - fixed_mm, axis = 1)
+def transform_residuals(transform_matrix: np.ndarray, moving: np.ndarray, fixed: np.ndarray) -> np.ndarray:
+    """Computes difference between atlas and recorded data after transformation"""
+    moving_homog = np.hstack([moving, np.ones((len(moving), 1))])
+    transformed = (transform_matrix @ moving_homog.T).T[:, :3]
+    return np.linalg.norm(transformed - fixed, axis = 1)
+
+def save_registration(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size, atlas_voxel_size, landmark_names, residuals):
+    json_path = Path(f'{hq_source_path}.registration.json')
+    registration = {
+        'model': 'similarity',
+        'hq_source_path': str(hq_source_path),
+        'atlas_source_path': str(atlas_source_path),
+        'hq_voxel_size': [float(v) for v in hq_voxel_size],
+        'atlas_voxel_size': [float(v) for v in atlas_voxel_size],
+        'landmark_names': list(landmark_names),
+        'transform_matrix': np.asarray(transform_matrix).tolist(),
+        'residuals': dict(zip(landmark_names, np.asarray(residuals).tolist())),
+        'rms_error': float(np.sqrt(np.mean(np.square(residuals)))),
+        'created': datetime.now(timezone.utc).isoformat()
+    }
+    with open(json_path, 'w') as f:
+        json.dump(registration, f, indent=2)
+        return json_path
+
+def load_registration(json_path) -> dict:
+    "Load transformation matrix"
+    with open(json_path) as f:
+        registration = json.load(f)
+
+    registration['transform_matrix'] = np.array(registration['transform_matrix'])
+    
+    return registration
+
+
+
+# def apply_transform_matrix(volume: np.ndarray, source_voxel_size, transform_matrix, atlas_shape, atlas_voxel_size):
+#     """Transfom volume onto atlas voxel grid via transform_matrix"""
+
+    
+
+
 
 # # Function to crop image in spatial dimensions (no temporal)
 # def crop_image(viewer, z_range, x_range, y_range):
