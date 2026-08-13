@@ -86,18 +86,15 @@ def fit_similarity_transform(moving_mm: np.ndarray, fixed_mm: np.ndarray):
     scale = np.sum(S * np.diag(correction)) / moving_variance
     translation = fixed_centroid - scale * rotation @ moving_centroid
 
-    matrix = np.eye(4)
-    matrix[:3, :3] = scale * rotation
-    matrix[:3, 3] = translation
-    return matrix
+    transform_matrix = np.eye(4)
+    transform_matrix[:3, :3] = scale * rotation
+    transform_matrix[:3, 3] = translation
+    return transform_matrix
 
 def transform_residuals_mm(matrix: np.ndarray, moving_mm: np.ndarray, fixed_mm: np.ndarray) -> np.ndarray:
     moving_homog = np.hstack([moving_mm, np.ones((len(moving_mm), 1))])
     transformed = (matrix @ moving_homog.T).T[:, :3]
     return np.linalg.norm(transformed - fixed_mm, axis = 1)
-
-def get_registration_json_path(hq_source_path) -> Path:
-    return Path(f'{hq_source_path}.registration.json')
 
 # # Function to crop image in spatial dimensions (no temporal)
 # def crop_image(viewer, z_range, x_range, y_range):
