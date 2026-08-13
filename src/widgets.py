@@ -173,30 +173,19 @@ class RegistrationWidget(QWidget):
 
         print('moving_layer.scale[:3]:', moving_layer.scale[:3])
 
-        # TODO: why is this scaled?
-        moving_mm = moving_landmarks * np.array(moving_layer.scale[:3])
-        fixed_mm = fixed_landmarks * np.array(fixed_layer.scale[:3])
+        # TODO: why is this scaled? Here it doesn't matter, I think, because their scale is the same. It might mattter if their scale is different (though the scaling parameter in the transform should technically take care of this)
+        moving_mm = np.array(list(moving_landmarks.values())) * np.array(moving_layer.scale[:3])
+        fixed_mm = np.array(list(fixed_landmarks.values())) * np.array(fixed_layer.scale[:3])
 
-        matrix_mm = fit_similarity_transform(moving_mm, fixed_mm)
-        residuals_mm = transform_residuals_mm(matrix_mm, moving_mm, fixed_mm)
+        transform_matrix = fit_similarity_transform(moving_mm, fixed_mm)
+        residuals_mm = transform_residuals_mm(transform_matrix, moving_mm, fixed_mm)
 
-        moving_layer.affine = matrix_mm
+        moving_layer.affine = transform_matrix
         self._last_registration = {
             'moving_layer': moving_layer,
             'fixed_layer': fixed_layer,
-            'matrix_mm': matrix_mm,
+            'transform_matrix': transform_matrix,
         }
-
-
-
-
-
-
-
-    
-
-
-
 
 
 ## Crop Widget
