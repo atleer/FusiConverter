@@ -100,18 +100,17 @@ def transform_residuals(transform_matrix: np.ndarray, moving: np.ndarray, fixed:
     transformed = (transform_matrix @ moving_homog.T).T[:, :3]
     return np.linalg.norm(transformed - fixed, axis = 1)
 
-def save_registration(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size, atlas_voxel_size, landmark_names, residuals):
+def save_registration(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size_in_mm, atlas_voxel_size_in_mm, landmark_names, residuals_mm):
     json_path = Path(f'{hq_source_path}.registration.json')
     registration = {
-        'model': 'similarity',
         'hq_source_path': str(hq_source_path),
         'atlas_source_path': str(atlas_source_path),
-        'hq_voxel_size': [float(v) for v in hq_voxel_size],
-        'atlas_voxel_size': [float(v) for v in atlas_voxel_size],
-        'landmark_names': list(landmark_names),
         'transform_matrix': np.asarray(transform_matrix).tolist(),
-        'residuals': dict(zip(landmark_names, np.asarray(residuals).tolist())),
-        'rms_error': float(np.sqrt(np.mean(np.square(residuals)))),
+        'hq_voxel_size_in_mm': [float(v) for v in hq_voxel_size_in_mm],
+        'atlas_voxel_size_in_mm': [float(v) for v in atlas_voxel_size_in_mm],
+        'landmark_names': list(landmark_names),
+        'residuals_mm': dict(zip(landmark_names, np.asarray(residuals_mm).tolist())),
+        'rms_error': float(np.sqrt(np.mean(np.square(residuals_mm)))),
         'created': datetime.now(timezone.utc).isoformat()
     }
     with open(json_path, 'w') as f:
@@ -123,7 +122,7 @@ def load_registration(json_path) -> dict:
     with open(json_path) as f:
         registration = json.load(f)
 
-    #registration['transform_matrix'] = np.array(registration['transform_matrix'])
+    registration['transform_matrix'] = np.array(registration['transform_matrix'])
     
     return registration
 

@@ -1,7 +1,7 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
-from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine # apply_log_normalization, crop_image
+from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_registration # apply_log_normalization, crop_image
 from pathlib import Path
 
 class AddLandmark(QWidget):
@@ -132,9 +132,15 @@ class RegistrationWidget(QWidget):
         compute_button.clicked.connect(self.compute_registration)
         self.layout().addWidget(compute_button)
 
+        save_button = QPushButton('Save Registration')
+        save_button.clicked.connect(self.save)
+        self.layout().addWidget(save_button)
+
         self.status_label = QLabel('')
         self.status_label.setWordWrap(True)
         self.layout().addWidget(self.status_label)
+
+        self._last_registration = None
 
     def _refresh_layer_choices(self):
         """Used to refresh widget when a new layer is added or removed in napari so that it shows up in dropdown menu where you pick a layer to add the landmark to"""
@@ -163,11 +169,11 @@ class RegistrationWidget(QWidget):
         moving_landmarks = load_landmarks(source_path_moving)
         fixed_landmarks = load_landmarks(source_path_fixed)
 
-        names, moving_pts, fixed_pts = match_landmarks(moving_landmarks, fixed_landmarks)
+        landmark_names, moving_pts, fixed_pts = match_landmarks(moving_landmarks, fixed_landmarks)
         
-        if len(names) < 3:
+        if len(landmark_names) < 3:
             self.status_label.setText(
-                f"Need >=3 matching landmark names on both layers, found {len(names)}."
+                f"Need >=3 matching landmark names on both layers, found {len(landmark_names)}."
             )
             return
 
@@ -177,9 +183,6 @@ class RegistrationWidget(QWidget):
         moving = moving_pts * np.array(moving_layer.scale[:3])
         fixed  = fixed_pts  * np.array(fixed_layer.scale[:3])
 
-        #moving = np.array(list(moving_landmarks.values())) * np.array(moving_layer.scale[:3])
-        #fixed = np.array(list(fixed_landmarks.values())) * np.array(fixed_layer.scale[:3])
-
         transform_matrix = fit_similarity_transform(moving, fixed)
         residuals = transform_residuals(transform_matrix, moving, fixed)
 
@@ -187,9 +190,15 @@ class RegistrationWidget(QWidget):
 
         moving_layer.affine = transform_matrix
         self._last_registration = {
-            'moving_layer': moving_layer,
-            'fixed_layer': fixed_layer,
+            'hq_source_path': source_path_moving,
+            'atlas_source_path': fixed_layer,
             'transform_matrix': transform_matrix,
+            'hq_voxel_size_in_mm':moving_layer.scale[:3],
+            "atlas_voxel_size_in_mm":fixed_layer.scale[:3],
+            'landmark_names':landmark_names,
+            'residuals_mm': residuals,
+            #'moving_layer': moving_layer,
+            #'fixed_layer': fixed_layer,
         }
 
         points_name = f'{moving_layer_name}_landmarks'
@@ -197,6 +206,67 @@ class RegistrationWidget(QWidget):
             points_layer = self.viewer.layers[points_name]
             points_layer.affine = to_layer_affine(transform_matrix, points_layer.ndim)
 
+    def save(self):
+        """Write the landmarks to file"""
+        json_path = Path(f"{self._last_registration['hq_source_path']}.registration.json")
+        mode = 'overwrite'
+        # if json_path.exists() :
+        #     mode = self._ask_save_mode(json_path)
+        #     if mode is None:
+        #         return
+
+        save_registration(**self._last_registration)
+        print(f'Saved registration to {json_path} ({mode})')
+
+        """
+            
+            layer_name = self.layer_landmarks_added.currentText() # text string containing name of currently selected layer
+            image_layer = self.viewer.layers[layer_name]  # the currently selected layer (e.g. the atlas or the recorded image)
+            if image_layer is None:
+                return
+    
+            points_name = f'{image_layer.name}_landmarks' # base of file name
+            if points_name not in self.viewer.layers:
+                print(f'No landmarks layer for {image_layer.name} to save. Add a landmark first.')
+                return
+    
+            # check with user if they want to overwrite or append
+            points_layer = self.viewer.layers[points_name]
+            json_path = Path(f"{points_layer.metadata.get('source_path')}.landmarks.json")
+            mode = 'overwrite'
+            if json_path.exists():
+                mode = self._ask_save_mode(json_path)
+                if mode is None: # user cancelled
+                    return
+    
+            # write new landmarks to disk
+            save_landmarks(self.viewer.layers[points_name], mode=mode)
+            print(f'Saved landmarks to {json_path} ({mode})')
+    
+            
+        def _ask_save_mode(self, json_path):
+    
+            box = QMessageBox(self)
+            box.setWindowTitle('Save Landmarks')
+            box.setIcon(QMessageBox.Question)
+            box.setText(f'{json_path.name} already exists')
+            box.setInformativeText(
+                'Append keeps landmarks that are already in the file. \n' \
+                'Overwrite keeps only the landmarks you added in this session;\n' \
+                'landmarks loaded from file are discarded.'
+            )
+            append_button = box.addButton('Append', QMessageBox.AcceptRole)
+            overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
+            box.addButton('Cancel', QMessageBox.RejectRole)
+            box.exec_()
+    
+            clicked = box.clickedButton()
+            if clicked is append_button:
+                return 'append'
+            if clicked is overwrite_button:
+                return 'overwrite'
+            return None
+        """
 
 
 
