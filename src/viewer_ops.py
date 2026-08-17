@@ -123,11 +123,22 @@ def load_registration(json_path) -> dict:
     with open(json_path) as f:
         registration = json.load(f)
 
-    registration['transform_matrix'] = np.array(registration['transform_matrix'])
+    #registration['transform_matrix'] = np.array(registration['transform_matrix'])
     
     return registration
 
+def to_layer_affine(transform_matrix, ndim):
+    """Embed the 3D 4x4 similarity matrix in an (ndim+1, ndim+1) matrix for a napari layer.
 
+    Spatial axes are the leading three (Z, X, Y); trailing axes (e.g. time) are left
+    untouched, so the transform is never applied across time.
+    """
+    if ndim == 3:
+        return transform_matrix
+    affine = np.eye(ndim + 1)
+    affine[:3, :3] = transform_matrix[:3, :3]
+    affine[:3, ndim] = transform_matrix[:3, 3]   # translation goes in the last column
+    return affine
 
 # def apply_transform_matrix(volume: np.ndarray, source_voxel_size, transform_matrix, atlas_shape, atlas_voxel_size):
 #     """Transfom volume onto atlas voxel grid via transform_matrix"""

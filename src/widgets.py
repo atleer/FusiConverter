@@ -1,7 +1,7 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
-from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals_mm # apply_log_normalization, crop_image
+from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine # apply_log_normalization, crop_image
 from pathlib import Path
 
 class AddLandmark(QWidget):
@@ -171,14 +171,19 @@ class RegistrationWidget(QWidget):
             )
             return
 
-        print('moving_layer.scale[:3]:', moving_layer.scale[:3])
+        print('fixed_layer.scale[:3]:', fixed_layer.scale[:3])
 
-        # TODO: why is this scaled? Here it doesn't matter, I think, because their scale is the same. It might mattter if their scale is different (though the scaling parameter in the transform should technically take care of this)
-        moving_mm = np.array(list(moving_landmarks.values())) * np.array(moving_layer.scale[:3])
-        fixed_mm = np.array(list(fixed_landmarks.values())) * np.array(fixed_layer.scale[:3])
+        # ensure that volume (moving) to be aligned and atlas (fixed) are on the same scale
+        moving = moving_pts * np.array(moving_layer.scale[:3])
+        fixed  = fixed_pts  * np.array(fixed_layer.scale[:3])
 
-        transform_matrix = fit_similarity_transform(moving_mm, fixed_mm)
-        residuals_mm = transform_residuals_mm(transform_matrix, moving_mm, fixed_mm)
+        #moving = np.array(list(moving_landmarks.values())) * np.array(moving_layer.scale[:3])
+        #fixed = np.array(list(fixed_landmarks.values())) * np.array(fixed_layer.scale[:3])
+
+        transform_matrix = fit_similarity_transform(moving, fixed)
+        residuals = transform_residuals(transform_matrix, moving, fixed)
+
+        print("Transform matrix computed")
 
         moving_layer.affine = transform_matrix
         self._last_registration = {
@@ -186,6 +191,13 @@ class RegistrationWidget(QWidget):
             'fixed_layer': fixed_layer,
             'transform_matrix': transform_matrix,
         }
+
+        points_name = f'{moving_layer_name}_landmarks'
+        if points_name in self.viewer.layers:
+            points_layer = self.viewer.layers[points_name]
+            points_layer.affine = to_layer_affine(transform_matrix, points_layer.ndim)
+
+
 
 
 ## Crop Widget

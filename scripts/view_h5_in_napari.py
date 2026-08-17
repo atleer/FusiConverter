@@ -51,7 +51,18 @@ for name, (image, scale) in images.items():
     elif image.ndim > len(scale): # only needed if the image has more dimensions than the scale (e.g. a time dimension).
         # Non-spatial trailing axes (e.g. time) get a scale of 1.
         scale = tuple(scale) + (1,) * (image.ndim - len(scale))
-    viewer.add_image(name=name, data=image, scale=scale, metadata={'source_path': image_sources[name]})
+    layer = viewer.add_image(name=name, data=image, scale=scale, metadata={'source_path': image_sources[name]})
+
+    registration_path = Path(f"{image_sources[name]}.registration.json")
+    if registration_path.exists():
+        registration = load_registration(registration_path)
+        layer.affine = to_layer_affine(registration['transform_matrix'], layer.ndim)
+        print(f"Applied saved registration to '{name}' "
+              f"(RMS {registration['rms_error']:.3f} mm)")
+
+        points_layer = get_or_create_landmarks_layer(viewer, layer)   # loads the saved .landmarks.json
+        points_layer.affine = to_layer_affine(registration['transform_matrix'], points_layer.ndim)
+
 
 # crop_widget = CropWidget(viewer)
 # viewer.window.add_dock_widget(crop_widget, area='right')
