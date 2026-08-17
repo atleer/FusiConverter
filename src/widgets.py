@@ -209,66 +209,36 @@ class RegistrationWidget(QWidget):
     def save(self):
         """Write the landmarks to file"""
         json_path = Path(f"{self._last_registration['hq_source_path']}.registration.json")
-        mode = 'overwrite'
-        # if json_path.exists() :
-        #     mode = self._ask_save_mode(json_path)
-        #     if mode is None:
-        #         return
+        if not json_path.exists() :
+            save_registration(**self._last_registration)
+            print(f'Saved registration to {json_path}')
+            return
+        
+        # registration file already exists, check with user if they want to overwrite
+        mode = self._ask_save_mode(json_path)
+        if mode is None:  
+            # user cancelled
+            return
 
-        save_registration(**self._last_registration)
-        print(f'Saved registration to {json_path} ({mode})')
+        if mode == 'overwrite':
+            save_registration(**self._last_registration)
+            print(f'Saved registration to {json_path}')
 
-        """
             
-            layer_name = self.layer_landmarks_added.currentText() # text string containing name of currently selected layer
-            image_layer = self.viewer.layers[layer_name]  # the currently selected layer (e.g. the atlas or the recorded image)
-            if image_layer is None:
-                return
-    
-            points_name = f'{image_layer.name}_landmarks' # base of file name
-            if points_name not in self.viewer.layers:
-                print(f'No landmarks layer for {image_layer.name} to save. Add a landmark first.')
-                return
-    
-            # check with user if they want to overwrite or append
-            points_layer = self.viewer.layers[points_name]
-            json_path = Path(f"{points_layer.metadata.get('source_path')}.landmarks.json")
-            mode = 'overwrite'
-            if json_path.exists():
-                mode = self._ask_save_mode(json_path)
-                if mode is None: # user cancelled
-                    return
-    
-            # write new landmarks to disk
-            save_landmarks(self.viewer.layers[points_name], mode=mode)
-            print(f'Saved landmarks to {json_path} ({mode})')
-    
-            
-        def _ask_save_mode(self, json_path):
-    
-            box = QMessageBox(self)
-            box.setWindowTitle('Save Landmarks')
-            box.setIcon(QMessageBox.Question)
-            box.setText(f'{json_path.name} already exists')
-            box.setInformativeText(
-                'Append keeps landmarks that are already in the file. \n' \
-                'Overwrite keeps only the landmarks you added in this session;\n' \
-                'landmarks loaded from file are discarded.'
-            )
-            append_button = box.addButton('Append', QMessageBox.AcceptRole)
-            overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
-            box.addButton('Cancel', QMessageBox.RejectRole)
-            box.exec_()
-    
-            clicked = box.clickedButton()
-            if clicked is append_button:
-                return 'append'
-            if clicked is overwrite_button:
-                return 'overwrite'
-            return None
-        """
+    def _ask_save_mode(self, json_path):
+        """If registration file already exists, ask whether to overwrite it"""
+        box = QMessageBox(self)
+        box.setWindowTitle('Save Registration')
+        box.setIcon(QMessageBox.Question)
+        box.setText(f'A registration file already exists for this session: {json_path.name}. Do you want to overwrite it with the new registration?')
+        overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
+        box.addButton('Cancel', QMessageBox.RejectRole)
+        box.exec_()
 
-
+        clicked = box.clickedButton()
+        if clicked is overwrite_button:
+            return 'overwrite'
+        return None
 
 ## Crop Widget
 # class CropWidget(QWidget):
