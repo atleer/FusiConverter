@@ -100,9 +100,10 @@ def transform_residuals(transform_matrix: np.ndarray, moving: np.ndarray, fixed:
     transformed = (transform_matrix @ moving_homog.T).T[:, :3]
     return np.linalg.norm(transformed - fixed, axis = 1)
 
-def save_registration(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size_in_mm, atlas_voxel_size_in_mm, landmark_names, residuals_mm):
-    json_path = Path(f'{hq_source_path}.registration.json')
-    registration = {
+def save_alignment_matrix(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size_in_mm, atlas_voxel_size_in_mm, landmark_names, residuals_mm):
+    """Load transformation matrix"""
+    json_path = Path(f'{hq_source_path}.alignment.json')
+    alignment = {
         'hq_source_path': str(hq_source_path),
         'atlas_source_path': str(atlas_source_path),
         'transform_matrix': np.asarray(transform_matrix).tolist(),
@@ -114,17 +115,17 @@ def save_registration(hq_source_path, atlas_source_path, transform_matrix, hq_vo
         'created': datetime.now(timezone.utc).isoformat()
     }
     with open(json_path, 'w') as f:
-        json.dump(registration, f, indent=2)
+        json.dump(alignment, f, indent=2)
         return json_path
 
-def load_registration(json_path) -> dict:
+def load_alignment_matrix(json_path) -> dict:
     "Load transformation matrix"
     with open(json_path) as f:
-        registration = json.load(f)
+        alignment = json.load(f)
 
-    registration['transform_matrix'] = np.array(registration['transform_matrix'])
+    alignment['transform_matrix'] = np.array(alignment['transform_matrix'])
     
-    return registration
+    return alignment
 
 def to_layer_affine(transform_matrix, ndim):
     """Embed the 3D 4x4 similarity matrix in an (ndim+1, ndim+1) matrix for a napari layer.

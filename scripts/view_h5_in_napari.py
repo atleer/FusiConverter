@@ -15,7 +15,7 @@ sys.path.insert(0, str(root_dir))
 
 from src.utils import *
 from src.viewer_ops import *
-from src.widgets import AddLandmark, RegistrationWidget#, CropWidget
+from src.widgets import AddLandmark, AlignmentWidget#, CropWidget
 
 
 h5_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI H5 Files to View")
@@ -53,15 +53,16 @@ for name, (image, scale) in images.items():
         scale = tuple(scale) + (1,) * (image.ndim - len(scale))
     layer = viewer.add_image(name=name, data=image, scale=scale, metadata={'source_path': image_sources[name]})
 
-    registration_path = Path(f"{image_sources[name]}.registration.json")
-    if registration_path.exists():
-        registration = load_registration(registration_path)
-        layer.affine = to_layer_affine(registration['transform_matrix'], layer.ndim)
-        print(f"Applied saved registration to '{name}' "
-              f"(RMS {registration['rms_error']:.3f} mm)")
+    # apply existing transformation matrix from file to layer
+    alignment_path = Path(f"{image_sources[name]}.alignment.json")
+    if alignment_path.exists():
+        alignment = load_alignment_matrix(alignment_path)
+        layer.affine = to_layer_affine(alignment['transform_matrix'], layer.ndim)
+        print(f"Applied saved transformation matrix for alignment to '{name}' "
+              f"(RMS {alignment['rms_error']:.3f} mm)")
 
         points_layer = get_or_create_landmarks_layer(viewer, layer)   # loads the saved .landmarks.json
-        points_layer.affine = to_layer_affine(registration['transform_matrix'], points_layer.ndim)
+        points_layer.affine = to_layer_affine(alignment['transform_matrix'], points_layer.ndim)
 
 
 # crop_widget = CropWidget(viewer)
@@ -70,7 +71,7 @@ for name, (image, scale) in images.items():
 add_landmark_widget = AddLandmark(viewer)
 viewer.window.add_dock_widget(add_landmark_widget, area='right')
 
-registration_widget = RegistrationWidget(viewer)
-viewer.window.add_dock_widget(registration_widget)
+alignment_widget = AlignmentWidget(viewer)
+viewer.window.add_dock_widget(alignment_widget)
 
 napari.run()

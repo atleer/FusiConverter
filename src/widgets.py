@@ -1,7 +1,7 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
-from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_registration # apply_log_normalization, crop_image
+from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix # apply_log_normalization, crop_image
 from pathlib import Path
 
 class AddLandmark(QWidget):
@@ -125,7 +125,7 @@ class AddLandmark(QWidget):
             return 'overwrite'
         return None
 
-class RegistrationWidget(QWidget):
+class AlignmentWidget(QWidget):
     def __init__(self, viewer):
         super().__init__()
         self.viewer = viewer
@@ -143,11 +143,11 @@ class RegistrationWidget(QWidget):
         self.viewer.layers.events.inserted.connect(self._refresh_layer_choices)
         self.viewer.layers.events.removed.connect(self._refresh_layer_choices)
 
-        compute_button = QPushButton('Compute Registration')
-        compute_button.clicked.connect(self.compute_registration)
-        self.layout().addWidget(compute_button)
+        align_button = QPushButton('Align to Atlas')
+        align_button.clicked.connect(self.align)
+        self.layout().addWidget(align_button)
 
-        save_button = QPushButton('Save Registration')
+        save_button = QPushButton('Save Alignment Matrix')
         save_button.clicked.connect(self.save)
         self.layout().addWidget(save_button)
 
@@ -155,7 +155,7 @@ class RegistrationWidget(QWidget):
         self.status_label.setWordWrap(True)
         self.layout().addWidget(self.status_label)
 
-        self._last_registration = None
+        self._last_alignment = None
 
     def _refresh_layer_choices(self):
         """Used to refresh widget when a new layer is added or removed in napari so that it shows up in dropdown menu where you pick a layer to add the landmark to"""
@@ -169,7 +169,7 @@ class RegistrationWidget(QWidget):
                 hq_and_atlas.setCurrentText(current)
             hq_and_atlas.blockSignals(False)
 
-    def compute_registration(self):
+    def align(self):
         moving_layer_name = self.moving_layer.currentText()
         fixed_layer_name = self.fixed_layer.currentText()
         if not moving_layer_name or not fixed_layer_name or moving_layer_name == fixed_layer_name:
@@ -217,7 +217,7 @@ class RegistrationWidget(QWidget):
         print("Transform matrix computed")
 
         moving_layer.affine = transform_matrix
-        self._last_registration = {
+        self._last_alignment = {
             'hq_source_path': source_path_moving,
             'atlas_source_path': fixed_layer,
             'transform_matrix': transform_matrix,
@@ -236,29 +236,29 @@ class RegistrationWidget(QWidget):
 
     def save(self):
         """Write the landmarks to file"""
-        json_path = Path(f"{self._last_registration['hq_source_path']}.registration.json")
+        json_path = Path(f"{self._last_alignment['hq_source_path']}.alignment.json")
         if not json_path.exists() :
-            save_registration(**self._last_registration)
-            print(f'Saved registration to {json_path}')
+            save_alignment_matrix(**self._last_alignment)
+            print(f'Saved transformation matrix for alignment to {json_path}')
             return
         
-        # registration file already exists, check with user if they want to overwrite
+        # file with transformation matrix for alignment already exists, check with user if they want to overwrite
         mode = self._ask_save_mode(json_path)
         if mode is None:  
             # user cancelled
             return
 
         if mode == 'overwrite':
-            save_registration(**self._last_registration)
-            print(f'Saved registration to {json_path}')
+            save_alignment_matrix(**self._last_alignment)
+            print(f'Saved transformation matrix for alignment to {json_path}')
 
             
     def _ask_save_mode(self, json_path):
-        """If registration file already exists, ask whether to overwrite it"""
+        """If file with transformation matrix for alignment already exists, ask whether to overwrite it"""
         box = QMessageBox(self)
-        box.setWindowTitle('Save Registration')
+        box.setWindowTitle('Save Transformation Matrix for Alignment')
         box.setIcon(QMessageBox.Question)
-        box.setText(f'A registration file already exists for this session: {json_path.name}. Do you want to overwrite it with the new registration?')
+        box.setText(f'A file with a transformation matrix for alignment already exists for this session: {json_path.name}. Do you want to overwrite it?')
         overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
         box.addButton('Cancel', QMessageBox.RejectRole)
         box.exec_()
