@@ -25,6 +25,10 @@ class AddLandmark(QWidget):
         add_button.clicked.connect(self.add_landmark)
         self.layout().addWidget(add_button)
 
+        load_button = QPushButton('Load Existing Landmarks')
+        load_button.clicked.connect(self.load)
+        self.layout().addWidget(load_button)
+
         save_button = QPushButton('Save Landmarks')
         save_button.clicked.connect(self.save)
         self.layout().addWidget(save_button)
@@ -85,6 +89,17 @@ class AddLandmark(QWidget):
         # write new landmarks to disk
         save_landmarks(self.viewer.layers[points_name], mode=mode)
         print(f'Saved landmarks to {json_path} ({mode})')
+
+    def load(self):
+        """Load existing landmarks"""
+
+
+        layer_name = self.layer_landmarks_added.currentText() # text string containing name of currently selected layer
+        image_layer = self.viewer.layers[layer_name] # the currently selected layer as an object (e.g. the atlas or the recorded image)
+
+        # add the landmark
+        points_layer = get_or_create_landmarks_layer(self.viewer, image_layer)
+
 
     def _ask_save_mode(self, json_path):
         """Ask whether to append new landmarks to existing landmarks file or overwrite it"""
@@ -176,9 +191,7 @@ class RegistrationWidget(QWidget):
                 f"Need >=3 matching landmark names on both layers, found {len(landmark_names)}."
             )
             return
-
-        print('fixed_layer.scale[:3]:', fixed_layer.scale[:3])
-
+        
         # ensure that volume (moving) to be aligned and atlas (fixed) are on the same scale
         moving = moving_pts * np.array(moving_layer.scale[:3])
         fixed  = fixed_pts  * np.array(fixed_layer.scale[:3])
