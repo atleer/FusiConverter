@@ -1,7 +1,13 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
-from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix # apply_log_normalization, crop_image
+from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix, load_alignment_matrix # apply_log_normalization, crop_image
+from src.utils import (
+    select_files_from_gui,
+    select_save_dir_from_gui,
+    load_atlas_image,
+)
+import sys
 from pathlib import Path
 
 class AddLandmark(QWidget):
@@ -92,7 +98,6 @@ class AddLandmark(QWidget):
 
     def load(self):
         """Load existing landmarks"""
-
 
         layer_name = self.layer_landmarks_added.currentText() # text string containing name of currently selected layer
         image_layer = self.viewer.layers[layer_name] # the currently selected layer as an object (e.g. the atlas or the recorded image)
@@ -197,8 +202,6 @@ class AlignmentWidget(QWidget):
             # if no active points layers containing landmarks
             fixed_landmarks = load_landmarks(source_path_fixed)
 
-
-
         landmark_names, moving_pts, fixed_pts = match_landmarks(moving_landmarks, fixed_landmarks)
         
         if len(landmark_names) < 3:
@@ -267,6 +270,38 @@ class AlignmentWidget(QWidget):
         if clicked is overwrite_button:
             return 'overwrite'
         return None
+
+# apply transform to new data widget
+class AlignToAtlasWidget(QWidget):
+    def __init__(self, viewer):
+        super().__init__()
+        self.viewer = viewer
+        self.setLayout(QVBoxLayout)
+
+        self.layout().addWidget(QLabel('Align New Image'))
+        align_button = QPushButton('Align New Image to Atlas')
+        align_button.clicked.connect(self.align)
+        self.layout().addWidget(align_button)
+
+    def align(self):
+        registration_paths = select_files_from_gui(
+            "Select an .alignement.json File",
+            defaultextension='.json',
+        )
+        if not registration_paths:
+            print("No alignment file selected. Quitting...")
+            sys.exit()
+        registration = load_alignment_matrix(registration_paths[0])
+
+        mat_filepaths = select_files_from_gui("Select Non-HQ .MAT Files to Align (e.g. T_*.mat)")
+        if not mat_filepaths:
+            print("No files selected. Quitting...")
+            sys.exit()
+
+
+
+
+
 
 
 
