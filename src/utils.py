@@ -7,6 +7,7 @@ import nibabel as nib
 def select_files_from_gui(title=None, defaultextension='.mat') -> tuple[str, ...]:
     root = tk.Tk()
     root.withdraw()  # Hide the main window
+    root.attributes('-topmost', True)   # force child dialogs to the front
     file_path = filedialog.askopenfilenames(title=title, defaultextension=defaultextension)  # Open file dialog
     if not file_path:
         return ()
@@ -16,6 +17,7 @@ def select_files_from_gui(title=None, defaultextension='.mat') -> tuple[str, ...
 def select_save_dir_from_gui(title="Save Directory") -> str | None:
     root = tk.Tk()
     root.withdraw()  # Hide the main window
+    root.attributes('-topmost', True)   # force child dialogs to the front
     file_path = filedialog.askdirectory(title=title)  # Open folder dialog
     if not file_path:
         return None
@@ -24,6 +26,7 @@ def select_save_dir_from_gui(title="Save Directory") -> str | None:
 def prompt_load_atlas() -> str | None:
     root = tk.Tk()
     root.withdraw()  # Hide the main window
+    root.attributes('-topmost', True)   # force child dialogs to the front
     load = messagebox.askyesno(
         "Load Atlas",
         "Would you like to load the Allen CCF atlas as an additional layer on top of the recorded image?\n\n"
