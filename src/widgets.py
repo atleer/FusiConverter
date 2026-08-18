@@ -181,8 +181,23 @@ class RegistrationWidget(QWidget):
         source_path_moving = moving_layer.metadata.get('source_path')
         source_path_fixed = fixed_layer.metadata.get('source_path')
 
-        moving_landmarks = load_landmarks(source_path_moving)
-        fixed_landmarks = load_landmarks(source_path_fixed)
+        moving_points_name = f'{moving_layer_name}_landmarks'
+        if moving_points_name in self.viewer.layers:
+            moving_points_layer = self.viewer.layers[moving_points_name]
+            moving_landmarks = dict(zip(moving_points_layer.properties['landmark_name'], moving_points_layer.data))
+        else:
+            # if no active points layers containing landmarks
+            moving_landmarks = load_landmarks(source_path_moving)
+
+        fixed_points_name = f'{fixed_layer_name}_landmarks'
+        if fixed_points_name in self.viewer.layers:
+            fixed_points_layer = self.viewer.layers[fixed_points_name]
+            fixed_landmarks = dict(zip(fixed_points_layer.properties['landmark_name'], fixed_points_layer.data))
+        else:
+            # if no active points layers containing landmarks
+            fixed_landmarks = load_landmarks(source_path_fixed)
+
+
 
         landmark_names, moving_pts, fixed_pts = match_landmarks(moving_landmarks, fixed_landmarks)
         
@@ -252,6 +267,8 @@ class RegistrationWidget(QWidget):
         if clicked is overwrite_button:
             return 'overwrite'
         return None
+
+
 
 ## Crop Widget
 # class CropWidget(QWidget):
