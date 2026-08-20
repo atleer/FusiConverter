@@ -15,7 +15,7 @@ sys.path.insert(0, str(root_dir))
 
 from src.utils import *
 from src.viewer_ops import *
-from src.widgets import AddLandmark, AlignmentWidget#, CropWidget
+from src.widgets import AddLandmark, AlignmentWidget, AlignToAtlasWidget#, CropWidget
 
 
 h5_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI H5 Files to View")
@@ -73,5 +73,8 @@ viewer.window.add_dock_widget(add_landmark_widget, area='right')
 
 alignment_widget = AlignmentWidget(viewer)
 viewer.window.add_dock_widget(alignment_widget)
+
+align_to_atlas_widget = AlignToAtlasWidget(viewer)
+viewer.window.add_dock_widget(align_to_atlas_widget, area='right')
 
 napari.run()

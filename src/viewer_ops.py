@@ -127,17 +127,18 @@ def load_alignment_matrix(json_path) -> dict:
     
     return alignment
 
-def to_layer_affine(transform_matrix, ndim):
+def to_layer_affine(transform_matrix, ndim, spatial_axes=(0,1,2)):
     """Embed the 3D 4x4 similarity matrix in an (ndim+1, ndim+1) matrix for a napari layer.
 
-    Spatial axes are the leading three (Z, X, Y); trailing axes (e.g. time) are left
+    'spatial_axes' say which layer axes are (Z, X, Y); other (usually trailing) axes (e.g. time) are left
     untouched, so the transform is never applied across time.
     """
-    if ndim == 3:
+    axes = list(spatial_axes)
+    if ndim == 3 and axes == [0,1,2]:
         return transform_matrix
     affine = np.eye(ndim + 1)
-    affine[:3, :3] = transform_matrix[:3, :3]
-    affine[:3, ndim] = transform_matrix[:3, 3]   # translation goes in the last column
+    affine[np.ix_(axes,axes)] = transform_matrix[:3, :3] # TODO: what does np.ix do exactly?
+    affine[axes, ndim] = transform_matrix[:3, 3]   # translation goes in the last column
     return affine
 
 # def apply_transform_matrix(volume: np.ndarray, source_voxel_size, transform_matrix, atlas_shape, atlas_voxel_size):
