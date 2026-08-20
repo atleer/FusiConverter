@@ -6,6 +6,7 @@ from src.utils import (
     select_files_from_gui,
     select_save_dir_from_gui,
     load_atlas_image,
+    load_image,
 )
 import sys
 from pathlib import Path
@@ -222,7 +223,7 @@ class AlignmentWidget(QWidget):
         moving_layer.affine = transform_matrix
         self._last_alignment = {
             'hq_source_path': source_path_moving,
-            'atlas_source_path': fixed_layer,
+            'atlas_source_path': source_path_fixed,
             'transform_matrix': transform_matrix,
             'hq_voxel_size_in_mm':moving_layer.scale[:3],
             "atlas_voxel_size_in_mm":fixed_layer.scale[:3],
@@ -239,6 +240,10 @@ class AlignmentWidget(QWidget):
 
     def save(self):
         """Write the landmarks to file"""
+        if self._last_alignment is None:
+            self.status_label.setText("Run 'Align to Atlas' before saving.")
+            return
+
         json_path = Path(f"{self._last_alignment['hq_source_path']}.alignment.json")
         if not json_path.exists() :
             save_alignment_matrix(**self._last_alignment)
@@ -273,37 +278,94 @@ class AlignmentWidget(QWidget):
 
 # apply transform to new data widget
 class AlignToAtlasWidget(QWidget):
+    """Align a new acquisition (e.g. ...T_0.mat) to atlas using transformation matrix fitted to session's HQ volume"""
+
     def __init__(self, viewer):
         super().__init__()
         self.viewer = viewer
-        self.setLayout(QVBoxLayout)
+        self.setLayout(QVBoxLayout())
 
         self.layout().addWidget(QLabel('Align New Image'))
         align_button = QPushButton('Align New Image to Atlas')
         align_button.clicked.connect(self.align)
         self.layout().addWidget(align_button)
 
+        # TODO: what are the next three lines for exactly?
+        self.status_label = QLabel('')
+        self.status_label.setWordWrap(True)
+        self.layout().addWidget(self.status_label)
+
     def align(self):
-        registration_paths = select_files_from_gui(
-            "Select an .alignement.json File",
+        image_paths = select_files_from_gui("Select Non-HQ .MAT Files to Align (e.g. T_*.mat)", defaultextension='.mat')
+
+        alignment_paths = select_files_from_gui(
+            "Select an .alignment.json File",
             defaultextension='.json',
         )
-        if not registration_paths:
+        if not alignment_paths:
             print("No alignment file selected. Quitting...")
-            sys.exit()
-        registration = load_alignment_matrix(registration_paths[0])
+        alignment = load_alignment_matrix(alignment_paths[0])
 
-        mat_filepaths = select_files_from_gui("Select Non-HQ .MAT Files to Align (e.g. T_*.mat)")
-        if not mat_filepaths:
+        if not image_paths:
             print("No files selected. Quitting...")
             sys.exit()
 
+        for image_path in image_paths:
+            image_path = Path(image_path)
 
+            image, voxel_size, origin = load_image(image_path)
 
+            if voxel_size is None:
+                self._report(f"No voxel size in {image_path.name}, cannot align it automatically to atlas.")
 
+            # napari lines layers up by their trailing (last) axes, so time needs to go first for the spatial axes to be aligned with the atlas axes
+            if image.ndim == len(voxel_size) + 1:
+                image = np.moveaxis(image, -1, 0)
+                scale = (1.0,) + tuple(voxel_size)
+                spatial_axes = tuple(range(1, image.ndim))
+            elif image.ndim == len(voxel_size):
+                scale = tuple(voxel_size)
+                spatial_axes = (0, 1, 2)
+            else:
+                print(f"{image_path.name}: image has {image.ndim} dimensions but voxel size has "
+                f"{len(voxel_size)}; don't know which axes are spatial.")
 
+            layer = self.viewer.add_image(
+                data=image,
+                name=image_path.stem,
+                scale=scale,
+                metadata={'source_path': str(image_path)}
+            )
+            layer.affine = to_layer_affine(alignment['transform_matrix'], ndim=image.ndim, spatial_axes=spatial_axes)
 
+    def _find_alignment_file(self, image_path: Path):
+        """Find the *.alignment.json sitting next to the selected file. One match is used
+        as is; zero or several means the user picks."""
+        candidates = sorted(image_path.parent.glob('*.alignment.json'))
+        if len(candidates) == 1:
+            return candidates[0]
 
+        if not candidates:
+            self._report(f"No .alignment.json found next to {image_path.name}. Select one.")
+        else:
+            self._report(
+                f"{len(candidates)} .alignment.json files next to {image_path.name}. Select one."
+            )
+
+        selected = select_files_from_gui(
+            f"Select the .alignment.json File to Use for {image_path.name}",
+            defaultextension='.json',
+        )
+        if not selected:
+            self._report(f"No alignment file selected; skipped {image_path.name}.")
+            return None
+        return selected[0]
+
+    def _report(self, message: str):
+        self.status_label.setText(message)
+        print(message)
+
+    
 
 ## Crop Widget
 # class CropWidget(QWidget):
