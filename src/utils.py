@@ -90,8 +90,8 @@ def load_mat_image(mat_path):
         metadata['origin'] = metadata.pop('origen')
 
     voxel_size = tuple(float(v) for v in metadata['voxelSize']) if 'voxelSize' in metadata else None
-    origin = tuple(float(v) for v in metadata['origin']) if 'origin' in metadata else None
-    return np.asarray(data[image_name]), voxel_size, origin
+    origin = tuple(float(v) for v in metadata['origin']) if 'origin' in metadata else None # TODO: Can I just drop origin? What is it needed for?
+    return np.asarray(data[image_name]), voxel_size, origin, image_name
 
 
     

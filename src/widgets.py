@@ -313,7 +313,7 @@ class AlignToAtlasWidget(QWidget):
         for image_path in image_paths:
             image_path = Path(image_path)
 
-            image, voxel_size, origin = load_image(image_path)
+            image, voxel_size, origin, image_name = load_image(image_path)
 
             if voxel_size is None:
                 self._report(f"No voxel size in {image_path.name}, cannot align it automatically to atlas.")

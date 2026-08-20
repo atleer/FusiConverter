@@ -1,3 +1,4 @@
+# %%
 import sys
 from pathlib import Path
 
@@ -18,21 +19,36 @@ from src.viewer_ops import *
 from src.widgets import AddLandmark, AlignmentWidget, AlignToAtlasWidget#, CropWidget
 
 
-h5_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI H5 Files to View")
-if not h5_filepaths:
-    print("No Files Selected.  Quitting...")
-    sys.exit()
+# h5_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI H5 Files to View")
+# if not h5_filepaths:
+#     print("No Files Selected.  Quitting...")
+#     sys.exit()
 
 # Load images
+# images = {}
+# image_sources = {}
+# for h5_filepath in tqdm(h5_filepaths, desc='Loading Images...'):
+#     with h5py.File(h5_filepath) as data:
+#         filename = Path(h5_filepath).stem
+#         image_type = data.attrs['imageType']
+#         layer_name = f'{image_type}_{filename}'
+#         images[layer_name] = (np.abs(data['image']), get_voxel_size_mm(data))
+#         image_sources[layer_name] = h5_filepath
+
+# %%
+
+mat_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI .mat Files to View")
+
 images = {}
 image_sources = {}
-for h5_filepath in tqdm(h5_filepaths, desc='Loading Images...'):
-    with h5py.File(h5_filepath) as data:
-        filename = Path(h5_filepath).stem
-        image_type = data.attrs['imageType']
-        layer_name = f'{image_type}_{filename}'
-        images[layer_name] = (np.abs(data['image']), get_voxel_size_mm(data))
-        image_sources[layer_name] = h5_filepath
+for mat_filepath in tqdm(mat_filepaths, desc='Loading Images...'):
+    filename = Path(mat_filepath).stem
+    image, voxel_size, origin, image_name = load_mat_image(mat_filepath)
+    layer_name = f'{image_name}_{filename}'
+    images[layer_name] = (np.abs(image), voxel_size)
+    image_sources[layer_name] = mat_filepath
+
+
 
 # Optionally load the Allen CCF atlas as an additional layer
 atlas_path = prompt_load_atlas()
@@ -78,3 +94,5 @@ align_to_atlas_widget = AlignToAtlasWidget(viewer)
 viewer.window.add_dock_widget(align_to_atlas_widget, area='right')
 
 napari.run()
+
+# %%
