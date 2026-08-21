@@ -12,7 +12,7 @@ root_dir = Path(__file__).parent.parent
 os.chdir(root_dir)
 sys.path.insert(0, str(root_dir))
 
-from src.utils import select_files_from_gui, select_save_dir_from_gui
+from src.fusiconverter.utils import select_files_from_gui, select_save_dir_from_gui
 # %%
 
 def main_pipeline(filepath_in, filepath_out):

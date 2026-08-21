@@ -1,8 +1,8 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
-from src.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix, load_alignment_matrix # apply_log_normalization, crop_image
-from src.utils import (
+from src.fusiconverter.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix, load_alignment_matrix # apply_log_normalization, crop_image
+from src.fusiconverter.utils import (
     select_files_from_gui,
     select_save_dir_from_gui,
     load_atlas_image,
@@ -303,7 +303,10 @@ class AlignToAtlasWidget(QWidget):
             defaultextension='.json',
         )
         if not alignment_paths:
+            self._report(f"No alignment file selected. Alignment skipped.")
             print("No alignment file selected. Quitting...")
+            return
+        
         alignment = load_alignment_matrix(alignment_paths[0])
 
         if not image_paths:

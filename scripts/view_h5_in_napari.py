@@ -14,9 +14,9 @@ root_dir = Path(__file__).parent.parent
 os.chdir(root_dir)
 sys.path.insert(0, str(root_dir))
 
-from src.utils import *
-from src.viewer_ops import *
-from src.widgets import AddLandmark, AlignmentWidget, AlignToAtlasWidget#, CropWidget
+from src.fusiconverter.utils import *
+from src.fusiconverter.viewer_ops import *
+from src.fusiconverter.widgets import AddLandmark, AlignmentWidget, AlignToAtlasWidget#, CropWidget
 
 
 # h5_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI H5 Files to View")
