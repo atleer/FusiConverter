@@ -1,0 +1,34 @@
+[project]
+name = "fusiconverter"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "atleer", email = "atle.rimehaug@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "h5py>=3.16.0",
+    "ipykernel>=7.3.0",
+    "matplotlib>=3.11.1",
+    "napari-nifti>=0.0.12,<0.0.13",
+    "napari[pyqt5]>=0.5.6,<0.6",
+    "nibabel>=5.4.2,<6",
+    "numpy>=2.5.2",
+    "pandas>=3.0.5",
+    "qtpy>=2.4.3,<3",
+    "scipy>=1.18.0",
+    "tqdm>=4.70.0",
+    "xarray>=2026.7.0",
+]
+
+[project.scripts]
+fusiconverter = "fusiconverter:main"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+required-environments = ["sys_platform == 'win32' and platform_machine == 'AMD64'"]
+
