@@ -1,0 +1,13 @@
+name: fusiconverter
+display_name: fUSI Converter
+contributions:
+  commands:
+    - id: fusiconverter.get_reader
+      title: Open Allen CCF NIfTI atlas
+      python_name: fusiconverter.reader:napari_get_reader
+  readers:
+    - command: fusiconverter.get_reader
+      filename_patterns:
+        - '*.nii'
+        - '*.nii.gz'
+      accepts_directories: false
