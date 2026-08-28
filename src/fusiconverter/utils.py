@@ -1,4 +1,6 @@
+import ast
 import numpy as np
+import pandas as pd
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import nibabel as nib
@@ -93,7 +95,48 @@ def load_mat_image(mat_path):
     origin = tuple(float(v) for v in metadata['origin']) if 'origin' in metadata else None # TODO: Can I just drop origin? What is it needed for?
     return np.asarray(data[image_name]), voxel_size, origin, image_name
 
+def prompt_load_annotation() -> str | None:
+    """Ask the user for the Allen CCF annotation volume file that says which structure each atlas voxel is in."""
+    root = tk.Tk()
+    root.withdraw()  # Hide the main window
+    root.attributes('-topmost', True)   # force child dialogs to the front
+    annotation_path = filedialog.askopenfilename(
+        title="Select Allen CCF Annotation File (pick the resolution you aligned to, e.g. annotation_50.nii.gz)",
+        filetypes=[("NIfTI files", "*.nii.gz *.nii"), ("All files", "*.*")],
+    )
+    root.destroy()
+    return annotation_path or None
 
+def load_structure_graph(structure_graph_csv, coarse_structures_csv=None) -> dict[int, dict]:
+    """Map Allen structure ids onto their names, colours and major brain division.
+
+    'division' is the coarsest ancestor of a structure (Isocortex, HPF, TH, etc.)
+    """
+    structure_graph_csv = Path(structure_graph_csv)
+    if coarse_structures_csv is None:
+        coarse_structures_csv = structure_graph_csv.parent / 'allen_mouse_connectivity_coarse_structures.csv'
+
+    graph = pd.read_csv(structure_graph_csv)
+
+    coarse_acronyms = {}
+    if Path(coarse_structures_csv).exists():
+        coarse = pd.read_csv(coarse_structures_csv)
+        coarse_acronyms = dict(zip(coarse['id'], coarse['acronym']))
+
+    structures = {}
+    for row in graph.itertuples(index=False):
+        # both columns are stored as strings that look like lists, e.g. "[997, 8, 567]"
+        ancestors = ast.literal_eval(row.structure_id_path)
+        rgb = ast.literal_eval(row.rgb_triplet)
+        # deepest ancestor that is one of the major divisions; structures above them (root, grey) have none
+        division = next((coarse_acronyms[i] for i in reversed(ancestors) if i in coarse_acronyms), '')
+        structures[int(row.id)] = {
+            'acronym': str(row.acronym),
+            'name': str(row.name),
+            'division': division,
+            'rgb': tuple(int(c) for c in rgb),
+        }
+    return structures
     
     
 

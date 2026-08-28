@@ -141,55 +141,32 @@ def to_layer_affine(transform_matrix, ndim, spatial_axes=(0,1,2)):
     affine[axes, ndim] = transform_matrix[:3, 3]   # translation goes in the last column
     return affine
 
+def atlas_index_transform(voxel_size_mm, transform_matrix, atlas_voxel_size_mm):
+    """Matrix and offset taking a recording's voxel indices straight to atlas voxel indices.
+    """
+    to_atlas_index = np.diag(1.0 / np.asarray(atlas_voxel_size_mm, dtype=float))
+    matrix = to_atlas_index @ transform_matrix[:3, :3] @ np.diag(np.asarray(voxel_size_mm, dtype=float))
+    offset = to_atlas_index @ transform_matrix[:3, 3]
+    return matrix, offset
+
+def annotate_volume(spatial_shape, voxel_size_mm, transform_matrix, annotation, annotation_voxel_size_mm):
+    """Look up which atlas structure each voxel of a recording sits in.
+    """
+    matrix, offset = atlas_index_transform(voxel_size_mm, transform_matrix, annotation_voxel_size_mm)
+    voxel_indices = np.indices(spatial_shape, dtype=np.float32).reshape(3, -1) # (3, n_voxels)
+    atlas_indices = np.rint(
+        matrix.astype(np.float32) @ voxel_indices + offset.astype(np.float32)[:, None]
+    ).astype(np.intp)
+
+    inside = np.ones(atlas_indices.shape[1], dtype=bool)
+    for axis, size in enumerate(annotation.shape):
+        inside &= (atlas_indices[axis] >= 0) & (atlas_indices[axis] < size)
+
+    labels = np.zeros(atlas_indices.shape[1], dtype=np.uint32)
+    labels[inside] = annotation[tuple(atlas_indices[:, inside])]
+
+    return labels.reshape(spatial_shape), float(1.0 - inside.mean())
+
+
 # def apply_transform_matrix(volume: np.ndarray, source_voxel_size, transform_matrix, atlas_shape, atlas_voxel_size):
 #     """Transfom volume onto atlas voxel grid via transform_matrix"""
-
-    
-
-
-
-# # Function to crop image in spatial dimensions (no temporal)
-# def crop_image(viewer, z_range, x_range, y_range):
-#     layer = viewer.layers.selection.active
-#     if layer is None or not isinstance(layer, napari.layers.Image):
-#         print("No image layer selected.")
-#         return
-    
-#     # Get the shape of the image
-#     shape = layer.data.shape
-#     z_shape, x_shape, y_shape = shape[0], shape[1], shape[2]
-
-#     # Set default ranges if not provided
-#     if not z_range:
-#         z_range = f'0:{z_shape}'
-#     if not x_range:
-#         x_range = f'0:{x_shape}'
-#     if not y_range:
-#         y_range = f'0:{y_shape}'
-        
-#     # Parse the input ranges
-#     z_min, z_max = map(int, z_range.split(':'))
-#     x_min, x_max = map(int, x_range.split(':'))
-#     y_min, y_max = map(int, y_range.split(':'))
-
-#     # Crop the image
-#     cropped_image = layer.data[z_min:z_max, x_min:x_max, y_min:y_max]
-
-#     # Add the cropped image as a new layer
-#     viewer.add_image(cropped_image, name=f'Cropped_{layer.name}')
-
-# def apply_log_normalization(viewer):
-#     layer = viewer.layers.selection.active
-#     if layer is None or not isinstance(layer, napari.layers.Image):
-#         print("No image layer selected.")
-#         return
-#     # Map the image data to [0, 1] range
-#     data_min = np.min(layer.data)
-#     data_max = np.max(layer.data)
-#     scaled_data = (layer.data - data_min) / (data_max - data_min)
-
-#     # Apply logarithmic normalization
-#     normalized_data = np.log1p(scaled_data)
-    
-#     # Add the normalized image as a new layer
-#     viewer.add_image(normalized_data, name=f'LogNorm_{layer.name}')

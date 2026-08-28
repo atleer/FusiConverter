@@ -1,12 +1,14 @@
 import numpy as np
 import napari
-from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox
-from src.fusiconverter.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix, load_alignment_matrix # apply_log_normalization, crop_image
+from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox, QCheckBox
+from src.fusiconverter.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix, load_alignment_matrix, annotate_volume # apply_log_normalization, crop_image
 from src.fusiconverter.utils import (
     select_files_from_gui,
     select_save_dir_from_gui,
     load_atlas_image,
     load_image,
+    prompt_load_annotation,
+    load_structure_graph,
 )
 import sys
 from pathlib import Path
@@ -368,34 +370,84 @@ class AlignToAtlasWidget(QWidget):
         self.status_label.setText(message)
         print(message)
 
-    
+class RegisterToAreasWidget(QWidget):
+    """Label every voxel of an aligned recording with the Allen brain structure it sits in.
 
-## Crop Widget
-# class CropWidget(QWidget):
-#     def __init__(self, viewer):
-#         super().__init__()
-#         self.viewer = viewer
-#         self.setLayout(QVBoxLayout())
+    Adds a Labels layer on top of the recording; hovering a voxel with that layer selected shows
+    the structure acronym, full name and major division in napari's status bar.
+    """
 
-#         self.layout().addWidget(QLabel('Z Range (e.g., 0:10):'))
-#         self.z_range_input = QLineEdit()
-#         self.layout().addWidget(self.z_range_input)
+    def __init__(self, viewer):
+        super().__init__()
+        self.viewer = viewer
+        self.setLayout(QVBoxLayout())
 
-#         self.layout().addWidget(QLabel('X Range (e.g., 0:100):'))
-#         self.x_range_input = QLineEdit()
-#         self.layout().addWidget(self.x_range_input)
+        self.layout().addWidget(QLabel('Aligned Layer to Register'))
+        self.image_layer = QComboBox()
+        self.layout().addWidget(self.image_layer)
 
-#         self.layout().addWidget(QLabel('Y Range (e.g., 0:100):'))
-#         self.y_range_input = QLineEdit()
-#         self.layout().addWidget(self.y_range_input)
+        self._refresh_layer_choices()
+        self.viewer.layers.events.inserted.connect(self._refresh_layer_choices)
+        self.viewer.layers.events.removed.connect(self._refresh_layer_choices)
 
-#         crop_button = QPushButton('Crop Image & Log-Norm')
-#         crop_button.clicked.connect(self.crop)
-#         self.layout().addWidget(crop_button)
+        # napari cannot slice a rotated layer in 2D, so by default the recording is put back on its
+        # own grid and the atlas is brought to it instead
+        self.recording_space = QCheckBox('View in recording space (needed to be enable view in 2D)')
+        self.recording_space.setChecked(True)
+        self.layout().addWidget(self.recording_space)
 
-#     def crop(self):
-#         z_range = self.z_range_input.text()
-#         x_range = self.x_range_input.text()
-#         y_range = self.y_range_input.text()
-#         crop_image(self.viewer, z_range, x_range, y_range)
-#         apply_log_normalization(self.viewer)
+        register_button = QPushButton('Register to Atlas Areas')
+        register_button.clicked.connect(self.register)
+        self.layout().addWidget(register_button)
+
+        self.status_label = QLabel('')
+        self.status_label.setWordWrap(True)
+        self.layout().addWidget(self.status_label)
+
+    def _refresh_layer_choices(self):
+        """Used to refresh widget when a new layer is added or removed in napari so that it shows up in the dropdown menu"""
+        current = self.image_layer.currentText()
+        image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
+        self.image_layer.blockSignals(True)
+        self.image_layer.clear()
+        self.image_layer.addItems(image_layer_names)
+        if current in image_layer_names:
+            self.image_layer.setCurrentText(current)
+        self.image_layer.blockSignals(False)
+
+    def register(self):
+        layer_name = self.image_layer.currentText()
+        if not layer_name:
+            self._report("Pick a layer to register.")
+            return
+        image_layer = self.viewer.layers[layer_name]
+
+        # the Labels layer is 3D, and napari lines layers up by their trailing axes, so the spatial
+        # axes have to be the last three for the labels to sit on top of the recording
+        spatial_axes = tuple(image_layer.metadata.get('spatial_axes', range(image_layer.ndim - 3, image_layer.ndim)))
+
+        transform_matrix = self._alignment_of(image_layer, spatial_axes)
+        if transform_matrix is None:
+            self._report(
+                f"'{layer_name}' has not been aligned to the atlas yet. Run 'Align to Atlas' "
+                "or load an existing alignment matrix from file."
+            )
+            return
+
+        annotation_path = prompt_load_annotation()
+        if not annotation_path:
+            self._report("No annotation file selected. Registration skipped.")
+            return
+
+        # get atlas image and atlas voxel size
+        annotation, annotation_voxel_size = load_atlas_image(annotation_path) # annotation and annotation_voxel_size are the same as atlas_image and atlas_voxel_size
+        # get names of structures in atlas
+        structures = load_structure_graph(Path(annotation_path).parent)
+
+        voxel_size = np.asarray(image_layer.scale)[list(spatial_axes)]
+        spatial_shape = tuple(np.asarray(image_layer.data.shape)[list(spatial_axes)].tolist())
+
+        labels, fraction_outside = annotate_volume(spatial_shape, voxel_size, transform_matrix, annotation, annotation_voxel_size)
+
+    def recording_space():
+        raise NotImplementedError
