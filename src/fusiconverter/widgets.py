@@ -1,7 +1,7 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox, QCheckBox
-from src.fusiconverter.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix, load_alignment_matrix, annotate_volume # apply_log_normalization, crop_image
+from src.fusiconverter.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix, load_alignment_matrix, annotate_volume, resample_atlas_to_recording # apply_log_normalization, crop_image
 from src.fusiconverter.utils import (
     select_files_from_gui,
     select_save_dir_from_gui,
@@ -223,6 +223,7 @@ class AlignmentWidget(QWidget):
         print("Transform matrix computed")
 
         moving_layer.affine = transform_matrix
+        moving_layer.metadata['alignment_matrix'] = transform_matrix
         self._last_alignment = {
             'hq_source_path': source_path_moving,
             'atlas_source_path': source_path_fixed,
@@ -341,6 +342,7 @@ class AlignToAtlasWidget(QWidget):
                 scale=scale,
                 metadata={'source_path': str(image_path)}
             )
+            layer.metadata['alignment_matrix'] = alignment['transform_matrix']
             layer.affine = to_layer_affine(alignment['transform_matrix'], ndim=image.ndim, spatial_axes=spatial_axes)
 
     def _find_alignment_file(self, image_path: Path):
@@ -426,7 +428,9 @@ class RegisterToAreasWidget(QWidget):
         # axes have to be the last three for the labels to sit on top of the recording
         spatial_axes = tuple(image_layer.metadata.get('spatial_axes', range(image_layer.ndim - 3, image_layer.ndim)))
 
-        transform_matrix = self._alignment_of(image_layer, spatial_axes)
+
+
+        transform_matrix = image_layer.metadata.get('alignment_matrix')
         if transform_matrix is None:
             self._report(
                 f"'{layer_name}' has not been aligned to the atlas yet. Run 'Align to Atlas' "
@@ -442,12 +446,55 @@ class RegisterToAreasWidget(QWidget):
         # get atlas image and atlas voxel size
         annotation, annotation_voxel_size = load_atlas_image(annotation_path) # annotation and annotation_voxel_size are the same as atlas_image and atlas_voxel_size
         # get names of structures in atlas
-        structures = load_structure_graph(Path(annotation_path).parent)
+        structures = load_structure_graph(Path(annotation_path).parent / 'allen_mouse_connectivity_structure_graph.csv')
 
         voxel_size = np.asarray(image_layer.scale)[list(spatial_axes)]
         spatial_shape = tuple(np.asarray(image_layer.data.shape)[list(spatial_axes)].tolist())
 
         labels, fraction_outside = annotate_volume(spatial_shape, voxel_size, transform_matrix, annotation, annotation_voxel_size)
 
-    def recording_space():
-        raise NotImplementedError
+        #if self.recording_space.isChecked():
+        self._to_recording_space(image_layer, transform_matrix, spatial_shape, voxel_size,
+                                    annotation.shape, annotation_voxel_size)
+
+        self._add_labels_layer(image_layer, labels, structures, annotation_path)
+        self._save(image_layer, labels, annotation_path, fraction_outside)
+
+    def _to_recording_space(self, image_layer, transform_matrix, spatial_shape, voxel_size, annotation_shape, annotation_voxel_size):
+        """Put the recording back on its own grid and bring the atlas.
+        
+        A rotated layer cannot be sliced in 2D by napari, so the recording needs to keep its own axis 
+        and the atlas template is instead resampled onto the recording's axes. 
+        """
+
+        image_layer.metadata['alignment_matrix'] = transform_matrix
+        image_layer.affine = np.eye(image_layer.ndim + 1)
+
+        landmarks_name = f'{image_layer.name}_landmarks'
+        if landmarks_name in self.viewer.layers:
+            landmarks_layer = self.viewer.layers[landmarks_name]
+            landmarks_layer.affine = np.eye(landmarks_layer.ndim + 1)
+
+        # any unaligned 3D image layer on the annotation's grid is an atlas
+        for layer in list(self.viewer.layers):
+            if layer is image_layer or not isinstance(layer, napari.layers.Image):
+                continue
+            if layer.ndim != 3 or tuple(layer.data.shape) != tuple(annotation_shape):
+                continue
+            if not np.allclose(np.asarray(layer.affine.affine_matrix), np.eye(4)):
+                continue
+
+
+            resampled_name = f'{layer.name}_in_{image_layer.name}'
+            if resampled_name in self.viewer.layers:
+                # start from scratch
+                self.viewer.layers.remove(resampled_name)
+
+            resampled = resample_atlas_to_recording(np.asarray(layer.data), np.asarray(layer.scale), transform_matrix, spatial_shape, voxel_size, order = 1)
+
+            self.viewer.add_image(resampled, name = resampled_name, scale = voxel_size, blending='additive', metadata={'source_path': layer.metadata.get('source_path')})
+
+
+    def _report(self, message: str):
+        self.status_label.setText(message)
+        print(message)
