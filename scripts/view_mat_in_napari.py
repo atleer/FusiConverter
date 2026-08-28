@@ -16,7 +16,7 @@ sys.path.insert(0, str(root_dir))
 
 from src.fusiconverter.utils import *
 from src.fusiconverter.viewer_ops import *
-from src.fusiconverter.widgets import AddLandmark, AlignmentWidget, AlignToAtlasWidget#, CropWidget
+from src.fusiconverter.widgets import AddLandmark, AlignmentWidget, AlignToAtlasWidget, RegisterToAreasWidget#, CropWidget
 
 
 # h5_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI H5 Files to View")
@@ -81,9 +81,6 @@ for name, (image, scale) in images.items():
         points_layer.affine = to_layer_affine(alignment['transform_matrix'], points_layer.ndim)
 
 
-# crop_widget = CropWidget(viewer)
-# viewer.window.add_dock_widget(crop_widget, area='right')
-
 add_landmark_widget = AddLandmark(viewer)
 viewer.window.add_dock_widget(add_landmark_widget, area='right')
 
@@ -92,6 +89,9 @@ viewer.window.add_dock_widget(alignment_widget)
 
 align_to_atlas_widget = AlignToAtlasWidget(viewer)
 viewer.window.add_dock_widget(align_to_atlas_widget, area='right')
+
+register_to_atlas_areas_widget = RegisterToAreasWidget(viewer)
+viewer.window.add_dock_widget(register_to_atlas_areas_widget, area='top')
 
 napari.run()
 
