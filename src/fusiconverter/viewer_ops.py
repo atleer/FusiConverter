@@ -128,7 +128,7 @@ def load_alignment_matrix(json_path) -> dict:
     return alignment
 
 def to_layer_affine(transform_matrix, ndim, spatial_axes=(0,1,2)):
-    """Embed the 3D 4x4 similarity matrix in an (ndim+1, ndim+1) matrix for a napari layer.
+    """Embed the transformation matrix in an (ndim+1, ndim+1) matrix for a napari layer.
 
     'spatial_axes' say which layer axes are (Z, X, Y); other (usually trailing) axes (e.g. time) are left
     untouched, so the transform is never applied across time.
@@ -166,6 +166,13 @@ def annotate_volume(spatial_shape, voxel_size_mm, transform_matrix, annotation, 
     labels[inside] = annotation[tuple(atlas_indices[:, inside])]
 
     return labels.reshape(spatial_shape), float(1.0 - inside.mean())
+
+def resample_atlas_to_recording(atlas, atlas_voxel_size_mm, transform_matrix, spatial_shape, voxel_size_mm, order=1):
+    matrix, offset = atlas_index_transform(voxel_size_mm, transform_matrix, atlas_voxel_size_mm)
+    resampled_atlas = affine_transform(atlas, matrix, offset=offset, output_shape = tuple(spatial_shape),
+                                 order = order, mode='constant', cval=0)
+    return resampled_atlas
+
 
 
 # def apply_transform_matrix(volume: np.ndarray, source_voxel_size, transform_matrix, atlas_shape, atlas_voxel_size):
