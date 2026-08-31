@@ -12,6 +12,7 @@ from src.fusiconverter.utils import (
 )
 import sys
 from pathlib import Path
+from napari.utils.colormaps import DirectLabelColormap
 
 class AddLandmark(QWidget):
     def __init__(self, viewer):
@@ -453,12 +454,12 @@ class RegisterToAreasWidget(QWidget):
 
         labels, fraction_outside = annotate_volume(spatial_shape, voxel_size, transform_matrix, annotation, annotation_voxel_size)
 
-        #if self.recording_space.isChecked():
-        self._to_recording_space(image_layer, transform_matrix, spatial_shape, voxel_size,
-                                    annotation.shape, annotation_voxel_size)
+        if self.recording_space.isChecked():
+            self._to_recording_space(image_layer, transform_matrix, spatial_shape, voxel_size,
+                                        annotation.shape, annotation_voxel_size)
 
         self._add_labels_layer(image_layer, labels, structures, annotation_path)
-        self._save(image_layer, labels, annotation_path, fraction_outside)
+        #self._save(image_layer, labels, annotation_path, fraction_outside)
 
     def _to_recording_space(self, image_layer, transform_matrix, spatial_shape, voxel_size, annotation_shape, annotation_voxel_size):
         """Put the recording back on its own grid and bring the atlas.
@@ -493,6 +494,56 @@ class RegisterToAreasWidget(QWidget):
             resampled = resample_atlas_to_recording(np.asarray(layer.data), np.asarray(layer.scale), transform_matrix, spatial_shape, voxel_size, order = 1)
 
             self.viewer.add_image(resampled, name = resampled_name, scale = voxel_size, blending='additive', metadata={'source_path': layer.metadata.get('source_path')})
+
+    def _add_labels_layer(self, image_layer, labels, structures, annotation_path):
+        "Put the structure ids on screen in colours on top of the recording"
+
+        # next two lines: [[0, 0 , 985], [315, 315, 985], [672, 0, 985]] -> [[0, 0 , 3], [1, 1, 3], [2, 0, 3]]
+        # only the indeces of different labels within compact are kept. Needed for napari's DirectLabelColormap. Labels can be reconstructed with unique_ids[compact] 
+        unique_ids = np.unique(labels)
+        compact = np.searchsorted(unique_ids, labels).astype(np.uint16)
+
+        # the creation of labels_affine could go in a function from_layer_affine which does the opposite of the current to_layer_affine
+        # to_layer_affine puts the transforomation matrix in a 2D matrix for application to a napari layer, from_layer_affine gets back the original transformation matrix
+        spatial_axes = list(range(image_layer.ndim - 3, image_layer.ndim))
+        layer_affine = np.asarray(image_layer.affine.affine_matrix)
+
+        labels_affine = np.eye(4) # note: next two lines are only needed if self.recording_space.isChecked() isn't commented out
+        labels_affine[:3, :3] = layer_affine[np.ix_(spatial_axes, spatial_axes)]
+        labels_affine[:3, 3] = layer_affine[spatial_axes, image_layer.ndim]
+    
+        # napari matches a features row to a label through the 'index' column, positionally - so
+        # these have to be plain lists in the same order, not a filtered dataframe
+        colors = {None: (0.0, 0.0, 0.0, 0.0)} # anything unlabelled stays transparent
+        features = {'index': [], 'acronym': [], 'name': [], 'division': [], 'structure_id': []}
+        for compact_id, structure_id in enumerate(unique_ids.tolist()):
+            if structure_id == 0: # background
+                continue
+            structure = structures.get(structure_id, {})
+            colors[compact_id] = tuple(channel / 255 for channel in structure.get('rgb', (255, 255, 255))) + (1.0,)
+            features['index'].append(compact_id)
+            features['acronym'].append(structure.get('acronym', f'unknown_{structure_id}'))
+            features['name'].append(structure.get('name', 'not in the structure graph'))
+            features['division'].append(structure.get('division', ''))
+            features['structure_id'].append(structure_id)
+
+        labels_layer = self.viewer.add_labels(
+            compact,
+            name=f'{image_layer.name}_areas',
+            scale=np.asarray(image_layer.scale)[-3:],
+            affine=labels_affine,
+            opacity=0.5,
+            colormap=DirectLabelColormap(color_dict=colors),
+            features=features,
+            metadata={
+                'source_path': image_layer.metadata.get('source_path'),
+                'annotation_source_path': str(annotation_path),
+                'structure_ids': unique_ids, # unique_ids[label value] is the Allen structure id
+            },
+        )
+        # select it so hovering reports the structure names in napari's status bar
+        self.viewer.layers.selection.active = labels_layer
+        return labels_layer
 
 
     def _report(self, message: str):

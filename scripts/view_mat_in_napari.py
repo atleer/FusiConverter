@@ -91,7 +91,7 @@ align_to_atlas_widget = AlignToAtlasWidget(viewer)
 viewer.window.add_dock_widget(align_to_atlas_widget, area='right')
 
 register_to_atlas_areas_widget = RegisterToAreasWidget(viewer)
-viewer.window.add_dock_widget(register_to_atlas_areas_widget, area='top')
+viewer.window.add_dock_widget(register_to_atlas_areas_widget, area='right')
 
 napari.run()
 
