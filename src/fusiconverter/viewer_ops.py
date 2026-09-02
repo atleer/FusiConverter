@@ -183,7 +183,37 @@ def resample_atlas_to_recording(atlas, atlas_voxel_size_mm, transform_matrix, sp
                                  order = order, mode='constant', cval=0)
     return resampled_atlas
 
+def summarize_areas(labels, structures):
+    """Count how many voxels of the recording fall in each structure, most covered first."""
+    ids, counts = np.unique(labels, return_counts=True)
+    summary = []
+    for structure_id, n_voxels in zip(ids.tolist(), counts.tolist()):
+        if structure_id == 0: # unlabelled / outside the atlas
+            continue
+        structure = structures.get(structure_id, {})
+        summary.append({
+            'id': structure_id,
+            'acronym': structure.get('acronym', f'unknown_{structure_id}'),
+            'name': structure.get('name', f'Structure id {structure_id} is not in the structure graph'),
+            'division': structure.get('division', ''),
+            'n_voxels': n_voxels,
+            'fraction_of_recording': n_voxels / labels.size,
+        })
+    summary.sort(key=lambda structure: structure['n_voxels'], reverse=True)
+    return summary
 
-
-# def apply_transform_matrix(volume: np.ndarray, source_voxel_size, transform_matrix, atlas_shape, atlas_voxel_size):
-#     """Transfom volume onto atlas voxel grid via transform_matrix"""
+def save_area_map(source_path, summary, labels, annotation_source_path, fraction_outside):
+    """Write which structures a recording covers to <source_path>.areas.json"""
+    json_path = Path(f'{source_path}.areas.json')
+    area_map = {
+        'source_path': str(source_path),
+        'annotation_source_path': str(annotation_source_path),
+        'n_voxels_total': int(labels.size),
+        'n_voxels_unlabelled': int(np.count_nonzero(labels == 0)),
+        'fraction_outside_atlas': fraction_outside,
+        'structures': summary,
+        'created': datetime.now(timezone.utc).isoformat()
+    }
+    with open(json_path, 'w') as f:
+        json.dump(area_map, f, indent=2)
+    return json_path

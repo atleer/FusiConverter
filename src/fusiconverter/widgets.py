@@ -1,7 +1,21 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox, QCheckBox
-from src.fusiconverter.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, put_transform_matrix_in_layer_affine, get_transform_matrix_from_layer_affine, save_transform_matrix, load_transform_matrix, annotate_volume, resample_atlas_to_recording # apply_log_normalization, crop_image
+from src.fusiconverter.viewer_ops import (
+    save_landmarks, 
+    load_landmarks, 
+    get_or_create_landmarks_layer, 
+    match_landmarks, fit_similarity_transform, 
+    transform_residuals, 
+    put_transform_matrix_in_layer_affine, 
+    get_transform_matrix_from_layer_affine, 
+    save_transform_matrix, 
+    load_transform_matrix, 
+    annotate_volume, 
+    resample_atlas_to_recording,
+    summarize_areas,
+    save_area_map
+)
 from src.fusiconverter.utils import (
     select_files_from_gui,
     select_save_dir_from_gui,
@@ -294,7 +308,7 @@ class AlignToAtlasWidget(QWidget):
         align_button.clicked.connect(self.align)
         self.layout().addWidget(align_button)
 
-        # TODO: what are the next three lines for exactly?
+        # sets the status to empty so that it can be populated by _report later
         self.status_label = QLabel('')
         self.status_label.setWordWrap(True)
         self.layout().addWidget(self.status_label)
@@ -397,6 +411,11 @@ class RegisterToAreasWidget(QWidget):
         register_button.clicked.connect(self.register)
         self.layout().addWidget(register_button)
 
+        # TODO: implement _save function so that only argument is self
+        # save_button = QPushButton('Save Registered Areas')
+        # save_button.clicked.connect(self._save)
+        # self.layout().addWidget(save_button)
+
         self.status_label = QLabel('')
         self.status_label.setWordWrap(True)
         self.layout().addWidget(self.status_label)
@@ -446,11 +465,21 @@ class RegisterToAreasWidget(QWidget):
 
         labels, fraction_outside = annotate_volume(spatial_shape, voxel_size, transform_matrix, annotation, annotation_voxel_size)
 
+        summary = summarize_areas(labels, structures)
+
+        if not summary:
+            self._report(
+                f"No voxel of '{layer_name}' landed on a labelled atlas structure "
+                f"({fraction_outside:.0%} of the volume fell outside the atlas). Check the alignment."
+            )
+            return
+
         self._to_recording_space(image_layer, transform_matrix, spatial_shape, voxel_size,
                                     annotation.shape, annotation_voxel_size)
 
         self._add_labels_layer(image_layer, labels, structures, annotation_path)
-        #self._save(image_layer, labels, annotation_path, fraction_outside)
+        self._save(image_layer, summary, labels, annotation_path, fraction_outside) # TODO: remove this when _save button with ask to overwrite has been properly implemented
+        self._report_summary(layer_name, summary, labels, fraction_outside)
 
     def _get_transform_matrix(self, image_layer, spatial_axes):
         """Get the matrix used to align the recording's to the atlas, or return None if it has not been aligned.
@@ -549,7 +578,46 @@ class RegisterToAreasWidget(QWidget):
         self.viewer.layers.selection.active = labels_layer
         return labels_layer
 
+    def _save(self, image_layer, summary, labels, annotation_path, fraction_outside):
+        """Write the registration to atlas areas to file"""
+        source_path = image_layer.metadata.get('source_path')
+        if source_path is None:
+            print(f"No source path for '{image_layer.name}', not writing an area map.")
+            return
+
+        json_path = Path(f'{source_path}.areas.json')
+        if json_path.exists() and not self._ask_overwrite(json_path):
+            return
+
+        save_area_map(source_path, summary, labels, annotation_path, fraction_outside)
+        print(f'Saved area map to {json_path}')
+
+    
+    def _report_summary(self, layer_name, summary, labels, fraction_outside):
+        top = ' · '.join(f"{structure['acronym']} ({structure['fraction_of_recording']:.0%})"
+                         for structure in summary[:6])
+        unlabelled = np.count_nonzero(labels == 0) / labels.size
+        self._report(
+            f"{layer_name}: {len(summary)} structures. Most covered: {top}. "
+            f"Unlabelled {unlabelled:.0%}, outside atlas {fraction_outside:.0%}."
+        )
+        print(f'\nStructures covered by {layer_name} ({len(summary)} in total, all of them in the .areas.json):')
+        for structure in summary[:25]:
+            print(f"  {structure['acronym']:<12} {structure['n_voxels']:>8} voxels "
+                  f"({structure['fraction_of_recording']:6.2%})  {structure['division']:<10} {structure['name']}")
+        if len(summary) > 25:
+            print(f'  ... and {len(summary) - 25} smaller structures')
+            
+    def _ask_overwrite(self, json_path):
+        box = QMessageBox(self)
+        box.setWindowTitle('Save Area Map')
+        box.setIcon(QMessageBox.Question)
+        box.setText(f'An area map already exists for this recording: {json_path.name}. Do you want to overwrite it?')
+        overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
+        box.addButton('Cancel', QMessageBox.RejectRole)
+        box.exec_()
+        return box.clickedButton() is overwrite_button
 
     def _report(self, message: str):
-        self.status_label.setText(message)
-        print(message)
+            self.status_label.setText(message)
+            print(message)
