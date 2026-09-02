@@ -1,7 +1,7 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox, QCheckBox
-from src.fusiconverter.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, to_layer_affine, save_alignment_matrix, load_alignment_matrix, annotate_volume, resample_atlas_to_recording # apply_log_normalization, crop_image
+from src.fusiconverter.viewer_ops import save_landmarks, load_landmarks, get_or_create_landmarks_layer, match_landmarks, fit_similarity_transform, transform_residuals, put_transform_matrix_in_layer_affine, get_transform_matrix_from_layer_affine, save_transform_matrix, load_transform_matrix, annotate_volume, resample_atlas_to_recording # apply_log_normalization, crop_image
 from src.fusiconverter.utils import (
     select_files_from_gui,
     select_save_dir_from_gui,
@@ -240,7 +240,7 @@ class AlignmentWidget(QWidget):
         points_name = f'{moving_layer_name}_landmarks'
         if points_name in self.viewer.layers:
             points_layer = self.viewer.layers[points_name]
-            points_layer.affine = to_layer_affine(transform_matrix, points_layer.ndim)
+            points_layer.affine = put_transform_matrix_in_layer_affine(transform_matrix, points_layer.ndim)
 
     def save(self):
         """Write the landmarks to file"""
@@ -250,7 +250,7 @@ class AlignmentWidget(QWidget):
 
         json_path = Path(f"{self._last_alignment['hq_source_path']}.alignment.json")
         if not json_path.exists() :
-            save_alignment_matrix(**self._last_alignment)
+            save_transform_matrix(**self._last_alignment)
             print(f'Saved transformation matrix for alignment to {json_path}')
             return
         
@@ -261,7 +261,7 @@ class AlignmentWidget(QWidget):
             return
 
         if mode == 'overwrite':
-            save_alignment_matrix(**self._last_alignment)
+            save_transform_matrix(**self._last_alignment)
             print(f'Saved transformation matrix for alignment to {json_path}')
 
             
@@ -311,7 +311,7 @@ class AlignToAtlasWidget(QWidget):
             print("No alignment file selected. Quitting...")
             return
         
-        alignment = load_alignment_matrix(alignment_paths[0])
+        alignment = load_transform_matrix(alignment_paths[0])
 
         if not image_paths:
             print("No files selected. Quitting...")
@@ -343,8 +343,8 @@ class AlignToAtlasWidget(QWidget):
                 scale=scale,
                 metadata={'source_path': str(image_path)}
             )
-            layer.metadata['alignment_matrix'] = alignment['transform_matrix']
-            layer.affine = to_layer_affine(alignment['transform_matrix'], ndim=image.ndim, spatial_axes=spatial_axes)
+            layer.metadata['transform_matrix'] = alignment['transform_matrix']
+            layer.affine = put_transform_matrix_in_layer_affine(alignment['transform_matrix'], ndim=image.ndim, spatial_axes=spatial_axes)
 
     def _find_alignment_file(self, image_path: Path):
         """Find the *.alignment.json sitting next to the selected file. One match is used
@@ -393,12 +393,6 @@ class RegisterToAreasWidget(QWidget):
         self.viewer.layers.events.inserted.connect(self._refresh_layer_choices)
         self.viewer.layers.events.removed.connect(self._refresh_layer_choices)
 
-        # napari cannot slice a rotated layer in 2D, so by default the recording is put back on its
-        # own grid and the atlas is brought to it instead
-        self.recording_space = QCheckBox('View in recording space (needed to be enable view in 2D)')
-        self.recording_space.setChecked(True)
-        self.layout().addWidget(self.recording_space)
-
         register_button = QPushButton('Register to Atlas Areas')
         register_button.clicked.connect(self.register)
         self.layout().addWidget(register_button)
@@ -429,9 +423,7 @@ class RegisterToAreasWidget(QWidget):
         # axes have to be the last three for the labels to sit on top of the recording
         spatial_axes = tuple(image_layer.metadata.get('spatial_axes', range(image_layer.ndim - 3, image_layer.ndim)))
 
-
-
-        transform_matrix = image_layer.metadata.get('alignment_matrix')
+        transform_matrix = self._get_transform_matrix(image_layer, spatial_axes)
         if transform_matrix is None:
             self._report(
                 f"'{layer_name}' has not been aligned to the atlas yet. Run 'Align to Atlas' "
@@ -454,12 +446,23 @@ class RegisterToAreasWidget(QWidget):
 
         labels, fraction_outside = annotate_volume(spatial_shape, voxel_size, transform_matrix, annotation, annotation_voxel_size)
 
-        if self.recording_space.isChecked():
-            self._to_recording_space(image_layer, transform_matrix, spatial_shape, voxel_size,
-                                        annotation.shape, annotation_voxel_size)
+        self._to_recording_space(image_layer, transform_matrix, spatial_shape, voxel_size,
+                                    annotation.shape, annotation_voxel_size)
 
         self._add_labels_layer(image_layer, labels, structures, annotation_path)
         #self._save(image_layer, labels, annotation_path, fraction_outside)
+
+    def _get_transform_matrix(self, image_layer, spatial_axes):
+        """Get the matrix used to align the recording's to the atlas, or return None if it has not been aligned.
+
+        Normally, the transform matrix is the layer's affine, but once the layer has been put back into recording space
+        the affine is identity again, so the matrix is kept in the layer metadata as well.
+        """
+        layer_affine = np.asarray(image_layer.affine.affine_matrix)
+        if not np.allclose(layer_affine, np.eye(image_layer.ndim + 1)):
+            return get_transform_matrix_from_layer_affine(layer_affine, spatial_axes)
+        transform_matrix = image_layer.metadata.get('transform_matrix')
+        return None if transform_matrix is None else np.asarray(transform_matrix)
 
     def _to_recording_space(self, image_layer, transform_matrix, spatial_shape, voxel_size, annotation_shape, annotation_voxel_size):
         """Put the recording back on its own grid and bring the atlas.
@@ -468,7 +471,7 @@ class RegisterToAreasWidget(QWidget):
         and the atlas template is instead resampled onto the recording's axes. 
         """
 
-        image_layer.metadata['alignment_matrix'] = transform_matrix
+        image_layer.metadata['transform_matrix'] = transform_matrix
         image_layer.affine = np.eye(image_layer.ndim + 1)
 
         landmarks_name = f'{image_layer.name}_landmarks'
@@ -494,6 +497,7 @@ class RegisterToAreasWidget(QWidget):
             resampled = resample_atlas_to_recording(np.asarray(layer.data), np.asarray(layer.scale), transform_matrix, spatial_shape, voxel_size, order = 1)
 
             self.viewer.add_image(resampled, name = resampled_name, scale = voxel_size, blending='additive', metadata={'source_path': layer.metadata.get('source_path')})
+            layer.visible = False # the original atlas no longer lines up with the recorded brain, so make it invisible
 
     def _add_labels_layer(self, image_layer, labels, structures, annotation_path):
         "Put the structure ids on screen in colours on top of the recording"
@@ -501,10 +505,10 @@ class RegisterToAreasWidget(QWidget):
         # next two lines: [[0, 0 , 985], [315, 315, 985], [672, 0, 985]] -> [[0, 0 , 3], [1, 1, 3], [2, 0, 3]]
         # only the indeces of different labels within compact are kept. Needed for napari's DirectLabelColormap. Labels can be reconstructed with unique_ids[compact] 
         unique_ids = np.unique(labels)
+        if unique_ids[0] != 0:
+            unique_ids = np.concatenate([[0], unique_ids])
         compact = np.searchsorted(unique_ids, labels).astype(np.uint16)
 
-        # the creation of labels_affine could go in a function from_layer_affine which does the opposite of the current to_layer_affine
-        # to_layer_affine puts the transforomation matrix in a 2D matrix for application to a napari layer, from_layer_affine gets back the original transformation matrix
         spatial_axes = list(range(image_layer.ndim - 3, image_layer.ndim))
         layer_affine = np.asarray(image_layer.affine.affine_matrix)
 
