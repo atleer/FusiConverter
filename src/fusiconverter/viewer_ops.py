@@ -127,10 +127,10 @@ def load_alignment_matrix(json_path) -> dict:
     
     return alignment
 
-def to_layer_affine(transform_matrix, ndim, spatial_axes=(0,1,2)):
-    """Embed the transformation matrix in an (ndim+1, ndim+1) matrix for a napari layer.
+def put_transform_matrix_in_layer_affine(transform_matrix, ndim, spatial_axes=(0,1,2)):
+    """Embed the transformation matrix in an (ndim+1, ndim+1) matrix for a napari image layer.
 
-    'spatial_axes' say which layer axes are (Z, X, Y); other (usually trailing) axes (e.g. time) are left
+    'spatial_axes' say which layer axes are spatial (Z, X, Y); other (usually trailing) axes (e.g. time) are left
     untouched, so the transform is never applied across time.
     """
     axes = list(spatial_axes)
@@ -140,6 +140,16 @@ def to_layer_affine(transform_matrix, ndim, spatial_axes=(0,1,2)):
     affine[np.ix_(axes,axes)] = transform_matrix[:3, :3] # TODO: what does np.ix do exactly?
     affine[axes, ndim] = transform_matrix[:3, 3]   # translation goes in the last column
     return affine
+
+def get_transform_matrix_from_layer_affine(layer_affine_matrix, spatial_axes=(0,1,2)):
+    """Pull the transformation matrix back out of a napari layer affine. Inverse of put_transform_matrix_in_layer_affine."""
+    layer_affine_matrix = np.asarray(layer_affine_matrix)
+    ndim = layer_affine_matrix.shape[0] - 1
+    axes = list(spatial_axes)
+    transform_matrix = np.eye(4)
+    transform_matrix[:3, :3] = layer_affine_matrix[np.ix_(axes, axes)]
+    transform_matrix[:3, 3] = layer_affine_matrix[axes, ndim]
+    return transform_matrix
 
 def atlas_index_transform(voxel_size_mm, transform_matrix, atlas_voxel_size_mm):
     """Matrix and offset taking a recording's voxel indices straight to atlas voxel indices.
