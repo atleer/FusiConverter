@@ -100,8 +100,8 @@ def transform_residuals(transform_matrix: np.ndarray, moving: np.ndarray, fixed:
     transformed = (transform_matrix @ moving_homog.T).T[:, :3]
     return np.linalg.norm(transformed - fixed, axis = 1)
 
-def save_alignment_matrix(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size_in_mm, atlas_voxel_size_in_mm, landmark_names, residuals_mm):
-    """Load transformation matrix"""
+def save_transform_matrix(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size_in_mm, atlas_voxel_size_in_mm, landmark_names, residuals_mm):
+    """Save transformation matrix used for alignement"""
     json_path = Path(f'{hq_source_path}.alignment.json')
     alignment = {
         'hq_source_path': str(hq_source_path),
@@ -118,8 +118,8 @@ def save_alignment_matrix(hq_source_path, atlas_source_path, transform_matrix, h
         json.dump(alignment, f, indent=2)
         return json_path
 
-def load_alignment_matrix(json_path) -> dict:
-    "Load transformation matrix"
+def load_transform_matrix(json_path) -> dict:
+    "Load transformation matrix used for alignement"
     with open(json_path) as f:
         alignment = json.load(f)
 
