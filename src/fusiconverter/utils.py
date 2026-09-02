@@ -56,6 +56,31 @@ def load_atlas_image(atlas_path) -> tuple[np.ndarray, tuple[float, float, float]
     scale_mm = tuple(z / 1000 for z in img.header.get_zooms()[:3])
     return np.asarray(img.get_fdata()), scale_mm
 
+def prepare_image_for_layer(image, voxel_size):
+    """Put a loaded acquisition on the axis order napari needs, and say which axes are spatial.
+
+    napari lines layers up by their trailing (last) axes, so a time axis has to go first for the
+    spatial axes to line up with the 3D atlas.
+
+    Returns (image, scale, spatial_axes), where spatial_axes are the layer axes holding (Z, X, Y).
+    """
+    if voxel_size is None:
+        # nothing to go on, so fall back on the same "spatial axes are the last three" convention
+        return image, (1.0,) * image.ndim, tuple(range(max(0, image.ndim - 3), image.ndim))
+
+    n_spatial = len(voxel_size)
+    if image.ndim == n_spatial + 1:
+        # there are 4 dimensions, i.e. a time dimension, and the time dimension is moved from the last to the first axis
+        image = np.moveaxis(image, -1, 0)
+        scale = (1.0,) + tuple(voxel_size)
+    elif image.ndim == n_spatial:
+        scale = tuple(voxel_size)
+    else:
+        raise ValueError(
+            f"Image has {image.ndim} dimensions but voxel size has {n_spatial}; "
+            "don't know which axes are spatial."
+        )
+    return image, scale, tuple(range(image.ndim - n_spatial, image.ndim))
 
 def get_voxel_size_mm(h5_file) -> tuple[float, ...] | None:
     if 'voxelSize' not in h5_file:
