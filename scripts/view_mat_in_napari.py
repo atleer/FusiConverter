@@ -18,23 +18,6 @@ from src.fusiconverter.utils import *
 from src.fusiconverter.viewer_ops import *
 from src.fusiconverter.widgets import AddLandmark, AlignmentWidget, AlignToAtlasWidget, RegisterToAreasWidget#, CropWidget
 
-
-# h5_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI H5 Files to View")
-# if not h5_filepaths:
-#     print("No Files Selected.  Quitting...")
-#     sys.exit()
-
-# Load images
-# images = {}
-# image_sources = {}
-# for h5_filepath in tqdm(h5_filepaths, desc='Loading Images...'):
-#     with h5py.File(h5_filepath) as data:
-#         filename = Path(h5_filepath).stem
-#         image_type = data.attrs['imageType']
-#         layer_name = f'{image_type}_{filename}'
-#         images[layer_name] = (np.abs(data['image']), get_voxel_size_mm(data))
-#         image_sources[layer_name] = h5_filepath
-
 # %%
 
 mat_filepaths = select_files_from_gui("Navigate to experiment folder and select fUSI .mat Files to View")
@@ -60,25 +43,30 @@ if atlas_path:
 # View in Napari
 print("Launching Napari Image Viewer...")
 viewer = napari.Viewer()
-for name, (image, scale) in images.items():
-    if scale is None:
+for name, (image, voxel_size) in images.items():
+    if voxel_size is None:
         print(f"No voxel size found for '{name}', displaying at raw voxel scale.")
-        scale = (1,) * image.ndim
-    elif image.ndim > len(scale): # only needed if the image has more dimensions than the scale (e.g. a time dimension).
-        # Non-spatial trailing axes (e.g. time) get a scale of 1.
-        scale = tuple(scale) + (1,) * (image.ndim - len(scale))
-    layer = viewer.add_image(name=name, data=image, scale=scale, metadata={'source_path': image_sources[name]})
+    # moves a time axis to the front so the spatial axes line up with the 3D atlas
+    try:
+        image, scale, spatial_axes = prepare_image_for_layer(image, voxel_size)
+    except ValueError as error:
+        # one odd file shouldn't stop the rest of the session from opening
+        print(f"'{name}': {error} Displaying at raw voxel scale.")
+        image, scale, spatial_axes = prepare_image_for_layer(image, None)
+    layer = viewer.add_image(name=name, data=image, scale=scale,
+                             metadata={'source_path': image_sources[name],
+                                       'spatial_axes': spatial_axes})
 
     # apply existing transformation matrix from file to layer
     alignment_path = Path(f"{image_sources[name]}.alignment.json")
     if alignment_path.exists():
-        alignment = load_alignment_matrix(alignment_path)
-        layer.affine = to_layer_affine(alignment['transform_matrix'], layer.ndim)
+        alignment = load_transform_matrix(alignment_path)
+        layer.affine = put_transform_matrix_in_layer_affine(alignment['transform_matrix'], layer.ndim, spatial_axes)
         print(f"Applied saved transformation matrix for alignment to '{name}' "
               f"(RMS {alignment['rms_error']:.3f} mm)")
 
         points_layer = get_or_create_landmarks_layer(viewer, layer)   # loads the saved .landmarks.json
-        points_layer.affine = to_layer_affine(alignment['transform_matrix'], points_layer.ndim)
+        points_layer.affine = put_transform_matrix_in_layer_affine(alignment['transform_matrix'], points_layer.ndim)
 
 
 add_landmark_widget = AddLandmark(viewer)
