@@ -198,22 +198,53 @@ def summarize_areas(labels, structures):
             'division': structure.get('division', ''),
             'n_voxels': n_voxels,
             'fraction_of_recording': n_voxels / labels.size,
+            # flat indices into labels.ravel(); use np.unravel_index(..., labels.shape) for (Z, X, Y)
+            'voxel_indices': np.flatnonzero(labels == structure_id),
         })
     summary.sort(key=lambda structure: structure['n_voxels'], reverse=True)
     return summary
 
 def save_area_map(source_path, summary, labels, annotation_source_path, fraction_outside):
-    """Write which structures a recording covers to <source_path>.areas.json"""
+    """Write which structures a recording covers to <source_path>.areas.json
+
+    The voxel indices are too bulky for JSON, so they go to <source_path>.areas.npz instead,
+    one flat index array per structure, keyed by structure id. 'hq_shape' is stored
+    alongside them so the flat indices can be unravelled without the labels volume.
+    """
     json_path = Path(f'{source_path}.areas.json')
+    npz_path = Path(f'{source_path}.areas.npz')
+
+    voxel_indices = {str(structure['id']): structure['voxel_indices']
+                     for structure in summary if 'voxel_indices' in structure}
+    # keep the JSON a readable summary - drop the indices without touching the caller's dicts
+    structures = [{key: value for key, value in structure.items() if key != 'voxel_indices'}
+                  for structure in summary]
+
     area_map = {
         'source_path': str(source_path),
         'annotation_source_path': str(annotation_source_path),
         'n_voxels_total': int(labels.size),
         'n_voxels_unlabelled': int(np.count_nonzero(labels == 0)),
         'fraction_outside_atlas': fraction_outside,
-        'structures': summary,
+        'hq_shape': list(labels.shape),
+        'voxel_indices_path': str(npz_path) if voxel_indices else None,
+        'structures': structures,
         'created': datetime.now(timezone.utc).isoformat()
     }
     with open(json_path, 'w') as f:
         json.dump(area_map, f, indent=2)
+
+    if voxel_indices:
+        np.savez_compressed(npz_path, labels_shape=np.array(labels.shape), **voxel_indices)
+
     return json_path
+
+def load_voxel_indices(source_path):
+    """Load the per-structure flat voxel indices written by save_area_map.
+
+    Returns {structure_id: flat index array} plus the shape they index into.
+    """
+    with np.load(Path(f'{source_path}.areas.npz')) as npz:
+        labels_shape = tuple(npz['labels_shape'].tolist())
+        voxel_indices = {int(key): npz[key] for key in npz.files if key != 'labels_shape'}
+    return voxel_indices, labels_shape
