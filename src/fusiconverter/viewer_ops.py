@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 from datetime import datetime, timezone
 from scipy.ndimage import affine_transform
+from scipy.spatial.transform import Rotation
 
 
 def load_landmarks(source_path):
@@ -100,18 +101,42 @@ def transform_residuals(transform_matrix: np.ndarray, moving: np.ndarray, fixed:
     transformed = (transform_matrix @ moving_homog.T).T[:, :3]
     return np.linalg.norm(transformed - fixed, axis = 1)
 
-def save_transform_matrix(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size_in_mm, atlas_voxel_size_in_mm, landmark_names, residuals_mm):
-    """Save transformation matrix used for alignement"""
+def compose_transform_matrix(translation_mm, rotation_deg, scale, centre_mm=(0, 0, 0)):
+    """Build a 4x4 transform from a translation (mm), Euler rotation angles about layer axes 0/1/2 (degrees) and
+    per-axis scale factors. Rotation and scaling happen about 'centre_mm' so the volume stays put while rotating."""
+    centre = np.asarray(centre_mm, dtype=float)
+    rotation = Rotation.from_euler('xyz', rotation_deg, degrees=True).as_matrix()  # 'xyz' = layer axes 0, 1, 2
+    linear = rotation @ np.diag(np.asarray(scale, dtype=float))
+    transform_matrix = np.eye(4)
+    transform_matrix[:3, :3] = linear
+    transform_matrix[:3, 3] = np.asarray(translation_mm, dtype=float) + centre - linear @ centre
+    return transform_matrix
+
+def rotate_about_axis_matrix(axis, angle_deg, centre_mm=(0, 0, 0)):
+    """4x4 rotation of 'angle_deg' about an arbitrary 'axis' (world mm direction) through 'centre_mm'"""
+    axis = np.asarray(axis, dtype=float)
+    axis /= np.linalg.norm(axis)
+    centre = np.asarray(centre_mm, dtype=float)
+    rotation = Rotation.from_rotvec(axis * np.deg2rad(angle_deg)).as_matrix()
+    transform_matrix = np.eye(4)
+    transform_matrix[:3, :3] = rotation
+    transform_matrix[:3, 3] = centre - rotation @ centre
+    return transform_matrix
+
+def save_transform_matrix(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size_in_mm, atlas_voxel_size_in_mm, landmark_names=(), residuals_mm=(), method='landmarks'):
+    """Save transformation matrix used for alignement. Landmarks/residuals are absent for a manual alignment."""
     json_path = Path(f'{hq_source_path}.alignment.json')
+    residuals_mm = np.asarray(residuals_mm, dtype=float)
     alignment = {
         'hq_source_path': str(hq_source_path),
         'atlas_source_path': str(atlas_source_path),
+        'method': method,
         'transform_matrix': np.asarray(transform_matrix).tolist(),
         'hq_voxel_size_in_mm': [float(v) for v in hq_voxel_size_in_mm],
         'atlas_voxel_size_in_mm': [float(v) for v in atlas_voxel_size_in_mm],
         'landmark_names': list(landmark_names),
-        'residuals_mm': dict(zip(landmark_names, np.asarray(residuals_mm).tolist())),
-        'rms_error': float(np.sqrt(np.mean(np.square(residuals_mm)))),
+        'residuals_mm': dict(zip(landmark_names, residuals_mm.tolist())),
+        'rms_error': float(np.sqrt(np.mean(np.square(residuals_mm)))) if residuals_mm.size else None,
         'created': datetime.now(timezone.utc).isoformat()
     }
     with open(json_path, 'w') as f:

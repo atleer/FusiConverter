@@ -1,12 +1,14 @@
 import numpy as np
 import napari
-from qtpy.QtWidgets import QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox, QCheckBox
+from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox, QCheckBox, QDoubleSpinBox
 from src.fusiconverter.viewer_ops import (
-    save_landmarks, 
-    load_landmarks, 
-    get_or_create_landmarks_layer, 
-    match_landmarks, fit_similarity_transform, 
-    transform_residuals, 
+    save_landmarks,
+    load_landmarks,
+    get_or_create_landmarks_layer,
+    match_landmarks, fit_similarity_transform,
+    transform_residuals,
+    compose_transform_matrix,
+    rotate_about_axis_matrix,
     put_transform_matrix_in_layer_affine, 
     get_transform_matrix_from_layer_affine, 
     save_transform_matrix, 
@@ -278,21 +280,237 @@ class AlignmentWidget(QWidget):
             save_transform_matrix(**self._last_alignment)
             print(f'Saved transformation matrix for alignment to {json_path}')
 
-            
-    def _ask_save_mode(self, json_path):
-        """If file with transformation matrix for alignment already exists, ask whether to overwrite it"""
-        box = QMessageBox(self)
-        box.setWindowTitle('Save Transformation Matrix for Alignment')
-        box.setIcon(QMessageBox.Question)
-        box.setText(f'A file with a transformation matrix for alignment already exists for this session: {json_path.name}. Do you want to overwrite it?')
-        overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
-        box.addButton('Cancel', QMessageBox.RejectRole)
-        box.exec_()
 
-        clicked = box.clickedButton()
-        if clicked is overwrite_button:
-            return 'overwrite'
-        return None
+    def _ask_save_mode(self, json_path):
+        return _ask_overwrite_alignment(self, json_path)
+
+
+def _ask_overwrite_alignment(parent, json_path):
+    """If file with transformation matrix for alignment already exists, ask whether to overwrite it"""
+    box = QMessageBox(parent)
+    box.setWindowTitle('Save Transformation Matrix for Alignment')
+    box.setIcon(QMessageBox.Question)
+    box.setText(f'A file with a transformation matrix for alignment already exists for this session: {json_path.name}. Do you want to overwrite it?')
+    overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
+    box.addButton('Cancel', QMessageBox.RejectRole)
+    box.exec_()
+
+    clicked = box.clickedButton()
+    if clicked is overwrite_button:
+        return 'overwrite'
+    return None
+
+
+class ManualAlignmentWidget(QWidget):
+    """Shift, rotate and stretch/squeeze a layer by hand to fine-tune its alignment to the atlas.
+
+    The spinboxes describe an adjustment on top of whatever transform the layer had when it was picked (identity, a
+    landmark fit, or a loaded .alignment.json). Rotation and scaling are about the centre of the volume.
+    """
+
+    def __init__(self, viewer):
+        super().__init__()
+        self.viewer = viewer
+        self.setLayout(QVBoxLayout())
+
+        self.layout().addWidget(QLabel('Layer to adjust (HQ file)'))
+        self.layer_choice = QComboBox()
+        self.layer_choice.currentTextChanged.connect(self._on_layer_changed)
+        self.layout().addWidget(self.layer_choice)
+
+        # (label, unit step, default) per row; each row has one spinbox per spatial axis (Z, X, Y)
+        self.controls = {}
+        for name, step, default, decimals in (('Translate (mm)', 0.1, 0.0, 2),
+                                              ('Rotate (deg)', 0.5, 0.0, 1),
+                                              ('Scale', 0.01, 1.0, 3)):
+            self.layout().addWidget(QLabel(name))
+            row = QHBoxLayout()
+            boxes = []
+            for axis in ('Z', 'X', 'Y'):
+                box = QDoubleSpinBox()
+                box.setPrefix(f'{axis}: ')
+                box.setRange(-1000, 1000)
+                box.setSingleStep(step)
+                box.setDecimals(decimals)
+                box.setValue(default)
+                box.valueChanged.connect(self._apply)
+                row.addWidget(box)
+                boxes.append(box)
+            self.controls[name] = (boxes, default)
+            self.layout().addLayout(row)
+
+        self.drag_button = QPushButton('Drag mode (3D)')
+        self.drag_button.setCheckable(True)
+        self.drag_button.setToolTip('Drag: shift.  Shift+drag: tumble.  Ctrl+drag: roll about the view direction.\n'
+                                    'Camera rotation is off while this is on; the wheel still zooms.')
+        self.drag_button.toggled.connect(self._set_drag_mode)
+        self.layout().addWidget(self.drag_button)
+
+        reset_button = QPushButton('Reset')
+        reset_button.clicked.connect(self.reset)
+        self.layout().addWidget(reset_button)
+
+        save_button = QPushButton('Save Alignment Matrix')
+        save_button.clicked.connect(self.save)
+        self.layout().addWidget(save_button)
+
+        self.status_label = QLabel('')
+        self.status_label.setWordWrap(True)
+        self.layout().addWidget(self.status_label)
+
+        self._base_matrix = None      # layer transform when it was picked
+        self._drag_matrix = np.eye(4) # accumulated mouse drags, applied on top of the base
+        self._half_extent_mm = None
+        self._refresh_layer_choices()
+        self.viewer.layers.events.inserted.connect(self._refresh_layer_choices)
+        self.viewer.layers.events.removed.connect(self._refresh_layer_choices)
+
+    def _refresh_layer_choices(self):
+        image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
+        current = self.layer_choice.currentText()
+        self.layer_choice.blockSignals(True)
+        self.layer_choice.clear()
+        self.layer_choice.addItems(image_layer_names)
+        if current in image_layer_names:
+            self.layer_choice.setCurrentText(current)
+        self.layer_choice.blockSignals(False)
+        if self.layer_choice.currentText() != current:
+            self._on_layer_changed()
+
+    def _on_layer_changed(self):
+        self._capture_base()
+        self.reset()
+
+    def _layer(self):
+        name = self.layer_choice.currentText()
+        return self.viewer.layers[name] if name in self.viewer.layers else None
+
+    def _spatial_axes(self, layer):
+        # layers added by AlignToAtlasWidget don't set this; time (if any) is the leading axis, so spatial are the last three
+        return tuple(layer.metadata.get('spatial_axes', range(layer.ndim - 3, layer.ndim)))
+
+    def _values(self, name):
+        boxes, _ = self.controls[name]
+        return [box.value() for box in boxes]
+
+    def _capture_base(self):
+        """Take the picked layer's current transform as the starting point the controls adjust on top of"""
+        layer = self._layer()
+        if layer is None:
+            self._base_matrix = None
+            return
+        axes = self._spatial_axes(layer)
+        self._base_matrix = get_transform_matrix_from_layer_affine(layer.affine.affine_matrix, axes)
+        self._half_extent_mm = np.array(layer.data.shape)[list(axes)] * np.array(layer.scale)[list(axes)] / 2
+
+    def _centre_of(self, transform_matrix):
+        """Centre of the volume in atlas mm under 'transform_matrix' - rotation/scale pivot here rather than at the origin"""
+        return (transform_matrix @ np.append(self._half_extent_mm, 1))[:3]
+
+    def _zero_controls(self):
+        for boxes, default in self.controls.values():
+            for box in boxes:
+                box.blockSignals(True)
+                box.setValue(default)
+                box.blockSignals(False)
+
+    def reset(self):
+        """Undo spinbox adjustments and drags, putting the layer back where it was when picked"""
+        self._zero_controls()
+        self._drag_matrix = np.eye(4)
+        self._apply()
+
+    def _spinbox_adjustment(self, on_top_of):
+        return compose_transform_matrix(self._values('Translate (mm)'), self._values('Rotate (deg)'),
+                                        self._values('Scale'), self._centre_of(on_top_of))
+
+    def _apply(self):
+        layer = self._layer()
+        if layer is None or self._base_matrix is None:
+            return
+        dragged = self._drag_matrix @ self._base_matrix
+        transform_matrix = self._spinbox_adjustment(dragged) @ dragged
+        axes = self._spatial_axes(layer)
+        layer.affine = put_transform_matrix_in_layer_affine(transform_matrix, layer.ndim, axes)
+        layer.metadata['transform_matrix'] = transform_matrix
+
+        points_name = f'{layer.name}_landmarks'
+        if points_name in self.viewer.layers:
+            points_layer = self.viewer.layers[points_name]
+            points_layer.affine = put_transform_matrix_in_layer_affine(transform_matrix, points_layer.ndim)
+
+    # --- mouse dragging in 3D ---------------------------------------------------------------------------------------
+    DEG_PER_PIXEL = 0.3
+
+    def _set_drag_mode(self, on):
+        """While on, dragging on the canvas moves the picked layer instead of the camera"""
+        if on:
+            self.viewer.dims.ndisplay = 3
+            self.viewer.camera.mouse_pan = False
+            self.viewer.mouse_drag_callbacks.append(self._on_drag)
+            self.status_label.setText('Drag: shift.  Shift+drag: tumble.  Ctrl+drag: roll.')
+        else:
+            self.viewer.camera.mouse_pan = True
+            if self._on_drag in self.viewer.mouse_drag_callbacks:
+                self.viewer.mouse_drag_callbacks.remove(self._on_drag)
+            self.status_label.setText('')
+
+    def _on_drag(self, viewer, event):
+        layer = self._layer()
+        if layer is None or self._base_matrix is None or len(event.dims_displayed) != 3:
+            return
+        # fold the spinbox adjustment into the drag matrix so the drag starts from what's on screen
+        self._drag_matrix = self._spinbox_adjustment(self._drag_matrix @ self._base_matrix) @ self._drag_matrix
+        self._zero_controls()
+        drag_at_press = self._drag_matrix
+        centre = self._centre_of(drag_at_press @ self._base_matrix)
+
+        # the layer's spatial axes are the viewer's last three dims (time, if any, leads)
+        view = np.asarray(event.view_direction)[-3:]
+        up = np.asarray(event.up_direction)[-3:]
+        right = np.cross(view, up)
+        start_position = np.asarray(event.position)[-3:]
+        start_pixel = np.asarray(event.pos, dtype=float)
+        modifiers = set(event.modifiers)
+        yield
+
+        while event.type == 'mouse_move':
+            dx, dy = (np.asarray(event.pos, dtype=float) - start_pixel) * self.DEG_PER_PIXEL
+            if 'Shift' in modifiers:
+                increment = (rotate_about_axis_matrix(up, -dx, centre)
+                             @ rotate_about_axis_matrix(right, -dy, centre))
+            elif 'Control' in modifiers:
+                increment = rotate_about_axis_matrix(view, dx, centre)
+            else:
+                increment = np.eye(4)
+                increment[:3, 3] = np.asarray(event.position)[-3:] - start_position
+            self._drag_matrix = increment @ drag_at_press
+            self._apply()
+            yield
+
+    def save(self):
+        layer = self._layer()
+        if layer is None or 'transform_matrix' not in layer.metadata:
+            self.status_label.setText('Pick a layer and adjust it before saving.')
+            return
+        source_path = layer.metadata.get('source_path')
+        atlas_layer = self.viewer.layers['Atlas'] if 'Atlas' in self.viewer.layers else None
+        axes = list(self._spatial_axes(layer))
+        alignment = {
+            'hq_source_path': source_path,
+            'atlas_source_path': atlas_layer.metadata.get('source_path') if atlas_layer else None,
+            'transform_matrix': layer.metadata['transform_matrix'],
+            'hq_voxel_size_in_mm': np.array(layer.scale)[axes],
+            'atlas_voxel_size_in_mm': atlas_layer.scale[:3] if atlas_layer else (np.nan,) * 3,
+            'method': 'manual',
+        }
+
+        json_path = Path(f'{source_path}.alignment.json')
+        if json_path.exists() and _ask_overwrite_alignment(self, json_path) is None:
+            return
+        save_transform_matrix(**alignment)
+        self.status_label.setText(f'Saved to {json_path.name}')
+        print(f'Saved transformation matrix for alignment to {json_path}')
 
 # apply transform to new data widget
 class AlignToAtlasWidget(QWidget):

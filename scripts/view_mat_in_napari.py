@@ -16,7 +16,7 @@ sys.path.insert(0, str(root_dir))
 
 from src.fusiconverter.utils import *
 from src.fusiconverter.viewer_ops import *
-from src.fusiconverter.widgets import AddLandmark, AlignmentWidget, AlignToAtlasWidget, RegisterToAreasWidget#, CropWidget
+from src.fusiconverter.widgets import AddLandmark, AlignmentWidget, ManualAlignmentWidget, AlignToAtlasWidget, RegisterToAreasWidget#, CropWidget
 
 # %%
 
@@ -62,8 +62,9 @@ for name, (image, voxel_size) in images.items():
     if alignment_path.exists():
         alignment = load_transform_matrix(alignment_path)
         layer.affine = put_transform_matrix_in_layer_affine(alignment['transform_matrix'], layer.ndim, spatial_axes)
+        rms = alignment.get('rms_error')
         print(f"Applied saved transformation matrix for alignment to '{name}' "
-              f"(RMS {alignment['rms_error']:.3f} mm)")
+              f"({'manual' if rms is None else f'RMS {rms:.3f} mm'})")
 
         points_layer = get_or_create_landmarks_layer(viewer, layer)   # loads the saved .landmarks.json
         points_layer.affine = put_transform_matrix_in_layer_affine(alignment['transform_matrix'], points_layer.ndim)
@@ -74,6 +75,9 @@ viewer.window.add_dock_widget(add_landmark_widget, area='right')
 
 alignment_widget = AlignmentWidget(viewer)
 viewer.window.add_dock_widget(alignment_widget)
+
+manual_alignment_widget = ManualAlignmentWidget(viewer)
+viewer.window.add_dock_widget(manual_alignment_widget, area='right')
 
 align_to_atlas_widget = AlignToAtlasWidget(viewer)
 viewer.window.add_dock_widget(align_to_atlas_widget, area='right')
