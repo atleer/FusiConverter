@@ -277,6 +277,7 @@ class AlignmentWidget(QWidget):
         if not json_path.exists() :
             save_transform_matrix(**self._last_alignment)
             print(f'Saved transformation matrix for alignment to {json_path}')
+            self.status_label.setText(f"Saved transformation matrix for alignment to {json_path}.")
             return
         
         # file with transformation matrix for alignment already exists, check with user if they want to overwrite

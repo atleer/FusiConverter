@@ -47,6 +47,7 @@ def get_or_create_landmarks_layer(viewer, image_layer) -> napari.layers.Points:
         name = points_name, # takes its name from the filename - atlas or HQ volume
         ndim=image_layer.ndim,
         scale=image_layer.scale,
+        affine=image_layer.affine.affine_matrix,
         features={
             'landmark_name': np.array(list(saved_landmarks.keys()), dtype=object),
             'from_disk': np.ones(len(saved_landmarks), dtype=bool),
