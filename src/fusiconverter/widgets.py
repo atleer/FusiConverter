@@ -59,6 +59,10 @@ class AddLandmark(QWidget):
         save_button.clicked.connect(self.save)
         self.layout().addWidget(save_button)
 
+        self.status_label = QLabel('')
+        self.status_label.setWordWrap(True)
+        self.layout().addWidget(self.status_label)
+
 
     def _refresh_layer_choices(self):
         """Used to refresh widget when a new layer is added or removed in napari so that it shows up in dropdown menu where you pick a layer to add the landmark to"""
@@ -115,6 +119,8 @@ class AddLandmark(QWidget):
         # write new landmarks to disk
         save_landmarks(self.viewer.layers[points_name], mode=mode)
         print(f'Saved landmarks to {json_path} ({mode})')
+        self._report(f"Saved landmarks to {json_path} ({mode})")
+
 
     def load(self):
         """Load existing landmarks"""
@@ -135,8 +141,7 @@ class AddLandmark(QWidget):
         box.setText(f'{json_path.name} already exists')
         box.setInformativeText(
             'Append keeps landmarks that are already in the file. \n' \
-            'Overwrite keeps only the landmarks you added in this session;\n' \
-            'landmarks loaded from file are discarded.'
+            'Overwrite keeps only the landmarks present in this session.'
         )
         append_button = box.addButton('Append', QMessageBox.AcceptRole)
         overwrite_button = box.addButton('Overwrite', QMessageBox.DestructiveRole)
@@ -149,6 +154,10 @@ class AddLandmark(QWidget):
         if clicked is overwrite_button:
             return 'overwrite'
         return None
+
+    def _report(self, message: str):
+        self.status_label.setText(message)
+        print(message)
 
 class AlignmentWidget(QWidget):
     def __init__(self, viewer):

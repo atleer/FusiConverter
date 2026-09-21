@@ -18,13 +18,11 @@ def load_landmarks(source_path):
 def save_landmarks(points_layer, mode='append'):
     source_path = points_layer.metadata.get('source_path') # source path stems from name of data that the landmarks are put on (e.g. atlas or the recorded image)
 
-    features = points_layer.features # names of landmarks and a list of booleans ('from_disk') indicating whether the landmark was added in this session or loaded from existing file are in features
+    features = points_layer.features # names of landmarks are in features
+    # overwrite means the file ends up matching the layer exactly: loaded landmarks are kept, landmarks deleted in napari are dropped
     landmarks = {}
-    for landmark_name, coords_landmark, from_disk in zip(features['landmark_name'], points_layer.data, features['from_disk']):
-        # overwrite means only the landmarks added in this session are kept
-        if mode == 'overwrite' and from_disk: # from_disk is just a boolean value
-            continue
-        landmarks[landmark_name] = coords_landmark.tolist() # added if the landmark doesn't already exist on file or the landmark already exists but the user has chosen to append
+    for landmark_name, coords_landmark in zip(features['landmark_name'], points_layer.data):
+        landmarks[landmark_name] = coords_landmark.tolist()
 
     if mode == 'append':
         # add new landmarks to existing landmarks on disk. If new landmarks have same name as landmarks on disk, new landmarks take precedence and will overwrite landmarks on disk
