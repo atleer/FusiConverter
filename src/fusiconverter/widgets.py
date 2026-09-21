@@ -401,7 +401,15 @@ class ManualAlignmentWidget(QWidget):
             return
         axes = self._spatial_axes(layer)
         self._base_matrix = get_transform_matrix_from_layer_affine(layer.affine.affine_matrix, axes)
+        self._last_applied = self._base_matrix
         self._half_extent_mm = np.array(layer.data.shape)[list(axes)] * np.array(layer.scale)[list(axes)] / 2
+
+    def _sync_base(self, layer):
+        """If something else (e.g. the landmark fit) moved the layer since we last wrote it, start from where it is now"""
+        current = get_transform_matrix_from_layer_affine(layer.affine.affine_matrix, self._spatial_axes(layer))
+        if not np.allclose(current, self._last_applied):
+            self._base_matrix = current
+            self._drag_matrix = np.eye(4)
 
     def _centre_of(self, transform_matrix):
         """Centre of the volume in atlas mm under 'transform_matrix' - rotation/scale pivot here rather than at the origin"""
@@ -428,11 +436,13 @@ class ManualAlignmentWidget(QWidget):
         layer = self._layer()
         if layer is None or self._base_matrix is None:
             return
+        self._sync_base(layer)
         dragged = self._drag_matrix @ self._base_matrix
         transform_matrix = self._spinbox_adjustment(dragged) @ dragged
         axes = self._spatial_axes(layer)
         layer.affine = put_transform_matrix_in_layer_affine(transform_matrix, layer.ndim, axes)
         layer.metadata['transform_matrix'] = transform_matrix
+        self._last_applied = transform_matrix
 
         points_name = f'{layer.name}_landmarks'
         if points_name in self.viewer.layers:
@@ -459,6 +469,7 @@ class ManualAlignmentWidget(QWidget):
         layer = self._layer()
         if layer is None or self._base_matrix is None or len(event.dims_displayed) != 3:
             return
+        self._sync_base(layer)
         # fold the spinbox adjustment into the drag matrix so the drag starts from what's on screen
         self._drag_matrix = self._spinbox_adjustment(self._drag_matrix @ self._base_matrix) @ self._drag_matrix
         self._zero_controls()
