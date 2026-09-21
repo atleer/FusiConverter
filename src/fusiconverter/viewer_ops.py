@@ -162,7 +162,7 @@ def put_transform_matrix_in_layer_affine(transform_matrix, ndim, spatial_axes=(0
     if ndim == 3 and axes == [0,1,2]:
         return transform_matrix
     affine = np.eye(ndim + 1)
-    affine[np.ix_(axes,axes)] = transform_matrix[:3, :3] # TODO: what does np.ix do exactly?
+    affine[np.ix_(axes,axes)] = transform_matrix[:3, :3] # np.ix_(axes,axes) accesses the rows and columns defined by spatial_axes
     affine[axes, ndim] = transform_matrix[:3, 3]   # translation goes in the last column
     return affine
 
