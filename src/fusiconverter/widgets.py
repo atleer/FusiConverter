@@ -553,7 +553,7 @@ class AlignToAtlasWidget(QWidget):
         self.layout().addWidget(self.status_label)
 
     def align(self):
-        image_paths = select_files_from_gui("Select Non-HQ .MAT Files to Align (e.g. T_*.mat)", defaultextension='.mat')
+        image_paths = select_files_from_gui("Select .MAT Files to Align", defaultextension='.mat')
 
         alignment_paths = select_files_from_gui(
             "Select an .alignment.json File",

@@ -10,4 +10,5 @@ contributions:
       filename_patterns:
         - '*.nii'
         - '*.nii.gz'
+        - '*.mat'
       accepts_directories: false

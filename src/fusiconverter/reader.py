@@ -5,17 +5,32 @@ File -> Open File(s) scales it the same way `view_mat_in_napari.py` does, i.e.
 in mm, on the same grid as the recording.
 """
 
+import numpy as np
 from pathlib import Path
 
-from .utils import load_atlas_image
+from .utils import load_atlas_image, load_mat_image, prepare_image_for_layer
 
 
 def napari_get_reader(path):
     """return the reader itself, not the data."""
-    if str(path).lower().endswith(('.nii', '.nii.gz')):
+    path =  str(path).lower()
+    if path.endswith(('.nii', '.nii.gz')):
         return read_atlas
+    if path.endswith('.mat'):
+        return read_mat
     return None
 
+def read_mat(mat_path):
+    image, voxel_size, _origin, image_name = load_mat_image(mat_path)
+
+    image, scale, spatial_axes = prepare_image_for_layer(np.abs(image), voxel_size)
+    kwargs = {
+        'name': f'{image_name}_{Path(mat_path).stem}',
+        'scale': scale,
+        'metadata': {'source_path': str(mat_path), 'spatial_axes': spatial_axes},
+    }
+
+    return [(image, kwargs, 'image')]
 
 def read_atlas(atlas_path):
     image, scale = load_atlas_image(atlas_path)
