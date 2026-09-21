@@ -263,13 +263,3 @@ def save_area_map(source_path, summary, labels, annotation_source_path, fraction
         np.savez_compressed(npz_path, labels_shape=np.array(labels.shape), **voxel_indices)
 
     return json_path
-
-def load_voxel_indices(source_path):
-    """Load the per-structure flat voxel indices written by save_area_map.
-
-    Returns {structure_id: flat index array} plus the shape they index into.
-    """
-    with np.load(Path(f'{source_path}.areas.npz')) as npz:
-        labels_shape = tuple(npz['labels_shape'].tolist())
-        voxel_indices = {int(key): npz[key] for key in npz.files if key != 'labels_shape'}
-    return voxel_indices, labels_shape
