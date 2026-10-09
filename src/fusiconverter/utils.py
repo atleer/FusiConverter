@@ -2,7 +2,7 @@ import ast
 import numpy as np
 import pandas as pd
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog
 import nibabel as nib
 from pathlib import Path
 from scipy import io
@@ -27,25 +27,6 @@ def select_save_dir_from_gui(title="Save Directory") -> str | None:
     if not file_path:
         return None
     return file_path
-
-def prompt_load_atlas() -> str | None:
-    root = tk.Tk()
-    root.withdraw()  # Hide the main window
-    root.attributes('-topmost', True)   # force child dialogs to the front
-    load = messagebox.askyesno(
-        "Load Atlas",
-        "Would you like to load the Allen CCF atlas as an additional layer on top of the recorded image?\n\n"
-        "If so, navigate to the folder Allen_CCF after clicking \"yes\" and select the atlas to load. Recommended: 50um resolution (e.g. 'average_template_50.nii.gz') in Allen_CCF."
-    )
-    if not load:
-        root.destroy()
-        return None
-    atlas_path = filedialog.askopenfilename(
-        title="Select Allen CCF Atlas File (recommended: 50um, e.g. average_template_50.nii.gz)",
-        filetypes=[("NIfTI files", "*.nii.gz *.nii"), ("All files", "*.*")],
-    )
-    root.destroy()
-    return atlas_path or None
 
 
 def load_atlas_image(atlas_path) -> tuple[np.ndarray, tuple[float, float, float]]:
