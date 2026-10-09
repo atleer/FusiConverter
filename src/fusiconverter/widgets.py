@@ -396,7 +396,7 @@ class ManualAlignmentWidget(QWidget):
         return self.viewer.layers[name] if name in self.viewer.layers else None
 
     def _spatial_axes(self, layer):
-        # layers added by AlignToAtlasWidget don't set this; time (if any) is the leading axis, so spatial are the last three
+        # TODO: This may not be needed anymore. Previous descrption: layers added by AlignToAtlasWidget don't set this; time (if any) is the leading axis, so spatial are the last three
         return tuple(layer.metadata.get('spatial_axes', range(layer.ndim - 3, layer.ndim)))
 
     def _values(self, name):
@@ -533,99 +533,6 @@ class ManualAlignmentWidget(QWidget):
         self.status_label.setText(f'Saved to {json_path.name}')
         print(f'Saved transformation matrix for alignment to {json_path}')
 
-# apply transform to new data widget
-class AlignToAtlasWidget(QWidget):
-    """Align a new acquisition (e.g. ...T_0.mat) to atlas using transformation matrix fitted to session's HQ volume"""
-
-    def __init__(self, viewer):
-        super().__init__()
-        self.viewer = viewer
-        self.setLayout(QVBoxLayout())
-
-        self.layout().addWidget(QLabel('Align New Image'))
-        align_button = QPushButton('Align New Image to Atlas')
-        align_button.clicked.connect(self.align)
-        self.layout().addWidget(align_button)
-
-        # sets the status to empty so that it can be populated by _report later
-        self.status_label = QLabel('')
-        self.status_label.setWordWrap(True)
-        self.layout().addWidget(self.status_label)
-
-    def align(self):
-        image_paths = select_files_from_gui("Select .MAT Files to Align", defaultextension='.mat')
-
-        alignment_paths = select_files_from_gui(
-            "Select an .alignment.json File",
-            defaultextension='.json',
-        )
-        if not alignment_paths:
-            self._report(f"No alignment file selected. Alignment skipped.")
-            print("No alignment file selected. Quitting...")
-            return
-        
-        alignment = load_transform_matrix(alignment_paths[0])
-
-        if not image_paths:
-            print("No files selected. Quitting...")
-            sys.exit()
-
-        for image_path in image_paths:
-            image_path = Path(image_path)
-
-            image, voxel_size, origin, image_name = load_image(image_path)
-
-            if voxel_size is None:
-                self._report(f"No voxel size in {image_path.name}, cannot align it automatically to atlas.")
-
-            # napari lines layers up by their trailing (last) axes, so time needs to go first for the spatial axes to be aligned with the atlas axes
-            if image.ndim == len(voxel_size) + 1:
-                image = np.moveaxis(image, -1, 0)
-                scale = (1.0,) + tuple(voxel_size)
-                spatial_axes = tuple(range(1, image.ndim))
-            elif image.ndim == len(voxel_size):
-                scale = tuple(voxel_size)
-                spatial_axes = (0, 1, 2)
-            else:
-                print(f"{image_path.name}: image has {image.ndim} dimensions but voxel size has "
-                f"{len(voxel_size)}; don't know which axes are spatial.")
-
-            layer = self.viewer.add_image(
-                data=image,
-                name=image_path.stem,
-                scale=scale,
-                metadata={'source_path': str(image_path)}
-            )
-            layer.metadata['transform_matrix'] = alignment['transform_matrix']
-            layer.affine = put_transform_matrix_in_layer_affine(alignment['transform_matrix'], ndim=image.ndim, spatial_axes=spatial_axes)
-
-    def _find_alignment_file(self, image_path: Path):
-        """Find the *.alignment.json sitting next to the selected file. One match is used
-        as is; zero or several means the user picks."""
-        candidates = sorted(image_path.parent.glob('*.alignment.json'))
-        if len(candidates) == 1:
-            return candidates[0]
-
-        if not candidates:
-            self._report(f"No .alignment.json found next to {image_path.name}. Select one.")
-        else:
-            self._report(
-                f"{len(candidates)} .alignment.json files next to {image_path.name}. Select one."
-            )
-
-        selected = select_files_from_gui(
-            f"Select the .alignment.json File to Use for {image_path.name}",
-            defaultextension='.json',
-        )
-        if not selected:
-            self._report(f"No alignment file selected; skipped {image_path.name}.")
-            return None
-        return selected[0]
-
-    def _report(self, message: str):
-        self.status_label.setText(message)
-        print(message)
-
 class RegisterToAreasWidget(QWidget):
     """Label every voxel of an aligned recording with the Allen brain structure it sits in.
 
@@ -712,9 +619,6 @@ class RegisterToAreasWidget(QWidget):
                 f"({fraction_outside:.0%} of the volume fell outside the atlas). Check the alignment."
             )
             return
-
-        self._to_recording_space(image_layer, transform_matrix, spatial_shape, voxel_size,
-                                    annotation.shape, annotation_voxel_size)
 
         self._add_labels_layer(image_layer, labels, structures, annotation_path)
         self._save(image_layer, summary, labels, annotation_path, fraction_outside) # TODO: remove this when _save button with ask to overwrite has been properly implemented

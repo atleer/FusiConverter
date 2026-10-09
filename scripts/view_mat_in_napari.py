@@ -16,7 +16,7 @@ sys.path.insert(0, str(root_dir))
 
 from src.fusiconverter.utils import *
 from src.fusiconverter.viewer_ops import *
-from src.fusiconverter.widgets import AddLandmark, AlignmentWidget, ManualAlignmentWidget, AlignToAtlasWidget, RegisterToAreasWidget#, CropWidget
+from src.fusiconverter.widgets import AddLandmark, AlignmentWidget, ManualAlignmentWidget, RegisterToAreasWidget#, CropWidget
 
 # %%
 
@@ -78,9 +78,6 @@ viewer.window.add_dock_widget(alignment_widget)
 
 manual_alignment_widget = ManualAlignmentWidget(viewer)
 viewer.window.add_dock_widget(manual_alignment_widget, area='right')
-
-align_to_atlas_widget = AlignToAtlasWidget(viewer)
-viewer.window.add_dock_widget(align_to_atlas_widget, area='right')
 
 register_to_atlas_areas_widget = RegisterToAreasWidget(viewer)
 viewer.window.add_dock_widget(register_to_atlas_areas_widget, area='right')
