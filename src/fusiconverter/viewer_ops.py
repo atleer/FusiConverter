@@ -3,7 +3,6 @@ import numpy as np
 from pathlib import Path
 import json
 from datetime import datetime, timezone
-from scipy.ndimage import affine_transform
 from scipy.spatial.transform import Rotation
 
 
@@ -200,12 +199,6 @@ def annotate_volume(spatial_shape, voxel_size_mm, transform_matrix, annotation, 
     labels[inside] = annotation[tuple(atlas_indices[:, inside])]
 
     return labels.reshape(spatial_shape), float(1.0 - inside.mean())
-
-def resample_atlas_to_recording(atlas, atlas_voxel_size_mm, transform_matrix, spatial_shape, voxel_size_mm, order=1):
-    matrix, offset = atlas_index_transform(voxel_size_mm, transform_matrix, atlas_voxel_size_mm)
-    resampled_atlas = affine_transform(atlas, matrix, offset=offset, output_shape = tuple(spatial_shape),
-                                 order = order, mode='constant', cval=0)
-    return resampled_atlas
 
 def summarize_areas(labels, structures):
     """Count how many voxels of the recording fall in each structure, most covered first."""

@@ -13,8 +13,7 @@ from src.fusiconverter.viewer_ops import (
     get_transform_matrix_from_layer_affine, 
     save_transform_matrix, 
     load_transform_matrix, 
-    annotate_volume, 
-    resample_atlas_to_recording,
+    annotate_volume,
     summarize_areas,
     save_area_map
 )
@@ -625,51 +624,11 @@ class RegisterToAreasWidget(QWidget):
         self._report_summary(layer_name, summary, labels, fraction_outside)
 
     def _get_transform_matrix(self, image_layer, spatial_axes):
-        """Get the matrix used to align the recording's to the atlas, or return None if it has not been aligned.
-
-        Normally, the transform matrix is the layer's affine, but once the layer has been put back into recording space
-        the affine is identity again, so the matrix is kept in the layer metadata as well.
-        """
+        """Get the matrix used to align the recording to the atlas (the layer's affine), or return None if it has not been aligned."""
         layer_affine = np.asarray(image_layer.affine.affine_matrix)
-        if not np.allclose(layer_affine, np.eye(image_layer.ndim + 1)):
-            return get_transform_matrix_from_layer_affine(layer_affine, spatial_axes)
-        transform_matrix = image_layer.metadata.get('transform_matrix')
-        return None if transform_matrix is None else np.asarray(transform_matrix)
-
-    def _to_recording_space(self, image_layer, transform_matrix, spatial_shape, voxel_size, annotation_shape, annotation_voxel_size):
-        """Put the recording back on its own grid and bring the atlas.
-        
-        A rotated layer cannot be sliced in 2D by napari, so the recording needs to keep its own axis 
-        and the atlas template is instead resampled onto the recording's axes. 
-        """
-
-        image_layer.metadata['transform_matrix'] = transform_matrix
-        image_layer.affine = np.eye(image_layer.ndim + 1)
-
-        landmarks_name = f'{image_layer.name}_landmarks'
-        if landmarks_name in self.viewer.layers:
-            landmarks_layer = self.viewer.layers[landmarks_name]
-            landmarks_layer.affine = np.eye(landmarks_layer.ndim + 1)
-
-        # any unaligned 3D image layer on the annotation's grid is an atlas
-        for layer in list(self.viewer.layers):
-            if layer is image_layer or not isinstance(layer, napari.layers.Image):
-                continue
-            if layer.ndim != 3 or tuple(layer.data.shape) != tuple(annotation_shape):
-                continue
-            if not np.allclose(np.asarray(layer.affine.affine_matrix), np.eye(4)):
-                continue
-
-
-            resampled_name = f'{layer.name}_in_{image_layer.name}'
-            if resampled_name in self.viewer.layers:
-                # start from scratch
-                self.viewer.layers.remove(resampled_name)
-
-            resampled = resample_atlas_to_recording(np.asarray(layer.data), np.asarray(layer.scale), transform_matrix, spatial_shape, voxel_size, order = 1)
-
-            self.viewer.add_image(resampled, name = resampled_name, scale = voxel_size, blending='additive', metadata={'source_path': layer.metadata.get('source_path')})
-            layer.visible = False # the original atlas no longer lines up with the recorded brain, so make it invisible
+        if np.allclose(layer_affine, np.eye(image_layer.ndim + 1)):
+            return None
+        return get_transform_matrix_from_layer_affine(layer_affine, spatial_axes)
 
     def _add_labels_layer(self, image_layer, labels, structures, annotation_path):
         "Put the structure ids on screen in colours on top of the recording"
@@ -684,7 +643,7 @@ class RegisterToAreasWidget(QWidget):
         spatial_axes = list(range(image_layer.ndim - 3, image_layer.ndim))
         layer_affine = np.asarray(image_layer.affine.affine_matrix)
 
-        labels_affine = np.eye(4) # note: next two lines are only needed if self.recording_space.isChecked() isn't commented out
+        labels_affine = np.eye(4) # same spatial affine as the recording, so the labels follow it into atlas space
         labels_affine[:3, :3] = layer_affine[np.ix_(spatial_axes, spatial_axes)]
         labels_affine[:3, 3] = layer_affine[spatial_axes, image_layer.ndim]
     
