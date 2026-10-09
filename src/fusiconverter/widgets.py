@@ -206,7 +206,7 @@ class AlignmentWidget(QWidget):
         moving_layer_name = self.moving_layer.currentText()
         fixed_layer_name = self.fixed_layer.currentText()
         if not moving_layer_name or not fixed_layer_name or moving_layer_name == fixed_layer_name:
-            self.status_label.setText("Pick two different layers (HQ and Atlas).")
+            self.status_label.setText("Pick two different layers.")
             return
         moving_layer = self.viewer.layers[moving_layer_name]
         fixed_layer = self.viewer.layers[fixed_layer_name]
