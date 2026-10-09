@@ -50,10 +50,18 @@ def prompt_load_atlas() -> str | None:
 
 def load_atlas_image(atlas_path) -> tuple[np.ndarray, tuple[float, float, float]]:
     img = nib.load(atlas_path)
-    # Allen CCF .nii.gz files declare their units as "mm" but the zoom values
-    # are actually written in um (e.g. 50.0 for the 50um atlas), so divide by
-    # 1000 to get a real mm voxel size comparable to the h5 files' voxelSize.
-    scale_mm = tuple(z / 1000 for z in img.header.get_zooms()[:3])
+    zooms = img.header.get_zooms()[:3]
+    # the headers all say "mm", but not all of them mean it, so tell them apart by size
+    if zooms[0] >= 1:
+        # Allen CCF: written in um (e.g. 50.0 for the 50um atlas)
+        to_mm = 1 / 1000
+    elif zooms[0] >= 0.2:
+        # rodent MRI blown up 10x so human-brain tools accept it (e.g. 0.78125 for the 78um Keliris vascular atlas)
+        to_mm = 1 / 10
+    else:
+        # already real mm (e.g. 0.078125 in the Keliris VascularProbabilisticAtlas)
+        to_mm = 1
+    scale_mm = tuple(z * to_mm for z in zooms)
     return np.asarray(img.get_fdata()), scale_mm
 
 def prepare_image_for_layer(image, voxel_size):
