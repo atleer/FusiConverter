@@ -6,6 +6,7 @@ from tkinter import filedialog
 import nibabel as nib
 from pathlib import Path
 from scipy import io
+import h5py
 
 
 
@@ -89,26 +90,33 @@ def load_image(path):
 def load_mat_image(mat_path):
     """Read image, voxel size (mm) and origin (mm) straight from a .mat acquisition file."""
 
-    data = io.loadmat(mat_path)
+    if '2026' not in mat_path:
+        data = io.loadmat(mat_path)       
+        for image_name in ['bmode', 'doppler', 'Ihq', 'I']:
+            if image_name in data:
+                break
+        else:
+            raise ValueError(f"Could not find image data in {mat_path}.")
 
-    for image_name in ['bmode', 'doppler', 'Ihq', 'I']:
-        if image_name in data:
-            break
+        metadata = {}
+        if 'metadata' in data:
+            for name in data['metadata'].dtype.names:
+                metadata[name] = np.asarray(data['metadata'][name].item()).flatten()
+
+        if 'origen' in metadata:
+            metadata['origin'] = metadata.pop('origen')
+
+        voxel_size = tuple(float(v) for v in metadata['voxelSize']) if 'voxelSize' in metadata else None
+        origin = tuple(float(v) for v in metadata['origin']) if 'origin' in metadata else None # TODO: Can I just drop origin? What is it needed for?
+        return np.asarray(data[image_name]), voxel_size, origin, image_name
     else:
-        raise ValueError(f"Could not find image data in {mat_path}.")
-
-    metadata = {}
-    if 'metadata' in data:
-        for name in data['metadata'].dtype.names:
-            metadata[name] = np.asarray(data['metadata'][name].item()).flatten()
-
-    if 'origen' in metadata:
-        metadata['origin'] = metadata.pop('origen')
-
-    voxel_size = tuple(float(v) for v in metadata['voxelSize']) if 'voxelSize' in metadata else None
-    origin = tuple(float(v) for v in metadata['origin']) if 'origin' in metadata else None # TODO: Can I just drop origin? What is it needed for?
-    return np.asarray(data[image_name]), voxel_size, origin, image_name
-
+        with h5py.File(mat_path, 'r') as file:
+            image_name = 'I'
+            # h5py reads MATLAB v7.3 arrays with the axes reversed, so transpose back to (Z, X, Y, time)
+            image = file[image_name][()]
+            voxel_size = tuple(float(v) for v in file['metadata/voxelSize'][()].flatten())
+        return image, voxel_size, None, image_name
+        
 def prompt_load_annotation() -> str | None:
     """Ask the user for the Allen CCF annotation volume file that says which structure each atlas voxel is in."""
     root = tk.Tk()
