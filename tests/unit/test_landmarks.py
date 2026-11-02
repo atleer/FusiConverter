@@ -1,10 +1,55 @@
 """
-Test matching landmarks by name between two layers
+Test saving, loading and matching landmarks
 """
 import numpy as np
+import napari
 
-from fusiconverter.viewer_ops import match_landmarks
+from fusiconverter.viewer_ops import match_landmarks, save_landmarks, load_landmarks
 
+
+def make_points_layer(source_path, landmarks):
+    """A napari Points layer (no viewer needed) holding 'landmarks' ({name: coordinates}), as AddLandmark builds it"""
+    return napari.layers.Points(
+        np.array(list(landmarks.values()), dtype=float),
+        features={'landmark_name': np.array(list(landmarks), dtype=object)},
+        metadata={'source_path': str(source_path)},
+    )
+
+# %% save_landmarks / load_landmarks
+
+def test_load_landmarks_without_file(tmp_path):
+    """A recording with no landmarks file has no landmarks"""
+    assert load_landmarks(tmp_path / 'recording.mat') == {}
+
+def test_save_and_load_landmarks(tmp_path):
+    """Saved landmarks load back with the same names and coordinates, from <source>.landmarks.json"""
+    source_path = tmp_path / 'recording.mat'
+    landmarks = {'bregma': [1.0, 2.0, 3.0], 'lambda': [4.0, 5.0, 6.0]}
+
+    save_landmarks(make_points_layer(source_path, landmarks))
+
+    assert (tmp_path / 'recording.mat.landmarks.json').exists()
+    assert load_landmarks(source_path) == landmarks
+
+def test_save_landmarks_append(tmp_path):
+    """Appending keeps the landmarks already on file, and a landmark with the same name is replaced by the new one"""
+    source_path = tmp_path / 'recording.mat'
+    save_landmarks(make_points_layer(source_path, {'bregma': [1.0, 2.0, 3.0], 'lambda': [4.0, 5.0, 6.0]}))
+
+    save_landmarks(make_points_layer(source_path, {'lambda': [40.0, 50.0, 60.0], 'midline': [7.0, 8.0, 9.0]}), mode='append')
+
+    assert load_landmarks(source_path) == {'bregma': [1.0, 2.0, 3.0], 'lambda': [40.0, 50.0, 60.0], 'midline': [7.0, 8.0, 9.0]}
+
+def test_save_landmarks_overwrite(tmp_path):
+    """Overwriting makes the file match the layer exactly, so landmarks only on file are dropped"""
+    source_path = tmp_path / 'recording.mat'
+    save_landmarks(make_points_layer(source_path, {'bregma': [1.0, 2.0, 3.0], 'lambda': [4.0, 5.0, 6.0]}))
+
+    save_landmarks(make_points_layer(source_path, {'lambda': [40.0, 50.0, 60.0], 'midline': [7.0, 8.0, 9.0]}), mode='overwrite')
+
+    assert load_landmarks(source_path) == {'lambda': [40.0, 50.0, 60.0], 'midline': [7.0, 8.0, 9.0]}
+
+# %% match_landmarks
 
 def test_match_landmarks_keeps_shared_names_sorted():
     """Only landmarks named in both layers are kept, sorted by name, with their coordinates in the same order"""
