@@ -1,5 +1,4 @@
 # %%
-import sys
 from pathlib import Path
 
 
@@ -8,12 +7,9 @@ import os
 
 root_dir = Path(__file__).parent.parent
 os.chdir(root_dir)
-sys.path.insert(0, str(root_dir))
 
-from src.fusiconverter.utils import *
-from src.fusiconverter.viewer_ops import *
-from src.fusiconverter.reader import read_atlas
-from src.fusiconverter.widgets import AddLandmark, AlignmentWidget, ManualAlignmentWidget, RegisterToAreasWidget#, CropWidget
+from fusiconverter.reader import read_atlas
+from fusiconverter.widgets import AddLandmark, AlignmentWidget, ManualAlignmentWidget, RegisterToAreasWidget#, CropWidget
 
 # %%
 

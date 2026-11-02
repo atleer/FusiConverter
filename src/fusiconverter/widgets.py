@@ -1,7 +1,7 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox, QCheckBox, QDoubleSpinBox
-from src.fusiconverter.viewer_ops import (
+from .viewer_ops import (
     save_landmarks,
     load_landmarks,
     get_or_create_landmarks_layer,
@@ -17,7 +17,7 @@ from src.fusiconverter.viewer_ops import (
     summarize_areas,
     save_area_map
 )
-from src.fusiconverter.utils import (
+from .utils import (
     select_files_from_gui,
     select_save_dir_from_gui,
     load_atlas_image,
