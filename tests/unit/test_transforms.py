@@ -8,10 +8,11 @@ from fusiconverter.viewer_ops import (
     fit_similarity_transform,
     transform_residuals,
     compose_transform_matrix,
-    rotate_about_axis_matrix,
     put_transform_matrix_in_layer_affine,
     get_transform_matrix_from_layer_affine,
     atlas_index_transform,
+    save_transform_matrix,
+    load_transform_matrix,
 )
 
 
@@ -130,3 +131,27 @@ def test_atlas_index_transform_matches_going_through_mm(random_similarity_transf
 
     expected = apply_transform(known, voxel_indices * voxel_size_mm) / atlas_voxel_size_mm
     assert np.allclose(voxel_indices @ matrix.T + offset, expected)
+
+# %% save_transform_matrix / load_transform_matrix
+
+def test_save_and_load_landmark_alignment(tmp_path, random_similarity_transform):
+    """A landmark alignment saved next to the recording loads back with the same matrix, voxel sizes, residuals per landmark and their RMS"""
+    known = random_similarity_transform(seed=8)
+    hq_source_path = tmp_path / 'recording.mat'
+
+    json_path = save_transform_matrix(hq_source_path, 'atlas.nii', known, (0.1, 0.2, 0.3), (0.05, 0.05, 0.05),
+                                      landmark_names=['bregma', 'lambda'], residuals_mm=[3.0, 4.0])
+    alignment = load_transform_matrix(json_path)
+
+    assert json_path == tmp_path / 'recording.mat.alignment.json'
+    assert isinstance(alignment['transform_matrix'], np.ndarray)
+    assert np.allclose(alignment['transform_matrix'], known)
+    assert alignment['hq_source_path'] == str(hq_source_path)
+    assert alignment['atlas_source_path'] == 'atlas.nii'
+    assert alignment['method'] == 'landmarks'
+    assert alignment['hq_voxel_size_in_mm'] == [0.1, 0.2, 0.3]
+    assert alignment['atlas_voxel_size_in_mm'] == [0.05, 0.05, 0.05]
+    assert alignment['landmark_names'] == ['bregma', 'lambda']
+    assert alignment['residuals_mm'] == {'bregma': 3.0, 'lambda': 4.0}
+    assert np.isclose(alignment['rms_error'], np.sqrt((3.0**2 + 4.0**2) / 2))
+    assert 'created' in alignment
