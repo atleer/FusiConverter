@@ -39,7 +39,7 @@ def _saved_alignment_affine(source_path, ndim, spatial_axes=(0, 1, 2), ask=True)
     print(f'Applied saved alignment to {Path(source_path).name}')
     return put_transform_matrix_in_layer_affine(alignment['transform_matrix'], ndim, spatial_axes)
 
-def read_mat(mat_path):
+def read_mat(mat_path, ask = True):
     image, voxel_size, _origin, image_name = load_mat_image(mat_path)
 
     image, scale, spatial_axes = prepare_image_for_layer(np.abs(image), voxel_size)
@@ -48,7 +48,7 @@ def read_mat(mat_path):
         'scale': scale,
         'metadata': {'source_path': str(mat_path), 'spatial_axes': spatial_axes},
     }
-    affine = _saved_alignment_affine(mat_path, image.ndim, spatial_axes)
+    affine = _saved_alignment_affine(mat_path, image.ndim, spatial_axes, ask=ask)
     if affine is not None:
         kwargs['affine'] = affine
 

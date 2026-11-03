@@ -63,9 +63,10 @@ def match_landmarks(landmarks_a: dict, landmarks_b: dict):
     coords_b = np.array([landmarks_b[name] for name in names], dtype=float)
     return names, coords_a, coords_b
 
-def fit_similarity_transform(moving: np.ndarray, fixed: np.ndarray):
-    """Applies Kabsch-Umeyama Algorithm to transform data to be aligned atlas: rotation + uniform scaling + translation.
-    
+def fit_similarity_transform(moving: np.ndarray, fixed: np.ndarray, allow_scaling: bool = False):
+    """Applies Kabsch-Umeyama Algorithm to transform data to be aligned atlas: rotation + translation,
+    plus uniform scaling if 'allow_scaling' is True.
+
     Returns a 4x4 homogeneous matrix mapping moving (landmarks on recorded data) points onto fixed (landmarks in atlas) points.
     """
 
@@ -84,8 +85,11 @@ def fit_similarity_transform(moving: np.ndarray, fixed: np.ndarray):
     correction = np.diag([1.0, 1.0, d])
     rotation = U @ correction @ Vt
 
-    moving_variance = (moving_centered ** 2).sum(axis=1).mean()
-    scale = np.sum(S * np.diag(correction)) / moving_variance
+    if allow_scaling:
+        moving_variance = (moving_centered ** 2).sum(axis=1).mean()
+        scale = np.sum(S * np.diag(correction)) / moving_variance
+    else:
+        scale = 1.0
     translation = fixed_centroid - scale * rotation @ moving_centroid
 
     transform_matrix = np.eye(4)
