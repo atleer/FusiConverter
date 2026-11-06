@@ -90,7 +90,7 @@ def load_image(path):
 def load_mat_image(mat_path):
     """Read image, voxel size (mm) and origin (mm) straight from a .mat acquisition file."""
 
-    if '2026' not in mat_path:
+    if '2026' not in str(mat_path):
         data = io.loadmat(mat_path)       
         for image_name in ['bmode', 'doppler', 'Ihq', 'I']:
             if image_name in data:
