@@ -42,11 +42,6 @@ def test_prepare_dimension_mismatch_raises(shape):
 
 # %% load_mat_image
 
-@pytest.fixture
-def image():
-    """A small, reproducible 3D recording"""
-    return np.random.default_rng(0).random((2, 3, 4))
-
 @pytest.mark.parametrize('image_name', ['bmode', 'doppler', 'Ihq', 'I'])
 def test_load_mat_finds_image_under_each_name(make_mat, image, image_name):
     """The image is found whichever of the variable names used by the different acquisition modes it is stored under"""

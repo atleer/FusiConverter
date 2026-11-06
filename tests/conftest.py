@@ -82,3 +82,8 @@ def make_structure_csvs(tmp_path):
             coarse.to_csv(tmp_path / 'allen_mouse_connectivity_coarse_structures.csv', index=False)
         return graph_path
     return make
+
+@pytest.fixture
+def image():
+    """A small, reproducible 3D recording"""
+    return np.random.default_rng(0).random((2, 3, 4))
