@@ -9,7 +9,7 @@ from pathlib import Path
 from qtpy.QtWidgets import QMessageBox
 
 from .utils import load_atlas_image, load_mat_image, prepare_image_for_layer
-from .viewer_ops import load_transform_matrix, put_transform_matrix_in_layer_affine
+from .transforms import load_transform_matrix, put_transform_matrix_in_layer_affine
 
 
 def napari_get_reader(path):

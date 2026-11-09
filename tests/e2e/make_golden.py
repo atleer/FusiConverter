@@ -17,12 +17,14 @@ from fusiconverter.utils import load_atlas_image, load_structure_graph
 from fusiconverter.viewer_ops import (
     load_landmarks,
     match_landmarks,
-    fit_similarity_transform,
-    transform_residuals,
-    get_transform_matrix_from_layer_affine,
     annotate_volume,
     summarize_areas,
     save_area_map,
+)
+from fusiconverter.transforms import (
+    fit_similarity_transform,
+    transform_residuals,
+    get_transform_matrix_from_layer_affine,
 )
 
 GOLDEN_PATH = Path(__file__).parent / 'golden' / 'golden.json'

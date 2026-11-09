@@ -4,7 +4,7 @@ Test the transform maths: fitting landmarks, composing manual adjustments and mo
 import pytest
 import numpy as np
 
-from fusiconverter.viewer_ops import (
+from fusiconverter.transforms import (
     fit_similarity_transform,
     transform_residuals,
     compose_transform_matrix,

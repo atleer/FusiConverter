@@ -9,7 +9,7 @@ import numpy as np
 import fusiconverter.widgets
 from fusiconverter.widgets import AddLandmark, AlignmentWidget, ManualAlignmentWidget, RegisterToAreasWidget
 from fusiconverter.reader import read_mat, read_atlas
-from fusiconverter.viewer_ops import get_transform_matrix_from_layer_affine
+from fusiconverter.transforms import get_transform_matrix_from_layer_affine
 
 pytestmark = pytest.mark.gui
 

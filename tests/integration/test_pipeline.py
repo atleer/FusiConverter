@@ -9,13 +9,15 @@ from fusiconverter.reader import read_mat
 from fusiconverter.viewer_ops import (
     load_landmarks,
     match_landmarks,
+    annotate_volume,
+    summarize_areas,
+    save_area_map,
+)
+from fusiconverter.transforms import (
     fit_similarity_transform,
     transform_residuals,
     save_transform_matrix,
     get_transform_matrix_from_layer_affine,
-    annotate_volume,
-    summarize_areas,
-    save_area_map,
 )
 
 

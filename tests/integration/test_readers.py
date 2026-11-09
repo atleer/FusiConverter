@@ -6,7 +6,7 @@ import numpy as np
 from qtpy.QtWidgets import QMessageBox
 
 from fusiconverter.reader import napari_get_reader, read_mat, read_atlas
-from fusiconverter.viewer_ops import save_transform_matrix
+from fusiconverter.transforms import save_transform_matrix
 
 
 def save_alignment(source_path, transform_matrix):

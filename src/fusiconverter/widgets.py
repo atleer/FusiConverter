@@ -5,17 +5,20 @@ from .viewer_ops import (
     save_landmarks,
     load_landmarks,
     get_or_create_landmarks_layer,
-    match_landmarks, fit_similarity_transform,
-    transform_residuals,
-    compose_transform_matrix,
-    rotate_about_axis_matrix,
-    put_transform_matrix_in_layer_affine, 
-    get_transform_matrix_from_layer_affine, 
-    save_transform_matrix, 
-    load_transform_matrix, 
+    match_landmarks,
     annotate_volume,
     summarize_areas,
     save_area_map
+)
+from .transforms import (
+    fit_similarity_transform,
+    transform_residuals,
+    compose_transform_matrix,
+    rotate_about_axis_matrix,
+    put_transform_matrix_in_layer_affine,
+    get_transform_matrix_from_layer_affine,
+    save_transform_matrix,
+    load_transform_matrix,
 )
 from .utils import (
     load_atlas_image,
