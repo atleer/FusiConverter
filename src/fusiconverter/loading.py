@@ -1,10 +1,15 @@
+# The atlas NIfTI headers don't all mean the voxel-size unit they claim (checked against ../data on 2026-11-03).
+# Every header says mm, except Keliris_vasc_atlas/VascularMeanTemplate.nii, which says "unknown":
+#   - Allen_CCF/ templates and annotations: header 25 / 50 / 100, really 25 / 50 / 100 um (the header is in um)
+#   - Keliris_vasc_atlas/VascularProbabilisticAtlas.nii and vasprob.nii: header 0.078125, really 0.078125 mm (correct)
+#   - all other Keliris_vasc_atlas/*.nii: header 0.78125, really 0.078125 mm (the header is 10x too big)
+# Taken at face value, the Allen volumes would be about 13 m across and the 0.78125 Keliris volumes about 20 cm.
+# With the corrected sizes they're about 13 mm and 20 mm, which fits a mouse brain. This is why load_atlas_image
+# guesses the unit from the size of the header value instead of reading the unit field.
 import numpy as np
-import tkinter as tk
-from tkinter import filedialog
 import nibabel as nib
 from scipy import io
 import h5py
-
 
 
 def load_atlas_image(atlas_path) -> tuple[np.ndarray, tuple[float, float, float]]:
@@ -77,15 +82,3 @@ def load_mat_image(mat_path):
             image = file[image_name][()]
             voxel_size = tuple(float(v) for v in file['metadata/voxelSize'][()].flatten())
         return image, voxel_size, None, image_name
-        
-def prompt_load_annotation() -> str | None:
-    """Ask the user for the Allen CCF annotation volume file that says which structure each atlas voxel is in."""
-    root = tk.Tk()
-    root.withdraw()  # Hide the main window
-    root.attributes('-topmost', True)   # force child dialogs to the front
-    annotation_path = filedialog.askopenfilename(
-        title="Select Allen CCF Annotation File (pick the resolution you aligned to, e.g. annotation_50.nii.gz)",
-        filetypes=[("NIfTI files", "*.nii.gz *.nii"), ("All files", "*.*")],
-    )
-    root.destroy()
-    return annotation_path or None
