@@ -4,7 +4,7 @@ Test saving, loading and matching landmarks
 import numpy as np
 import napari
 
-from fusiconverter.viewer_ops import match_landmarks, save_landmarks, load_landmarks
+from fusiconverter.landmarks import match_landmarks, save_landmarks, load_landmarks
 
 
 def make_points_layer(source_path, landmarks):

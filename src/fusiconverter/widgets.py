@@ -1,11 +1,13 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox, QCheckBox, QDoubleSpinBox
-from .viewer_ops import (
+from .landmarks import (
     save_landmarks,
     load_landmarks,
     get_or_create_landmarks_layer,
     match_landmarks,
+)
+from .viewer_ops import (
     annotate_volume,
     summarize_areas,
     save_area_map

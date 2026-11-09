@@ -6,9 +6,8 @@ import pytest
 import numpy as np
 
 from fusiconverter.reader import read_mat
+from fusiconverter.landmarks import load_landmarks, match_landmarks
 from fusiconverter.viewer_ops import (
-    load_landmarks,
-    match_landmarks,
     annotate_volume,
     summarize_areas,
     save_area_map,
