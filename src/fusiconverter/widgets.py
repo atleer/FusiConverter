@@ -7,10 +7,11 @@ from .landmarks import (
     get_or_create_landmarks_layer,
     match_landmarks,
 )
-from .viewer_ops import (
+from .areas import (
     annotate_volume,
     summarize_areas,
-    save_area_map
+    save_area_map,
+    load_structure_graph,
 )
 from .transforms import (
     fit_similarity_transform,
@@ -25,7 +26,6 @@ from .transforms import (
 from .utils import (
     load_atlas_image,
     prompt_load_annotation,
-    load_structure_graph,
 )
 import sys
 from pathlib import Path

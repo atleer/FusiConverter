@@ -4,8 +4,7 @@ Test labelling a recording's voxels with atlas structures, summarising which str
 import json
 import numpy as np
 
-from fusiconverter.viewer_ops import annotate_volume, summarize_areas, save_area_map
-from fusiconverter.utils import load_structure_graph
+from fusiconverter.areas import annotate_volume, summarize_areas, save_area_map, load_structure_graph
 
 
 # %% annotate_volume
