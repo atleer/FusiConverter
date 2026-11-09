@@ -10,26 +10,6 @@ import h5py
 
 
 
-def select_files_from_gui(title=None, defaultextension='.mat') -> tuple[str, ...]:
-    root = tk.Tk()
-    root.withdraw()  # Hide the main window
-    root.attributes('-topmost', True)   # force child dialogs to the front
-    file_path = filedialog.askopenfilenames(title=title, defaultextension=defaultextension)  # Open file dialog
-    if not file_path:
-        return ()
-    return file_path
-
-
-def select_save_dir_from_gui(title="Save Directory") -> str | None:
-    root = tk.Tk()
-    root.withdraw()  # Hide the main window
-    root.attributes('-topmost', True)   # force child dialogs to the front
-    file_path = filedialog.askdirectory(title=title)  # Open folder dialog
-    if not file_path:
-        return None
-    return file_path
-
-
 def load_atlas_image(atlas_path) -> tuple[np.ndarray, tuple[float, float, float]]:
     img = nib.load(atlas_path)
     zooms = img.header.get_zooms()[:3]
@@ -72,21 +52,6 @@ def prepare_image_for_layer(image, voxel_size):
         )
     return image, scale, tuple(range(image.ndim - n_spatial, image.ndim))
 
-def get_voxel_size_mm(h5_file) -> tuple[float, ...] | None:
-    if 'voxelSize' not in h5_file:
-        return None
-    return tuple(h5_file['voxelSize'][()])
-
-def load_image(path):
-    """Load a .mat or .h5 acquisition. This will actually be unnecessary if the function to load and convert mat_images are just used in all parts of the program, i.e. don't run convert_to_h5.py first
-        return NotImplementedError"""
-    suffix = Path(path).suffix.lower()
-    if suffix == '.mat':
-        return load_mat_image(path)
-    if suffix in ('.h5', '.hdf5'):
-        # this will actually be unnecessary if the function to load and convert mat_images are just used in all parts of the program, i.e. don't run convert_to_h5.py first
-        return NotImplementedError
-
 def load_mat_image(mat_path):
     """Read image, voxel size (mm) and origin (mm) straight from a .mat acquisition file."""
 
@@ -112,7 +77,6 @@ def load_mat_image(mat_path):
     else:
         with h5py.File(mat_path, 'r') as file:
             image_name = 'I'
-            # h5py reads MATLAB v7.3 arrays with the axes reversed, so transpose back to (Z, X, Y, time)
             image = file[image_name][()]
             voxel_size = tuple(float(v) for v in file['metadata/voxelSize'][()].flatten())
         return image, voxel_size, None, image_name

@@ -18,10 +18,7 @@ from .viewer_ops import (
     save_area_map
 )
 from .utils import (
-    select_files_from_gui,
-    select_save_dir_from_gui,
     load_atlas_image,
-    load_image,
     prompt_load_annotation,
     load_structure_graph,
 )
