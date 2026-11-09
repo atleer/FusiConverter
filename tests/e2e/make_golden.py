@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 
 from fusiconverter.reader import read_mat, read_atlas
-from fusiconverter.utils import load_atlas_image
+from fusiconverter.loading import load_atlas_image
 from fusiconverter.landmarks import load_landmarks, match_landmarks
 from fusiconverter.areas import (
     annotate_volume,

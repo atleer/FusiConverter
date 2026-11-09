@@ -23,12 +23,11 @@ from .transforms import (
     save_transform_matrix,
     load_transform_matrix,
 )
-from .utils import (
-    load_atlas_image,
-    prompt_load_annotation,
-)
+from .loading import load_atlas_image
 import sys
 from pathlib import Path
+import tkinter as tk
+from tkinter import filedialog
 from napari.utils.colormaps import DirectLabelColormap
 
 
@@ -556,6 +555,19 @@ class ManualAlignmentWidget(QWidget):
         save_transform_matrix(**alignment)
         self.status_label.setText(f'Saved to {json_path.name}')
         print(f'Saved transformation matrix for alignment to {json_path}')
+
+def prompt_load_annotation() -> str | None:
+    """Ask the user for the Allen CCF annotation volume file that says which structure each atlas voxel is in."""
+    root = tk.Tk()
+    root.withdraw()  # Hide the main window
+    root.attributes('-topmost', True)   # force child dialogs to the front
+    annotation_path = filedialog.askopenfilename(
+        title="Select Allen CCF Annotation File (pick the resolution you aligned to, e.g. annotation_50.nii.gz)",
+        filetypes=[("NIfTI files", "*.nii.gz *.nii"), ("All files", "*.*")],
+    )
+    root.destroy()
+    return annotation_path or None
+
 
 class RegisterToAreasWidget(QWidget):
     """Label every voxel of an aligned recording with the Allen brain structure it sits in.

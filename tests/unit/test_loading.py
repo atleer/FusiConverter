@@ -4,7 +4,7 @@ Test loading recordings and atlases from file, and putting a loaded recording on
 import pytest
 import numpy as np
 
-from fusiconverter.utils import prepare_image_for_layer, load_mat_image, load_atlas_image
+from fusiconverter.loading import prepare_image_for_layer, load_mat_image, load_atlas_image
 
 
 # %% prepare_image_for_layer
