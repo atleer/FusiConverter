@@ -1,0 +1,5175 @@
+{
+  "landmark_fit": {
+    "landmark_names": [
+      "DA",
+      "DP",
+      "VL",
+      "VR"
+    ],
+    "transform_matrix": [
+      [
+        0.03253002937391134,
+        0.9866670358621347,
+        0.15946773194587602,
+        5.57701393022492
+      ],
+      [
+        0.11861639240323,
+        0.15461338124882384,
+        -0.9808286566939454,
+        13.952549557130224
+      ],
+      [
+        -0.992407148625087,
+        0.05082187208117363,
+        -0.11200530646353053,
+        8.689713669687329
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "residuals_mm": [
+      0.9910951797915059,
+      2.061909576652424,
+      2.2945944942494885,
+      2.1918585805103348
+    ]
+  },
+  "labels_sha256": "e16ed7ab11cda0212f37c2279006dfdbf95d023684306fbd85c48030926cc88a",
+  "area_map": {
+    "n_voxels_total": 4274389,
+    "n_voxels_unlabelled": 1793491,
+    "fraction_outside_atlas": 0.0927267031615513,
+    "hq_shape": [
+      139,
+      191,
+      161
+    ],
+    "structures": [
+      {
+        "id": 672,
+        "acronym": "CP",
+        "name": "Caudoputamen",
+        "division": "STR",
+        "n_voxels": 154823,
+        "fraction_of_recording": 0.03622108329400998
+      },
+      {
+        "id": 961,
+        "acronym": "PIR",
+        "name": "Piriform area",
+        "division": "OLF",
+        "n_voxels": 62039,
+        "fraction_of_recording": 0.014514121199544544
+      },
+      {
+        "id": 382,
+        "acronym": "CA1",
+        "name": "Field CA1",
+        "division": "HPF",
+        "n_voxels": 60842,
+        "fraction_of_recording": 0.014234081175110642
+      },
+      {
+        "id": 313,
+        "acronym": "MB",
+        "name": "Midbrain",
+        "division": "MB",
+        "n_voxels": 40416,
+        "fraction_of_recording": 0.009455386489156696
+      },
+      {
+        "id": 463,
+        "acronym": "CA3",
+        "name": "Field CA3",
+        "division": "HPF",
+        "n_voxels": 37160,
+        "fraction_of_recording": 0.008693640190445932
+      },
+      {
+        "id": 1091,
+        "acronym": "CUL4, 5",
+        "name": "Lobules IV-V",
+        "division": "CB",
+        "n_voxels": 32597,
+        "fraction_of_recording": 0.0076261191950475265
+      },
+      {
+        "id": 728,
+        "acronym": "arb",
+        "name": "arbor vitae",
+        "division": "",
+        "n_voxels": 31766,
+        "fraction_of_recording": 0.007431705443748803
+      },
+      {
+        "id": 128,
+        "acronym": "MRN",
+        "name": "Midbrain reticular nucleus",
+        "division": "MB",
+        "n_voxels": 30504,
+        "fraction_of_recording": 0.007136458567528599
+      },
+      {
+        "id": 1007,
+        "acronym": "SIM",
+        "name": "Simple lobule",
+        "division": "CB",
+        "n_voxels": 29924,
+        "fraction_of_recording": 0.007000766659281596
+      },
+      {
+        "id": 1041,
+        "acronym": "PFL",
+        "name": "Paraflocculus",
+        "division": "CB",
+        "n_voxels": 29647,
+        "fraction_of_recording": 0.006935962075515355
+      },
+      {
+        "id": 56,
+        "acronym": "ACB",
+        "name": "Nucleus accumbens",
+        "division": "STR",
+        "n_voxels": 26065,
+        "fraction_of_recording": 0.006097947566307138
+      },
+      {
+        "id": 10703,
+        "acronym": "DG-mo",
+        "name": "Dentate gyrus, molecular layer",
+        "division": "HPF",
+        "n_voxels": 25665,
+        "fraction_of_recording": 0.006004366939929894
+      },
+      {
+        "id": 795,
+        "acronym": "PAG",
+        "name": "Periaqueductal gray",
+        "division": "MB",
+        "n_voxels": 25544,
+        "fraction_of_recording": 0.005976058800450778
+      },
+      {
+        "id": 1056,
+        "acronym": "ANcr1",
+        "name": "Crus 1",
+        "division": "CB",
+        "n_voxels": 25504,
+        "fraction_of_recording": 0.005966700737813054
+      },
+      {
+        "id": 767,
+        "acronym": "MOs5",
+        "name": "Secondary motor area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 22378,
+        "fraction_of_recording": 0.005235368142674894
+      },
+      {
+        "id": 943,
+        "acronym": "MOp2/3",
+        "name": "Primary motor area, Layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 21244,
+        "fraction_of_recording": 0.004970067066895409
+      },
+      {
+        "id": 997,
+        "acronym": "root",
+        "name": "root",
+        "division": "",
+        "n_voxels": 19981,
+        "fraction_of_recording": 0.0046745862391092624
+      },
+      {
+        "id": 754,
+        "acronym": "OT",
+        "name": "Olfactory tubercle",
+        "division": "STR",
+        "n_voxels": 19711,
+        "fraction_of_recording": 0.0046114193163046225
+      },
+      {
+        "id": 648,
+        "acronym": "MOp5",
+        "name": "Primary motor area, Layer 5",
+        "division": "Isocortex",
+        "n_voxels": 19223,
+        "fraction_of_recording": 0.004497250952124386
+      },
+      {
+        "id": 484682516,
+        "acronym": "ccb",
+        "name": "corpus callosum, body",
+        "division": "",
+        "n_voxels": 18045,
+        "fraction_of_recording": 0.004221656007443403
+      },
+      {
+        "id": 342,
+        "acronym": "SI",
+        "name": "Substantia innominata",
+        "division": "PAL",
+        "n_voxels": 17537,
+        "fraction_of_recording": 0.004102808611944304
+      },
+      {
+        "id": 844,
+        "acronym": "MOp6a",
+        "name": "Primary motor area, Layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 17270,
+        "fraction_of_recording": 0.004040343543837493
+      },
+      {
+        "id": 771,
+        "acronym": "P",
+        "name": "Pons",
+        "division": "P",
+        "n_voxels": 16577,
+        "fraction_of_recording": 0.003878215108638919
+      },
+      {
+        "id": 962,
+        "acronym": "MOs2/3",
+        "name": "Secondary motor area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 16484,
+        "fraction_of_recording": 0.00385645761300621
+      },
+      {
+        "id": 984,
+        "acronym": "CENT3",
+        "name": "Lobule III",
+        "division": "CB",
+        "n_voxels": 16352,
+        "fraction_of_recording": 0.0038255760063017194
+      },
+      {
+        "id": 1097,
+        "acronym": "HY",
+        "name": "Hypothalamus",
+        "division": "HY",
+        "n_voxels": 16205,
+        "fraction_of_recording": 0.003791185126108082
+      },
+      {
+        "id": 477,
+        "acronym": "STR",
+        "name": "Striatum",
+        "division": "STR",
+        "n_voxels": 16022,
+        "fraction_of_recording": 0.0037483719895404933
+      },
+      {
+        "id": 146,
+        "acronym": "PRNr",
+        "name": "Pontine reticular nucleus",
+        "division": "P",
+        "n_voxels": 14026,
+        "fraction_of_recording": 0.0032814046639180476
+      },
+      {
+        "id": 1021,
+        "acronym": "MOs6a",
+        "name": "Secondary motor area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 13884,
+        "fraction_of_recording": 0.003248183541554126
+      },
+      {
+        "id": 1090,
+        "acronym": "SSs5",
+        "name": "Supplemental somatosensory area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 13050,
+        "fraction_of_recording": 0.0030530679355575733
+      },
+      {
+        "id": 806,
+        "acronym": "SSs2/3",
+        "name": "Supplemental somatosensory area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 12763,
+        "fraction_of_recording": 0.002985923836131901
+      },
+      {
+        "id": 81,
+        "acronym": "VL",
+        "name": "lateral ventricle",
+        "division": "",
+        "n_voxels": 12658,
+        "fraction_of_recording": 0.0029613589217078744
+      },
+      {
+        "id": 502,
+        "acronym": "SUB",
+        "name": "Subiculum",
+        "division": "HPF",
+        "n_voxels": 12576,
+        "fraction_of_recording": 0.0029421748933005395
+      },
+      {
+        "id": 194,
+        "acronym": "LHA",
+        "name": "Lateral hypothalamic area",
+        "division": "HY",
+        "n_voxels": 12490,
+        "fraction_of_recording": 0.0029220550586294323
+      },
+      {
+        "id": 6,
+        "acronym": "int",
+        "name": "internal capsule",
+        "division": "",
+        "n_voxels": 12452,
+        "fraction_of_recording": 0.002913164899123594
+      },
+      {
+        "id": 17,
+        "acronym": "SCiw",
+        "name": "Superior colliculus, motor related, intermediate white layer",
+        "division": "MB",
+        "n_voxels": 12404,
+        "fraction_of_recording": 0.002901935223958325
+      },
+      {
+        "id": 862,
+        "acronym": "SSs6a",
+        "name": "Supplemental somatosensory area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 12321,
+        "fraction_of_recording": 0.002882517243985047
+      },
+      {
+        "id": 10,
+        "acronym": "SCig",
+        "name": "Superior colliculus, motor related, intermediate gray layer",
+        "division": "MB",
+        "n_voxels": 12158,
+        "fraction_of_recording": 0.00284438313873632
+      },
+      {
+        "id": 821,
+        "acronym": "VISp2/3",
+        "name": "Primary visual area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 11950,
+        "fraction_of_recording": 0.0027957212130201533
+      },
+      {
+        "id": 403,
+        "acronym": "MEA",
+        "name": "Medial amygdalar nucleus",
+        "division": "STR",
+        "n_voxels": 11911,
+        "fraction_of_recording": 0.002786597101948372
+      },
+      {
+        "id": 828,
+        "acronym": "ICe",
+        "name": "Inferior colliculus, external nucleus",
+        "division": "MB",
+        "n_voxels": 11828,
+        "fraction_of_recording": 0.002767179121975094
+      },
+      {
+        "id": 1093,
+        "acronym": "PRNc",
+        "name": "Pontine reticular nucleus, caudal part",
+        "division": "P",
+        "n_voxels": 11488,
+        "fraction_of_recording": 0.002687635589554437
+      },
+      {
+        "id": 258,
+        "acronym": "LSr",
+        "name": "Lateral septal nucleus, rostral (rostroventral) part",
+        "division": "STR",
+        "n_voxels": 11215,
+        "fraction_of_recording": 0.0026237668120519682
+      },
+      {
+        "id": 484682520,
+        "acronym": "or",
+        "name": "optic radiation",
+        "division": "",
+        "n_voxels": 11085,
+        "fraction_of_recording": 0.002593353108479364
+      },
+      {
+        "id": 202,
+        "acronym": "MV",
+        "name": "Medial vestibular nucleus",
+        "division": "MY",
+        "n_voxels": 10895,
+        "fraction_of_recording": 0.002548902310950173
+      },
+      {
+        "id": 1064,
+        "acronym": "ANcr2",
+        "name": "Crus 2",
+        "division": "CB",
+        "n_voxels": 10753,
+        "fraction_of_recording": 0.0025156811885862517
+      },
+      {
+        "id": 952,
+        "acronym": "EPd",
+        "name": "Endopiriform nucleus, dorsal part",
+        "division": "CTXsp",
+        "n_voxels": 10617,
+        "fraction_of_recording": 0.002483863775617989
+      },
+      {
+        "id": 1025,
+        "acronym": "PRM",
+        "name": "Paramedian lobule",
+        "division": "CB",
+        "n_voxels": 10543,
+        "fraction_of_recording": 0.002466551359738199
+      },
+      {
+        "id": 687,
+        "acronym": "RSPv5",
+        "name": "Retrosplenial area, ventral part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 9944,
+        "fraction_of_recording": 0.0023264143717382766
+      },
+      {
+        "id": 1102,
+        "acronym": "SSp-m6a",
+        "name": "Primary somatosensory area, mouth, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 9895,
+        "fraction_of_recording": 0.0023149507450070644
+      },
+      {
+        "id": 733,
+        "acronym": "VPM",
+        "name": "Ventral posteromedial nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 9766,
+        "fraction_of_recording": 0.002284770993000403
+      },
+      {
+        "id": 632,
+        "acronym": "DG-sg",
+        "name": "Dentate gyrus, granule cell layer",
+        "division": "HPF",
+        "n_voxels": 9621,
+        "fraction_of_recording": 0.0022508480159386525
+      },
+      {
+        "id": 20,
+        "acronym": "ENTl2",
+        "name": "Entorhinal area, lateral part, layer 2",
+        "division": "HPF",
+        "n_voxels": 9532,
+        "fraction_of_recording": 0.0022300263265697157
+      },
+      {
+        "id": 656,
+        "acronym": "MOs1",
+        "name": "Secondary motor area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 9431,
+        "fraction_of_recording": 0.0022063972184094617
+      },
+      {
+        "id": 1022,
+        "acronym": "GPe",
+        "name": "Globus pallidus, external segment",
+        "division": "PAL",
+        "n_voxels": 9375,
+        "fraction_of_recording": 0.0021932959307166475
+      },
+      {
+        "id": 797,
+        "acronym": "ZI",
+        "name": "Zona incerta",
+        "division": "HY",
+        "n_voxels": 9271,
+        "fraction_of_recording": 0.002168964967858564
+      },
+      {
+        "id": 778,
+        "acronym": "VISp5",
+        "name": "Primary visual area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 9231,
+        "fraction_of_recording": 0.00215960690522084
+      },
+      {
+        "id": 381,
+        "acronym": "SNr",
+        "name": "Substantia nigra, reticular part",
+        "division": "MB",
+        "n_voxels": 9211,
+        "fraction_of_recording": 0.0021549278739019778
+      },
+      {
+        "id": 1009,
+        "acronym": "fiber tracts",
+        "name": "fiber tracts",
+        "division": "",
+        "n_voxels": 9189,
+        "fraction_of_recording": 0.002149780939451229
+      },
+      {
+        "id": 201,
+        "acronym": "SSp-bfd2/3",
+        "name": "Primary somatosensory area, barrel field, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 9091,
+        "fraction_of_recording": 0.0021268536859888046
+      },
+      {
+        "id": 603,
+        "acronym": "fi",
+        "name": "fimbria",
+        "division": "",
+        "n_voxels": 9056,
+        "fraction_of_recording": 0.0021186653811807957
+      },
+      {
+        "id": 354,
+        "acronym": "MY",
+        "name": "Medulla",
+        "division": "MY",
+        "n_voxels": 8905,
+        "fraction_of_recording": 0.002083338694723386
+      },
+      {
+        "id": 657,
+        "acronym": "SSp-m2/3",
+        "name": "Primary somatosensory area, mouth, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 8838,
+        "fraction_of_recording": 0.002067663939805198
+      },
+      {
+        "id": 968,
+        "acronym": "NOD",
+        "name": "Nodulus (X)",
+        "division": "CB",
+        "n_voxels": 8812,
+        "fraction_of_recording": 0.002061581199090677
+      },
+      {
+        "id": 108,
+        "acronym": "chpl",
+        "name": "choroid plexus",
+        "division": "",
+        "n_voxels": 8591,
+        "fraction_of_recording": 0.00200987790301725
+      },
+      {
+        "id": 698,
+        "acronym": "OLF",
+        "name": "Olfactory areas",
+        "division": "OLF",
+        "n_voxels": 8535,
+        "fraction_of_recording": 0.001996776615324436
+      },
+      {
+        "id": 262,
+        "acronym": "RT",
+        "name": "Reticular nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 8515,
+        "fraction_of_recording": 0.0019920975840055735
+      },
+      {
+        "id": 139,
+        "acronym": "ENTl5",
+        "name": "Entorhinal area, lateral part, layer 5",
+        "division": "HPF",
+        "n_voxels": 8454,
+        "fraction_of_recording": 0.001977826538483044
+      },
+      {
+        "id": 466,
+        "acronym": "alv",
+        "name": "alveus",
+        "division": "",
+        "n_voxels": 8321,
+        "fraction_of_recording": 0.0019467109802126104
+      },
+      {
+        "id": 362,
+        "acronym": "MD",
+        "name": "Mediodorsal nucleus of thalamus",
+        "division": "TH",
+        "n_voxels": 8228,
+        "fraction_of_recording": 0.0019249534845799015
+      },
+      {
+        "id": 971,
+        "acronym": "fp",
+        "name": "corpus callosum, posterior forceps",
+        "division": "",
+        "n_voxels": 8191,
+        "fraction_of_recording": 0.0019162972766400062
+      },
+      {
+        "id": 351,
+        "acronym": "BST",
+        "name": "Bed nuclei of the stria terminalis",
+        "division": "PAL",
+        "n_voxels": 8012,
+        "fraction_of_recording": 0.0018744199463361897
+      },
+      {
+        "id": 976,
+        "acronym": "CENT2",
+        "name": "Lobule II",
+        "division": "CB",
+        "n_voxels": 7925,
+        "fraction_of_recording": 0.0018540661600991394
+      },
+      {
+        "id": 820,
+        "acronym": "ICd",
+        "name": "Inferior colliculus, dorsal nucleus",
+        "division": "MB",
+        "n_voxels": 7898,
+        "fraction_of_recording": 0.0018477494678186754
+      },
+      {
+        "id": 1049,
+        "acronym": "FL",
+        "name": "Flocculus",
+        "division": "CB",
+        "n_voxels": 7883,
+        "fraction_of_recording": 0.0018442401943295288
+      },
+      {
+        "id": 52,
+        "acronym": "ENTl3",
+        "name": "Entorhinal area, lateral part, layer 3",
+        "division": "HPF",
+        "n_voxels": 7849,
+        "fraction_of_recording": 0.0018362858410874631
+      },
+      {
+        "id": 852,
+        "acronym": "PARN",
+        "name": "Parvicellular reticular nucleus",
+        "division": "MY",
+        "n_voxels": 7785,
+        "fraction_of_recording": 0.0018213129408671041
+      },
+      {
+        "id": 1038,
+        "acronym": "SSp-bfd6a",
+        "name": "Primary somatosensory area, barrel field, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 7721,
+        "fraction_of_recording": 0.0018063400406467451
+      },
+      {
+        "id": 215,
+        "acronym": "APN",
+        "name": "Anterior pretectal nucleus",
+        "division": "MB",
+        "n_voxels": 7611,
+        "fraction_of_recording": 0.0017806053683930032
+      },
+      {
+        "id": 1047,
+        "acronym": "SSp-bfd4",
+        "name": "Primary somatosensory area, barrel field, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 7572,
+        "fraction_of_recording": 0.0017714812573212217
+      },
+      {
+        "id": 484682470,
+        "acronym": "ProS",
+        "name": "Prosubiculum",
+        "division": "HPF",
+        "n_voxels": 7572,
+        "fraction_of_recording": 0.0017714812573212217
+      },
+      {
+        "id": 543,
+        "acronym": "ENTm2",
+        "name": "Entorhinal area, medial part, dorsal zone, layer 2",
+        "division": "HPF",
+        "n_voxels": 7543,
+        "fraction_of_recording": 0.0017646966619088717
+      },
+      {
+        "id": 593,
+        "acronym": "VISp1",
+        "name": "Primary visual area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 7481,
+        "fraction_of_recording": 0.001750191664820399
+      },
+      {
+        "id": 1020,
+        "acronym": "PO",
+        "name": "Posterior complex of the thalamus",
+        "division": "TH",
+        "n_voxels": 7470,
+        "fraction_of_recording": 0.0017476181975950246
+      },
+      {
+        "id": 940,
+        "acronym": "cing",
+        "name": "cingulum bundle",
+        "division": "",
+        "n_voxels": 7463,
+        "fraction_of_recording": 0.0017459805366334229
+      },
+      {
+        "id": 526,
+        "acronym": "ENTm1",
+        "name": "Entorhinal area, medial part, dorsal zone, layer 1",
+        "division": "HPF",
+        "n_voxels": 7446,
+        "fraction_of_recording": 0.0017420033600123901
+      },
+      {
+        "id": 873,
+        "acronym": "SSs1",
+        "name": "Supplemental somatosensory area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 7431,
+        "fraction_of_recording": 0.0017384940865232434
+      },
+      {
+        "id": 566,
+        "acronym": "TR",
+        "name": "Postpiriform transition area",
+        "division": "OLF",
+        "n_voxels": 7391,
+        "fraction_of_recording": 0.001729136023885519
+      },
+      {
+        "id": 136,
+        "acronym": "IRN",
+        "name": "Intermediate reticular nucleus",
+        "division": "MY",
+        "n_voxels": 7357,
+        "fraction_of_recording": 0.0017211816706434533
+      },
+      {
+        "id": 320,
+        "acronym": "MOp1",
+        "name": "Primary motor area, Layer 1",
+        "division": "Isocortex",
+        "n_voxels": 7285,
+        "fraction_of_recording": 0.0017043371578955495
+      },
+      {
+        "id": 610,
+        "acronym": "RSPd5",
+        "name": "Retrosplenial area, dorsal part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 7255,
+        "fraction_of_recording": 0.0016973186109172562
+      },
+      {
+        "id": 1070,
+        "acronym": "SSp-bfd5",
+        "name": "Primary somatosensory area, barrel field, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 7237,
+        "fraction_of_recording": 0.0016931074827302803
+      },
+      {
+        "id": 26,
+        "acronym": "SCdg",
+        "name": "Superior colliculus, motor related, deep gray layer",
+        "division": "MB",
+        "n_voxels": 7197,
+        "fraction_of_recording": 0.001683749420092556
+      },
+      {
+        "id": 218,
+        "acronym": "LP",
+        "name": "Lateral posterior nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 7160,
+        "fraction_of_recording": 0.0016750932121526608
+      },
+      {
+        "id": 1015,
+        "acronym": "ACAd5",
+        "name": "Anterior cingulate area, dorsal part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 7154,
+        "fraction_of_recording": 0.0016736895027570022
+      },
+      {
+        "id": 974,
+        "acronym": "SSp-m5",
+        "name": "Primary somatosensory area, mouth, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 7142,
+        "fraction_of_recording": 0.001670882083965685
+      },
+      {
+        "id": 1035,
+        "acronym": "SSs4",
+        "name": "Supplemental somatosensory area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 6942,
+        "fraction_of_recording": 0.001624091770777063
+      },
+      {
+        "id": 842,
+        "acronym": "SCsg",
+        "name": "Superior colliculus, superficial gray layer",
+        "division": "MB",
+        "n_voxels": 6779,
+        "fraction_of_recording": 0.0015859576655283363
+      },
+      {
+        "id": 811,
+        "acronym": "ICc",
+        "name": "Inferior colliculus, central nucleus",
+        "division": "MB",
+        "n_voxels": 6724,
+        "fraction_of_recording": 0.0015730903294014654
+      },
+      {
+        "id": 803,
+        "acronym": "PAL",
+        "name": "Pallidum",
+        "division": "PAL",
+        "n_voxels": 6720,
+        "fraction_of_recording": 0.001572154523137693
+      },
+      {
+        "id": 1048,
+        "acronym": "GRN",
+        "name": "Gigantocellular reticular nucleus",
+        "division": "MY",
+        "n_voxels": 6633,
+        "fraction_of_recording": 0.0015518007369006424
+      },
+      {
+        "id": 1101,
+        "acronym": "AId5",
+        "name": "Agranular insular area, dorsal part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 6430,
+        "fraction_of_recording": 0.0015043085690141912
+      },
+      {
+        "id": 1037,
+        "acronym": "POST",
+        "name": "Postsubiculum",
+        "division": "HPF",
+        "n_voxels": 6424,
+        "fraction_of_recording": 0.0015029048596185326
+      },
+      {
+        "id": 33,
+        "acronym": "VISp6a",
+        "name": "Primary visual area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 6382,
+        "fraction_of_recording": 0.001493078893848922
+      },
+      {
+        "id": 484682512,
+        "acronym": "scwm",
+        "name": "supra-callosal cerebral white matter",
+        "division": "",
+        "n_voxels": 6377,
+        "fraction_of_recording": 0.0014919091360192066
+      },
+      {
+        "id": 28,
+        "acronym": "ENTl6a",
+        "name": "Entorhinal area, lateral part, layer 6a",
+        "division": "HPF",
+        "n_voxels": 6288,
+        "fraction_of_recording": 0.0014710874466502698
+      },
+      {
+        "id": 78,
+        "acronym": "mcp",
+        "name": "middle cerebellar peduncle",
+        "division": "",
+        "n_voxels": 6179,
+        "fraction_of_recording": 0.001445586725962471
+      },
+      {
+        "id": 430,
+        "acronym": "RSPv2/3",
+        "name": "Retrosplenial area, ventral part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 6163,
+        "fraction_of_recording": 0.001441843500907381
+      },
+      {
+        "id": 721,
+        "acronym": "VISp4",
+        "name": "Primary visual area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 6137,
+        "fraction_of_recording": 0.0014357607601928604
+      },
+      {
+        "id": 7,
+        "acronym": "PSV",
+        "name": "Principal sensory nucleus of the trigeminal",
+        "division": "P",
+        "n_voxels": 6129,
+        "fraction_of_recording": 0.0014338891476653153
+      },
+      {
+        "id": 155,
+        "acronym": "LD",
+        "name": "Lateral dorsal nucleus of thalamus",
+        "division": "TH",
+        "n_voxels": 6043,
+        "fraction_of_recording": 0.001413769312994208
+      },
+      {
+        "id": 437,
+        "acronym": "SPVI",
+        "name": "Spinal nucleus of the trigeminal, interpolar part",
+        "division": "MY",
+        "n_voxels": 5957,
+        "fraction_of_recording": 0.0013936494783231006
+      },
+      {
+        "id": 1033,
+        "acronym": "COPY",
+        "name": "Copula pyramidis",
+        "division": "CB",
+        "n_voxels": 5934,
+        "fraction_of_recording": 0.0013882685923064092
+      },
+      {
+        "id": 772,
+        "acronym": "ACAv5",
+        "name": "Anterior cingulate area, ventral part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 5910,
+        "fraction_of_recording": 0.0013826537547237745
+      },
+      {
+        "id": 664,
+        "acronym": "ENTm3",
+        "name": "Entorhinal area, medial part, dorsal zone, layer 3",
+        "division": "HPF",
+        "n_voxels": 5901,
+        "fraction_of_recording": 0.0013805481906302866
+      },
+      {
+        "id": 663,
+        "acronym": "COApm",
+        "name": "Cortical amygdalar area, posterior part, medial zone",
+        "division": "OLF",
+        "n_voxels": 5885,
+        "fraction_of_recording": 0.0013768049655751968
+      },
+      {
+        "id": 1121,
+        "acronym": "ENTl1",
+        "name": "Entorhinal area, lateral part, layer 1",
+        "division": "HPF",
+        "n_voxels": 5815,
+        "fraction_of_recording": 0.0013604283559591791
+      },
+      {
+        "id": 966,
+        "acronym": "EPv",
+        "name": "Endopiriform nucleus, ventral part",
+        "division": "CTXsp",
+        "n_voxels": 5811,
+        "fraction_of_recording": 0.0013594925496954067
+      },
+      {
+        "id": 854,
+        "acronym": "SSp-ul2/3",
+        "name": "Primary somatosensory area, upper limb, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 5770,
+        "fraction_of_recording": 0.0013499005354917393
+      },
+      {
+        "id": 950,
+        "acronym": "SSp-m4",
+        "name": "Primary somatosensory area, mouth, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 5747,
+        "fraction_of_recording": 0.0013445196494750477
+      },
+      {
+        "id": 434,
+        "acronym": "RSPd2/3",
+        "name": "Retrosplenial area, dorsal part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 5732,
+        "fraction_of_recording": 0.0013410103759859012
+      },
+      {
+        "id": 780,
+        "acronym": "PA",
+        "name": "Posterior amygdalar nucleus",
+        "division": "CTXsp",
+        "n_voxels": 5693,
+        "fraction_of_recording": 0.00133188626491412
+      },
+      {
+        "id": 289,
+        "acronym": "TEa5",
+        "name": "Temporal association areas, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 5652,
+        "fraction_of_recording": 0.0013222942507104525
+      },
+      {
+        "id": 867,
+        "acronym": "PB",
+        "name": "Parabrachial nucleus",
+        "division": "P",
+        "n_voxels": 5626,
+        "fraction_of_recording": 0.0013162115099959316
+      },
+      {
+        "id": 443,
+        "acronym": "dhc",
+        "name": "dorsal hippocampal commissure",
+        "division": "",
+        "n_voxels": 5619,
+        "fraction_of_recording": 0.00131457384903433
+      },
+      {
+        "id": 542,
+        "acronym": "RSPv1",
+        "name": "Retrosplenial area, ventral part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 5614,
+        "fraction_of_recording": 0.0013134040912046142
+      },
+      {
+        "id": 945,
+        "acronym": "SSp-ul6a",
+        "name": "Primary somatosensory area, upper limb, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 5599,
+        "fraction_of_recording": 0.0013098948177154676
+      },
+      {
+        "id": 727,
+        "acronym": "ENTm5",
+        "name": "Entorhinal area, medial part, dorsal zone, layer 5",
+        "division": "HPF",
+        "n_voxels": 5514,
+        "fraction_of_recording": 0.0012900089346103035
+      },
+      {
+        "id": 843,
+        "acronym": "PAR",
+        "name": "Parasubiculum",
+        "division": "HPF",
+        "n_voxels": 5507,
+        "fraction_of_recording": 0.0012883712736487015
+      },
+      {
+        "id": 685,
+        "acronym": "VM",
+        "name": "Ventral medial nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 5501,
+        "fraction_of_recording": 0.001286967564253043
+      },
+      {
+        "id": 549,
+        "acronym": "TH",
+        "name": "Thalamus",
+        "division": "TH",
+        "n_voxels": 5492,
+        "fraction_of_recording": 0.001284862000159555
+      },
+      {
+        "id": 1084,
+        "acronym": "PRE",
+        "name": "Presubiculum",
+        "division": "HPF",
+        "n_voxels": 5486,
+        "fraction_of_recording": 0.0012834582907638964
+      },
+      {
+        "id": 101,
+        "acronym": "VCO",
+        "name": "Ventral cochlear nucleus",
+        "division": "MY",
+        "n_voxels": 5481,
+        "fraction_of_recording": 0.0012822885329341809
+      },
+      {
+        "id": 1052,
+        "acronym": "PPN",
+        "name": "Pedunculopontine nucleus",
+        "division": "MB",
+        "n_voxels": 5369,
+        "fraction_of_recording": 0.0012560859575485525
+      },
+      {
+        "id": 129,
+        "acronym": "V3",
+        "name": "third ventricle",
+        "division": "",
+        "n_voxels": 5322,
+        "fraction_of_recording": 0.0012450902339492264
+      },
+      {
+        "id": 924,
+        "acronym": "cpd",
+        "name": "cerebal peduncle",
+        "division": "",
+        "n_voxels": 5305,
+        "fraction_of_recording": 0.0012411130573281935
+      },
+      {
+        "id": 718,
+        "acronym": "VPL",
+        "name": "Ventral posterolateral nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 5264,
+        "fraction_of_recording": 0.001231521043124526
+      },
+      {
+        "id": 579,
+        "acronym": "ec",
+        "name": "external capsule",
+        "division": "",
+        "n_voxels": 5229,
+        "fraction_of_recording": 0.0012233327383165172
+      },
+      {
+        "id": 91,
+        "acronym": "IP",
+        "name": "Interposed nucleus",
+        "division": "CB",
+        "n_voxels": 5141,
+        "fraction_of_recording": 0.0012027450005135238
+      },
+      {
+        "id": 956,
+        "acronym": "fa",
+        "name": "corpus callosum, anterior forceps",
+        "division": "",
+        "n_voxels": 5108,
+        "fraction_of_recording": 0.0011950245988374012
+      },
+      {
+        "id": 131,
+        "acronym": "LA",
+        "name": "Lateral amygdalar nucleus",
+        "division": "CTXsp",
+        "n_voxels": 5006,
+        "fraction_of_recording": 0.001171161539111204
+      },
+      {
+        "id": 1108,
+        "acronym": "ccg",
+        "name": "genu of corpus callosum",
+        "division": "",
+        "n_voxels": 4999,
+        "fraction_of_recording": 0.0011695238781496023
+      },
+      {
+        "id": 981,
+        "acronym": "SSp-bfd1",
+        "name": "Primary somatosensory area, barrel field, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 4933,
+        "fraction_of_recording": 0.001154083074797357
+      },
+      {
+        "id": 658,
+        "acronym": "ll",
+        "name": "lateral lemniscus",
+        "division": "",
+        "n_voxels": 4875,
+        "fraction_of_recording": 0.0011405138839726567
+      },
+      {
+        "id": 629,
+        "acronym": "VAL",
+        "name": "Ventral anterior-lateral complex of the thalamus",
+        "division": "TH",
+        "n_voxels": 4874,
+        "fraction_of_recording": 0.0011402799324067136
+      },
+      {
+        "id": 442,
+        "acronym": "RSPd1",
+        "name": "Retrosplenial area, dorsal part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 4843,
+        "fraction_of_recording": 0.0011330274338624772
+      },
+      {
+        "id": 794,
+        "acronym": "sptV",
+        "name": "spinal tract of the trigeminal nerve",
+        "division": "",
+        "n_voxels": 4815,
+        "fraction_of_recording": 0.00112647679001607
+      },
+      {
+        "id": 878,
+        "acronym": "SSp-m1",
+        "name": "Primary somatosensory area, mouth, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 4805,
+        "fraction_of_recording": 0.001124137274356639
+      },
+      {
+        "id": 889,
+        "acronym": "SSp-n6a",
+        "name": "Primary somatosensory area, nose, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 4771,
+        "fraction_of_recording": 0.0011161829211145734
+      },
+      {
+        "id": 163,
+        "acronym": "AIp2/3",
+        "name": "Agranular insular area, posterior part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 4767,
+        "fraction_of_recording": 0.001115247114850801
+      },
+      {
+        "id": 512,
+        "acronym": "CB",
+        "name": "Cerebellum",
+        "division": "CB",
+        "n_voxels": 4725,
+        "fraction_of_recording": 0.0011054211490811904
+      },
+      {
+        "id": 625,
+        "acronym": "SSp-ul5",
+        "name": "Primary somatosensory area, upper limb, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 4691,
+        "fraction_of_recording": 0.0010974667958391247
+      },
+      {
+        "id": 214,
+        "acronym": "RN",
+        "name": "Red nucleus",
+        "division": "MB",
+        "n_voxels": 4673,
+        "fraction_of_recording": 0.0010932556676521486
+      },
+      {
+        "id": 303,
+        "acronym": "BLAa",
+        "name": "Basolateral amygdalar nucleus, anterior part",
+        "division": "CTXsp",
+        "n_voxels": 4616,
+        "fraction_of_recording": 0.0010799204283933913
+      },
+      {
+        "id": 327,
+        "acronym": "BMAa",
+        "name": "Basomedial amygdalar nucleus, anterior part",
+        "division": "CTXsp",
+        "n_voxels": 4572,
+        "fraction_of_recording": 0.0010696265594918946
+      },
+      {
+        "id": 225,
+        "acronym": "SPIV",
+        "name": "Spinal vestibular nucleus",
+        "division": "MY",
+        "n_voxels": 4541,
+        "fraction_of_recording": 0.0010623740609476582
+      },
+      {
+        "id": 783,
+        "acronym": "AId6a",
+        "name": "Agranular insular area, dorsal part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 4499,
+        "fraction_of_recording": 0.0010525480951780477
+      },
+      {
+        "id": 274,
+        "acronym": "RSPd6a",
+        "name": "Retrosplenial area, dorsal part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 4491,
+        "fraction_of_recording": 0.0010506764826505029
+      },
+      {
+        "id": 559,
+        "acronym": "CEAm",
+        "name": "Central amygdalar nucleus, medial part",
+        "division": "STR",
+        "n_voxels": 4488,
+        "fraction_of_recording": 0.0010499746279526735
+      },
+      {
+        "id": 344,
+        "acronym": "AIp5",
+        "name": "Agranular insular area, posterior part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 4465,
+        "fraction_of_recording": 0.001044593741935982
+      },
+      {
+        "id": 931,
+        "acronym": "PG",
+        "name": "Pontine gray",
+        "division": "P",
+        "n_voxels": 4413,
+        "fraction_of_recording": 0.0010324282605069402
+      },
+      {
+        "id": 986,
+        "acronym": "ccs",
+        "name": "corpus callosum, splenium",
+        "division": "",
+        "n_voxels": 4378,
+        "fraction_of_recording": 0.0010242399556989314
+      },
+      {
+        "id": 774,
+        "acronym": "RSPagl5",
+        "name": "Retrosplenial area, lateral agranular part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 4376,
+        "fraction_of_recording": 0.0010237720525670452
+      },
+      {
+        "id": 363,
+        "acronym": "PL5",
+        "name": "Prelimbic area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 4363,
+        "fraction_of_recording": 0.0010207306822097848
+      },
+      {
+        "id": 596,
+        "acronym": "NDB",
+        "name": "Diagonal band nucleus",
+        "division": "PAL",
+        "n_voxels": 4359,
+        "fraction_of_recording": 0.0010197948759460124
+      },
+      {
+        "id": 88,
+        "acronym": "AHN",
+        "name": "Anterior hypothalamic nucleus",
+        "division": "HY",
+        "n_voxels": 4304,
+        "fraction_of_recording": 0.0010069275398191413
+      },
+      {
+        "id": 445,
+        "acronym": "SPVO",
+        "name": "Spinal nucleus of the trigeminal, oral part",
+        "division": "MY",
+        "n_voxels": 4282,
+        "fraction_of_recording": 0.001001780605368393
+      },
+      {
+        "id": 847,
+        "acronym": "AUDp5",
+        "name": "Primary auditory area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 4280,
+        "fraction_of_recording": 0.0010013127022365069
+      },
+      {
+        "id": 334,
+        "acronym": "BMAp",
+        "name": "Basomedial amygdalar nucleus, posterior part",
+        "division": "CTXsp",
+        "n_voxels": 4269,
+        "fraction_of_recording": 0.0009987392350111325
+      },
+      {
+        "id": 612,
+        "acronym": "NLL",
+        "name": "Nucleus of the lateral lemniscus",
+        "division": "P",
+        "n_voxels": 4258,
+        "fraction_of_recording": 0.0009961657677857584
+      },
+      {
+        "id": 311,
+        "acronym": "BLAp",
+        "name": "Basolateral amygdalar nucleus, posterior part",
+        "division": "CTXsp",
+        "n_voxels": 4223,
+        "fraction_of_recording": 0.0009879774629777496
+      },
+      {
+        "id": 946,
+        "acronym": "PH",
+        "name": "Posterior hypothalamic nucleus",
+        "division": "HY",
+        "n_voxels": 4215,
+        "fraction_of_recording": 0.0009861058504502048
+      },
+      {
+        "id": 1058,
+        "acronym": "VISC5",
+        "name": "Visceral area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 4201,
+        "fraction_of_recording": 0.000982830528527001
+      },
+      {
+        "id": 919,
+        "acronym": "ACAd6a",
+        "name": "Anterior cingulate area, dorsal part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 4151,
+        "fraction_of_recording": 0.0009711329502298457
+      },
+      {
+        "id": 1127,
+        "acronym": "TEa2/3",
+        "name": "Temporal association areas, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 4137,
+        "fraction_of_recording": 0.0009678576283066422
+      },
+      {
+        "id": 125,
+        "acronym": "opt",
+        "name": "optic tract",
+        "division": "",
+        "n_voxels": 4130,
+        "fraction_of_recording": 0.0009662199673450404
+      },
+      {
+        "id": 10704,
+        "acronym": "DG-po",
+        "name": "Dentate gyrus, polymorph layer",
+        "division": "HPF",
+        "n_voxels": 4095,
+        "fraction_of_recording": 0.0009580316625370316
+      },
+      {
+        "id": 574,
+        "acronym": "TRN",
+        "name": "Tegmental reticular nucleus",
+        "division": "P",
+        "n_voxels": 4078,
+        "fraction_of_recording": 0.0009540544859159987
+      },
+      {
+        "id": 965,
+        "acronym": "RSPagl2/3",
+        "name": "Retrosplenial area, lateral agranular part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 3978,
+        "fraction_of_recording": 0.0009306593293216879
+      },
+      {
+        "id": 851,
+        "acronym": "SCop",
+        "name": "Superior colliculus, optic layer",
+        "division": "MB",
+        "n_voxels": 3891,
+        "fraction_of_recording": 0.0009103055430846374
+      },
+      {
+        "id": 800,
+        "acronym": "AIv5",
+        "name": "Agranular insular area, ventral part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 3889,
+        "fraction_of_recording": 0.0009098376399527511
+      },
+      {
+        "id": 655,
+        "acronym": "COApl",
+        "name": "Cortical amygdalar area, posterior part, lateral zone",
+        "division": "OLF",
+        "n_voxels": 3867,
+        "fraction_of_recording": 0.0009046907055020027
+      },
+      {
+        "id": 113,
+        "acronym": "SSp-ll2/3",
+        "name": "Primary somatosensory area, lower limb, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 3866,
+        "fraction_of_recording": 0.0009044567539360596
+      },
+      {
+        "id": 590,
+        "acronym": "RSPv6a",
+        "name": "Retrosplenial area, ventral part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 3834,
+        "fraction_of_recording": 0.0008969703038258801
+      },
+      {
+        "id": 838,
+        "acronym": "SSp-n2/3",
+        "name": "Primary somatosensory area, nose, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 3830,
+        "fraction_of_recording": 0.0008960344975621077
+      },
+      {
+        "id": 651,
+        "acronym": "NTS",
+        "name": "Nucleus of the solitary tract",
+        "division": "MY",
+        "n_voxels": 3740,
+        "fraction_of_recording": 0.0008749788566272279
+      },
+      {
+        "id": 743,
+        "acronym": "ENTm6",
+        "name": "Entorhinal area, medial part, dorsal zone, layer 6",
+        "division": "HPF",
+        "n_voxels": 3710,
+        "fraction_of_recording": 0.0008679603096489346
+      },
+      {
+        "id": 211,
+        "acronym": "ACAd2/3",
+        "name": "Anterior cingulate area, dorsal part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 3700,
+        "fraction_of_recording": 0.0008656207939895035
+      },
+      {
+        "id": 788,
+        "acronym": "PAA",
+        "name": "Piriform-amygdalar area",
+        "division": "OLF",
+        "n_voxels": 3673,
+        "fraction_of_recording": 0.0008593041017090396
+      },
+      {
+        "id": 96,
+        "acronym": "DCO",
+        "name": "Dorsal cochlear nucleus",
+        "division": "MY",
+        "n_voxels": 3640,
+        "fraction_of_recording": 0.000851583700032917
+      },
+      {
+        "id": 229,
+        "acronym": "sV",
+        "name": "sensory root of the trigeminal nerve",
+        "division": "",
+        "n_voxels": 3613,
+        "fraction_of_recording": 0.000845267007752453
+      },
+      {
+        "id": 266,
+        "acronym": "LSv",
+        "name": "Lateral septal nucleus, ventral part",
+        "division": "STR",
+        "n_voxels": 3589,
+        "fraction_of_recording": 0.0008396521701698184
+      },
+      {
+        "id": 630,
+        "acronym": "ORBl5",
+        "name": "Orbital area, lateral part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 3581,
+        "fraction_of_recording": 0.0008377805576422736
+      },
+      {
+        "id": 1023,
+        "acronym": "AUDv5",
+        "name": "Ventral auditory area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 3568,
+        "fraction_of_recording": 0.0008347391872850132
+      },
+      {
+        "id": 679,
+        "acronym": "CS",
+        "name": "Superior central nucleus raphe",
+        "division": "P",
+        "n_voxels": 3552,
+        "fraction_of_recording": 0.0008309959622299234
+      },
+      {
+        "id": 935,
+        "acronym": "ACAd1",
+        "name": "Anterior cingulate area, dorsal part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 3412,
+        "fraction_of_recording": 0.0007982427429978882
+      },
+      {
+        "id": 702,
+        "acronym": "SSp-n5",
+        "name": "Primary somatosensory area, nose, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 3391,
+        "fraction_of_recording": 0.0007933297601130828
+      },
+      {
+        "id": 250,
+        "acronym": "LSc",
+        "name": "Lateral septal nucleus, caudal (caudodorsal) part",
+        "division": "STR",
+        "n_voxels": 3323,
+        "fraction_of_recording": 0.0007774210536289514
+      },
+      {
+        "id": 1123,
+        "acronym": "icp",
+        "name": "inferior cerebellar peduncle",
+        "division": "",
+        "n_voxels": 3313,
+        "fraction_of_recording": 0.0007750815379695203
+      },
+      {
+        "id": 523,
+        "acronym": "MPO",
+        "name": "Medial preoptic area",
+        "division": "HY",
+        "n_voxels": 3301,
+        "fraction_of_recording": 0.000772274119178203
+      },
+      {
+        "id": 654,
+        "acronym": "SSp-n4",
+        "name": "Primary somatosensory area, nose, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 3286,
+        "fraction_of_recording": 0.0007687648456890563
+      },
+      {
+        "id": 1128,
+        "acronym": "SSp-ll5",
+        "name": "Primary somatosensory area, lower limb, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 3284,
+        "fraction_of_recording": 0.0007682969425571701
+      },
+      {
+        "id": 583,
+        "acronym": "CLA",
+        "name": "Claustrum",
+        "division": "CTXsp",
+        "n_voxels": 3283,
+        "fraction_of_recording": 0.000768062990991227
+      },
+      {
+        "id": 616,
+        "acronym": "CUN",
+        "name": "Cuneiform nucleus",
+        "division": "MB",
+        "n_voxels": 3280,
+        "fraction_of_recording": 0.0007673611362933977
+      },
+      {
+        "id": 226,
+        "acronym": "LPO",
+        "name": "Lateral preoptic area",
+        "division": "HY",
+        "n_voxels": 3250,
+        "fraction_of_recording": 0.0007603425893151044
+      },
+      {
+        "id": 693,
+        "acronym": "VMH",
+        "name": "Ventromedial hypothalamic nucleus",
+        "division": "HY",
+        "n_voxels": 3241,
+        "fraction_of_recording": 0.0007582370252216165
+      },
+      {
+        "id": 187,
+        "acronym": "GU5",
+        "name": "Gustatory areas, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 3240,
+        "fraction_of_recording": 0.0007580030736556734
+      },
+      {
+        "id": 639,
+        "acronym": "COAa",
+        "name": "Cortical amygdalar area, anterior part",
+        "division": "OLF",
+        "n_voxels": 3236,
+        "fraction_of_recording": 0.0007570672673919009
+      },
+      {
+        "id": 1106,
+        "acronym": "VISC2/3",
+        "name": "Visceral area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 3213,
+        "fraction_of_recording": 0.0007516863813752094
+      },
+      {
+        "id": 296,
+        "acronym": "ACAv2/3",
+        "name": "Anterior cingulate area, ventral part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 3208,
+        "fraction_of_recording": 0.0007505166235454939
+      },
+      {
+        "id": 478,
+        "acronym": "SSp-ll6a",
+        "name": "Primary somatosensory area, lower limb, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 3202,
+        "fraction_of_recording": 0.0007491129141498352
+      },
+      {
+        "id": 97,
+        "acronym": "TEa1",
+        "name": "Temporal association areas, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 3199,
+        "fraction_of_recording": 0.0007484110594520059
+      },
+      {
+        "id": 898,
+        "acronym": "PCG",
+        "name": "Pontine central gray",
+        "division": "P",
+        "n_voxels": 3197,
+        "fraction_of_recording": 0.0007479431563201197
+      },
+      {
+        "id": 857,
+        "acronym": "VISC6a",
+        "name": "Visceral area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 3181,
+        "fraction_of_recording": 0.0007441999312650299
+      },
+      {
+        "id": 729,
+        "acronym": "TEa6a",
+        "name": "Temporal association areas, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 3158,
+        "fraction_of_recording": 0.0007388190452483384
+      },
+      {
+        "id": 988,
+        "acronym": "ECT5",
+        "name": "Ectorhinal area/Layer 5",
+        "division": "Isocortex",
+        "n_voxels": 3117,
+        "fraction_of_recording": 0.0007292270310446709
+      },
+      {
+        "id": 577,
+        "acronym": "SSp-ul4",
+        "name": "Primary somatosensory area, upper limb, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 3105,
+        "fraction_of_recording": 0.0007264196122533537
+      },
+      {
+        "id": 697,
+        "acronym": "ml",
+        "name": "medial lemniscus",
+        "division": "",
+        "n_voxels": 3083,
+        "fraction_of_recording": 0.0007212726778026053
+      },
+      {
+        "id": 145,
+        "acronym": "V4",
+        "name": "fourth ventricle",
+        "division": "",
+        "n_voxels": 2963,
+        "fraction_of_recording": 0.0006931984898894322
+      },
+      {
+        "id": 671,
+        "acronym": "RSPagl1",
+        "name": "Retrosplenial area, lateral agranular part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 2963,
+        "fraction_of_recording": 0.0006931984898894322
+      },
+      {
+        "id": 23,
+        "acronym": "AAA",
+        "name": "Anterior amygdalar area",
+        "division": "STR",
+        "n_voxels": 2944,
+        "fraction_of_recording": 0.000688753410136513
+      },
+      {
+        "id": 328,
+        "acronym": "AId2/3",
+        "name": "Agranular insular area, dorsal part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2878,
+        "fraction_of_recording": 0.0006733126067842679
+      },
+      {
+        "id": 423,
+        "acronym": "CA2",
+        "name": "Field CA2",
+        "division": "HPF",
+        "n_voxels": 2855,
+        "fraction_of_recording": 0.0006679317207675763
+      },
+      {
+        "id": 930,
+        "acronym": "PF",
+        "name": "Parafascicular nucleus",
+        "division": "TH",
+        "n_voxels": 2852,
+        "fraction_of_recording": 0.000667229866069747
+      },
+      {
+        "id": 597,
+        "acronym": "TTd",
+        "name": "Taenia tecta, dorsal part",
+        "division": "OLF",
+        "n_voxels": 2824,
+        "fraction_of_recording": 0.0006606792222233399
+      },
+      {
+        "id": 814,
+        "acronym": "DP",
+        "name": "Dorsal peduncular area",
+        "division": "OLF",
+        "n_voxels": 2821,
+        "fraction_of_recording": 0.0006599773675255106
+      },
+      {
+        "id": 310,
+        "acronym": "SF",
+        "name": "Septofimbrial nucleus",
+        "division": "STR",
+        "n_voxels": 2819,
+        "fraction_of_recording": 0.0006595094643936244
+      },
+      {
+        "id": 989,
+        "acronym": "FN",
+        "name": "Fastigial nucleus",
+        "division": "CB",
+        "n_voxels": 2815,
+        "fraction_of_recording": 0.000658573658129852
+      },
+      {
+        "id": 427,
+        "acronym": "ECT2/3",
+        "name": "Ectorhinal area/Layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2811,
+        "fraction_of_recording": 0.0006576378518660796
+      },
+      {
+        "id": 251,
+        "acronym": "AUDp2/3",
+        "name": "Primary auditory area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2782,
+        "fraction_of_recording": 0.0006508532564537294
+      },
+      {
+        "id": 450,
+        "acronym": "SSp-ul1",
+        "name": "Primary somatosensory area, upper limb, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 2774,
+        "fraction_of_recording": 0.0006489816439261846
+      },
+      {
+        "id": 588,
+        "acronym": "ACAv1",
+        "name": "Anterior cingulate area, ventral part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 2734,
+        "fraction_of_recording": 0.0006396235812884602
+      },
+      {
+        "id": 84,
+        "acronym": "PL6a",
+        "name": "Prelimbic area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 2699,
+        "fraction_of_recording": 0.0006314352764804513
+      },
+      {
+        "id": 153,
+        "acronym": "V4r",
+        "name": "lateral recess",
+        "division": "",
+        "n_voxels": 2691,
+        "fraction_of_recording": 0.0006295636639529065
+      },
+      {
+        "id": 614,
+        "acronym": "TU",
+        "name": "Tuberal nucleus",
+        "division": "HY",
+        "n_voxels": 2682,
+        "fraction_of_recording": 0.0006274580998594185
+      },
+      {
+        "id": 998,
+        "acronym": "FS",
+        "name": "Fundus of striatum",
+        "division": "STR",
+        "n_voxels": 2672,
+        "fraction_of_recording": 0.0006251185841999875
+      },
+      {
+        "id": 694,
+        "acronym": "AIv2/3",
+        "name": "Agranular insular area, ventral part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2640,
+        "fraction_of_recording": 0.000617632134089808
+      },
+      {
+        "id": 149,
+        "acronym": "PVT",
+        "name": "Paraventricular nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 2636,
+        "fraction_of_recording": 0.0006166963278260354
+      },
+      {
+        "id": 326,
+        "acronym": "scp",
+        "name": "superior cerebelar peduncles",
+        "division": "",
+        "n_voxels": 2610,
+        "fraction_of_recording": 0.0006106135871115147
+      },
+      {
+        "id": 638,
+        "acronym": "GU6a",
+        "name": "Gustatory areas, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 2604,
+        "fraction_of_recording": 0.000609209877715856
+      },
+      {
+        "id": 670,
+        "acronym": "SSp-tr2/3",
+        "name": "Primary somatosensory area, trunk, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2572,
+        "fraction_of_recording": 0.0006017234276056765
+      },
+      {
+        "id": 749,
+        "acronym": "VTA",
+        "name": "Ventral tegmental area",
+        "division": "MB",
+        "n_voxels": 2567,
+        "fraction_of_recording": 0.0006005536697759609
+      },
+      {
+        "id": 1031,
+        "acronym": "GPi",
+        "name": "Globus pallidus, internal segment",
+        "division": "PAL",
+        "n_voxels": 2547,
+        "fraction_of_recording": 0.0005958746384570987
+      },
+      {
+        "id": 1089,
+        "acronym": "HPF",
+        "name": "Hippocampal formation",
+        "division": "HPF",
+        "n_voxels": 2541,
+        "fraction_of_recording": 0.0005944709290614401
+      },
+      {
+        "id": 314,
+        "acronym": "AIp6a",
+        "name": "Agranular insular area, posterior part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 2532,
+        "fraction_of_recording": 0.0005923653649679521
+      },
+      {
+        "id": 120,
+        "acronym": "AIp1",
+        "name": "Agranular insular area, posterior part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 2525,
+        "fraction_of_recording": 0.0005907277040063504
+      },
+      {
+        "id": 181,
+        "acronym": "RE",
+        "name": "Nucleus of reuniens",
+        "division": "TH",
+        "n_voxels": 2512,
+        "fraction_of_recording": 0.0005876863336490899
+      },
+      {
+        "id": 312782554,
+        "acronym": "VISa2/3",
+        "name": "Anterior area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2505,
+        "fraction_of_recording": 0.0005860486726874882
+      },
+      {
+        "id": 440,
+        "acronym": "ORBl6a",
+        "name": "Orbital area, lateral part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 2502,
+        "fraction_of_recording": 0.0005853468179896589
+      },
+      {
+        "id": 589508447,
+        "acronym": "HATA",
+        "name": "Hippocampo-amygdalar transition area",
+        "division": "HPF",
+        "n_voxels": 2500,
+        "fraction_of_recording": 0.0005848789148577727
+      },
+      {
+        "id": 496345668,
+        "acronym": "LGd-co",
+        "name": "Dorsal part of the lateral geniculate complex, core",
+        "division": "TH",
+        "n_voxels": 2492,
+        "fraction_of_recording": 0.0005830073023302278
+      },
+      {
+        "id": 484682524,
+        "acronym": "ar",
+        "name": "auditory radiation",
+        "division": "",
+        "n_voxels": 2475,
+        "fraction_of_recording": 0.0005790301257091949
+      },
+      {
+        "id": 255,
+        "acronym": "AV",
+        "name": "Anteroventral nucleus of thalamus",
+        "division": "TH",
+        "n_voxels": 2445,
+        "fraction_of_recording": 0.0005720115787309016
+      },
+      {
+        "id": 564,
+        "acronym": "MS",
+        "name": "Medial septal nucleus",
+        "division": "PAL",
+        "n_voxels": 2438,
+        "fraction_of_recording": 0.0005703739177692999
+      },
+      {
+        "id": 180,
+        "acronym": "GU2/3",
+        "name": "Gustatory areas, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2427,
+        "fraction_of_recording": 0.0005678004505439257
+      },
+      {
+        "id": 140,
+        "acronym": "AQ",
+        "name": "cerebral aqueduct",
+        "division": "",
+        "n_voxels": 2423,
+        "fraction_of_recording": 0.0005668646442801532
+      },
+      {
+        "id": 900,
+        "acronym": "aco",
+        "name": "anterior commissure, olfactory limb",
+        "division": "",
+        "n_voxels": 2422,
+        "fraction_of_recording": 0.0005666306927142101
+      },
+      {
+        "id": 906,
+        "acronym": "RSPagl6a",
+        "name": "Retrosplenial area, lateral agranular part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 2405,
+        "fraction_of_recording": 0.0005626535160931773
+      },
+      {
+        "id": 178,
+        "acronym": "LGv",
+        "name": "Ventral part of the lateral geniculate complex",
+        "division": "TH",
+        "n_voxels": 2404,
+        "fraction_of_recording": 0.0005624195645272342
+      },
+      {
+        "id": 977,
+        "acronym": "ECT6a",
+        "name": "Ectorhinal area/Layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 2385,
+        "fraction_of_recording": 0.0005579744847743151
+      },
+      {
+        "id": 515,
+        "acronym": "MPN",
+        "name": "Medial preoptic nucleus",
+        "division": "HY",
+        "n_voxels": 2384,
+        "fraction_of_recording": 0.000557740533208372
+      },
+      {
+        "id": 558,
+        "acronym": "SSp-n1",
+        "name": "Primary somatosensory area, nose, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 2382,
+        "fraction_of_recording": 0.0005572726300764858
+      },
+      {
+        "id": 451,
+        "acronym": "BLAv",
+        "name": "Basolateral amygdalar nucleus, ventral part",
+        "division": "CTXsp",
+        "n_voxels": 2332,
+        "fraction_of_recording": 0.0005455750517793304
+      },
+      {
+        "id": 755,
+        "acronym": "AUDv2/3",
+        "name": "Ventral auditory area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2332,
+        "fraction_of_recording": 0.0005455750517793304
+      },
+      {
+        "id": 312782644,
+        "acronym": "VISpor5",
+        "name": "Postrhinal area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 2282,
+        "fraction_of_recording": 0.0005338774734821749
+      },
+      {
+        "id": 735,
+        "acronym": "AUDp1",
+        "name": "Primary auditory area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 2268,
+        "fraction_of_recording": 0.0005306021515589713
+      },
+      {
+        "id": 830,
+        "acronym": "DMH",
+        "name": "Dorsomedial nucleus of the hypothalamus",
+        "division": "HY",
+        "n_voxels": 2254,
+        "fraction_of_recording": 0.0005273268296357678
+      },
+      {
+        "id": 575,
+        "acronym": "CL",
+        "name": "Central lateral nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 2202,
+        "fraction_of_recording": 0.0005151613482067261
+      },
+      {
+        "id": 312782636,
+        "acronym": "VISpor2/3",
+        "name": "Postrhinal area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2195,
+        "fraction_of_recording": 0.0005135236872451244
+      },
+      {
+        "id": 834,
+        "acronym": "SCzo",
+        "name": "Superior colliculus, zonal layer",
+        "division": "MB",
+        "n_voxels": 2179,
+        "fraction_of_recording": 0.0005097804621900347
+      },
+      {
+        "id": 703,
+        "acronym": "CTXsp",
+        "name": "Cortical subplate",
+        "division": "CTXsp",
+        "n_voxels": 2168,
+        "fraction_of_recording": 0.0005072069949646604
+      },
+      {
+        "id": 810,
+        "acronym": "ACAv6a",
+        "name": "Anterior cingulate area, ventral part, 6a",
+        "division": "Isocortex",
+        "n_voxels": 2157,
+        "fraction_of_recording": 0.0005046335277392863
+      },
+      {
+        "id": 298,
+        "acronym": "MA",
+        "name": "Magnocellular nucleus",
+        "division": "PAL",
+        "n_voxels": 2151,
+        "fraction_of_recording": 0.0005032298183436276
+      },
+      {
+        "id": 312782562,
+        "acronym": "VISa5",
+        "name": "Anterior area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 2133,
+        "fraction_of_recording": 0.0004990186901566516
+      },
+      {
+        "id": 217,
+        "acronym": "SUV",
+        "name": "Superior vestibular nucleus",
+        "division": "MY",
+        "n_voxels": 2129,
+        "fraction_of_recording": 0.0004980828838928792
+      },
+      {
+        "id": 581,
+        "acronym": "TRS",
+        "name": "Triangular nucleus of septum",
+        "division": "PAL",
+        "n_voxels": 2122,
+        "fraction_of_recording": 0.0004964452229312775
+      },
+      {
+        "id": 621,
+        "acronym": "V",
+        "name": "Motor nucleus of trigeminal",
+        "division": "P",
+        "n_voxels": 2099,
+        "fraction_of_recording": 0.0004910643369145859
+      },
+      {
+        "id": 159,
+        "acronym": "AON",
+        "name": "Anterior olfactory nucleus",
+        "division": "OLF",
+        "n_voxels": 2080,
+        "fraction_of_recording": 0.00048661925716166684
+      },
+      {
+        "id": 484682508,
+        "acronym": "APr",
+        "name": "Area prostriata",
+        "division": "HPF",
+        "n_voxels": 2073,
+        "fraction_of_recording": 0.00048498159620006506
+      },
+      {
+        "id": 1111,
+        "acronym": "SSp-tr5",
+        "name": "Primary somatosensory area, trunk, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 2071,
+        "fraction_of_recording": 0.00048451369306817886
+      },
+      {
+        "id": 186,
+        "acronym": "LH",
+        "name": "Lateral habenula",
+        "division": "TH",
+        "n_voxels": 2067,
+        "fraction_of_recording": 0.00048357788680440645
+      },
+      {
+        "id": 888,
+        "acronym": "PERI2/3",
+        "name": "Perirhinal area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 2047,
+        "fraction_of_recording": 0.00047889885548554423
+      },
+      {
+        "id": 252,
+        "acronym": "AUDd5",
+        "name": "Dorsal auditory area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 2037,
+        "fraction_of_recording": 0.00047655933982611315
+      },
+      {
+        "id": 897,
+        "acronym": "VISC1",
+        "name": "Visceral area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 2021,
+        "fraction_of_recording": 0.0004728161147710234
+      },
+      {
+        "id": 846,
+        "acronym": "DN",
+        "name": "Dentate nucleus",
+        "division": "CB",
+        "n_voxels": 2014,
+        "fraction_of_recording": 0.0004711784538094217
+      },
+      {
+        "id": 827,
+        "acronym": "ILA5",
+        "name": "Infralimbic area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1989,
+        "fraction_of_recording": 0.00046532966466084394
+      },
+      {
+        "id": 1043,
+        "acronym": "tspc",
+        "name": "crossed tectospinal pathway",
+        "division": "",
+        "n_voxels": 1989,
+        "fraction_of_recording": 0.00046532966466084394
+      },
+      {
+        "id": 182305697,
+        "acronym": "SSp-un2/3",
+        "name": "Primary somatosensory area, unassigned, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 1984,
+        "fraction_of_recording": 0.0004641599068311284
+      },
+      {
+        "id": 665,
+        "acronym": "lot",
+        "name": "lateral olfactory tract, body",
+        "division": "",
+        "n_voxels": 1964,
+        "fraction_of_recording": 0.0004594808755122662
+      },
+      {
+        "id": 600,
+        "acronym": "AUDd2/3",
+        "name": "Dorsal auditory area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 1956,
+        "fraction_of_recording": 0.00045760926298472134
+      },
+      {
+        "id": 42,
+        "acronym": "SCdw",
+        "name": "Superior colliculus, motor related, deep white layer",
+        "division": "MB",
+        "n_voxels": 1938,
+        "fraction_of_recording": 0.0004533981347977454
+      },
+      {
+        "id": 549009215,
+        "acronym": "P5",
+        "name": "Peritrigeminal zone",
+        "division": "P",
+        "n_voxels": 1918,
+        "fraction_of_recording": 0.00044871910347888316
+      },
+      {
+        "id": 483,
+        "acronym": "MH",
+        "name": "Medial habenula",
+        "division": "TH",
+        "n_voxels": 1879,
+        "fraction_of_recording": 0.00043959499240710194
+      },
+      {
+        "id": 613,
+        "acronym": "VISl5",
+        "name": "Lateral visual area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1873,
+        "fraction_of_recording": 0.00043819128301144327
+      },
+      {
+        "id": 544,
+        "acronym": "CEAc",
+        "name": "Central amygdalar nucleus, capsular part",
+        "division": "STR",
+        "n_voxels": 1839,
+        "fraction_of_recording": 0.00043023692976937756
+      },
+      {
+        "id": 234,
+        "acronym": "TEa4",
+        "name": "Temporal association areas, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 1832,
+        "fraction_of_recording": 0.0004285992688077758
+      },
+      {
+        "id": 301,
+        "acronym": "st",
+        "name": "stria terminalis",
+        "division": "",
+        "n_voxels": 1819,
+        "fraction_of_recording": 0.0004255578984505154
+      },
+      {
+        "id": 366,
+        "acronym": "SMT",
+        "name": "Submedial nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 1818,
+        "fraction_of_recording": 0.0004253239468845723
+      },
+      {
+        "id": 973,
+        "acronym": "VISl2/3",
+        "name": "Lateral visual area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 1790,
+        "fraction_of_recording": 0.0004187733030381652
+      },
+      {
+        "id": 954,
+        "acronym": "AUDp6a",
+        "name": "Primary auditory area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1775,
+        "fraction_of_recording": 0.0004152640295490186
+      },
+      {
+        "id": 117,
+        "acronym": "och",
+        "name": "optic chiasm",
+        "division": "",
+        "n_voxels": 1769,
+        "fraction_of_recording": 0.00041386032015335993
+      },
+      {
+        "id": 1030,
+        "acronym": "SSp-ll1",
+        "name": "Primary somatosensory area, lower limb, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1752,
+        "fraction_of_recording": 0.0004098831435323271
+      },
+      {
+        "id": 634,
+        "acronym": "NPC",
+        "name": "Nucleus of the posterior commissure",
+        "division": "MB",
+        "n_voxels": 1736,
+        "fraction_of_recording": 0.0004061399184772373
+      },
+      {
+        "id": 959,
+        "acronym": "AUDv1",
+        "name": "Ventral auditory area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1727,
+        "fraction_of_recording": 0.00040403435438374934
+      },
+      {
+        "id": 182305709,
+        "acronym": "SSp-un6a",
+        "name": "Primary somatosensory area, unassigned, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1712,
+        "fraction_of_recording": 0.0004005250808946027
+      },
+      {
+        "id": 41,
+        "acronym": "VISpm2/3",
+        "name": "posteromedial visual area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 1695,
+        "fraction_of_recording": 0.00039654790427356984
+      },
+      {
+        "id": 520,
+        "acronym": "AUDv6a",
+        "name": "Ventral auditory area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1690,
+        "fraction_of_recording": 0.0003953781464438543
+      },
+      {
+        "id": 209,
+        "acronym": "LAV",
+        "name": "Lateral vestibular nucleus",
+        "division": "MY",
+        "n_voxels": 1688,
+        "fraction_of_recording": 0.0003949102433119681
+      },
+      {
+        "id": 802,
+        "acronym": "sm",
+        "name": "stria medullaris",
+        "division": "",
+        "n_voxels": 1681,
+        "fraction_of_recording": 0.00039327258235036635
+      },
+      {
+        "id": 171,
+        "acronym": "PL1",
+        "name": "Prelimbic area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1680,
+        "fraction_of_recording": 0.00039303863078442324
+      },
+      {
+        "id": 565,
+        "acronym": "VISpm5",
+        "name": "posteromedial visual area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1657,
+        "fraction_of_recording": 0.0003876577447677317
+      },
+      {
+        "id": 312782608,
+        "acronym": "VISrl2/3",
+        "name": "Rostrolateral area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 1657,
+        "fraction_of_recording": 0.0003876577447677317
+      },
+      {
+        "id": 563807435,
+        "acronym": "PoT",
+        "name": "Posterior triangular thalamic nucleus",
+        "division": "TH",
+        "n_voxels": 1656,
+        "fraction_of_recording": 0.0003874237932017886
+      },
+      {
+        "id": 1079,
+        "acronym": "MGv",
+        "name": "Medial geniculate complex, ventral part",
+        "division": "TH",
+        "n_voxels": 1644,
+        "fraction_of_recording": 0.0003846163744104713
+      },
+      {
+        "id": 1094,
+        "acronym": "SSp-ll4",
+        "name": "Primary somatosensory area, lower limb, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 1620,
+        "fraction_of_recording": 0.0003790015368278367
+      },
+      {
+        "id": 863,
+        "acronym": "rust",
+        "name": "rubrospinal tract",
+        "division": "",
+        "n_voxels": 1606,
+        "fraction_of_recording": 0.00037572621490463315
+      },
+      {
+        "id": 534,
+        "acronym": "SUT",
+        "name": "Supratrigeminal nucleus",
+        "division": "P",
+        "n_voxels": 1592,
+        "fraction_of_recording": 0.0003724508929814296
+      },
+      {
+        "id": 436,
+        "acronym": "fx",
+        "name": "columns of the fornix",
+        "division": "",
+        "n_voxels": 1577,
+        "fraction_of_recording": 0.000368941619492283
+      },
+      {
+        "id": 836,
+        "acronym": "ECT1",
+        "name": "Ectorhinal area/Layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1551,
+        "fraction_of_recording": 0.0003628588787777622
+      },
+      {
+        "id": 182305705,
+        "acronym": "SSp-un5",
+        "name": "Primary somatosensory area, unassigned, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1550,
+        "fraction_of_recording": 0.00036262492721181907
+      },
+      {
+        "id": 551,
+        "acronym": "CEAl",
+        "name": "Central amygdalar nucleus, lateral part",
+        "division": "STR",
+        "n_voxels": 1541,
+        "fraction_of_recording": 0.00036051936311833104
+      },
+      {
+        "id": 525,
+        "acronym": "SUM",
+        "name": "Supramammillary nucleus",
+        "division": "HY",
+        "n_voxels": 1511,
+        "fraction_of_recording": 0.0003535008161400378
+      },
+      {
+        "id": 312782632,
+        "acronym": "VISpor1",
+        "name": "Postrhinal area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1497,
+        "fraction_of_recording": 0.00035022549421683425
+      },
+      {
+        "id": 482,
+        "acronym": "bic",
+        "name": "brachium of the inferior colliculus",
+        "division": "",
+        "n_voxels": 1491,
+        "fraction_of_recording": 0.00034882178482117563
+      },
+      {
+        "id": 599,
+        "acronym": "CM",
+        "name": "Central medial nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 1481,
+        "fraction_of_recording": 0.0003464822691617445
+      },
+      {
+        "id": 304,
+        "acronym": "PL2/3",
+        "name": "Prelimbic area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 1473,
+        "fraction_of_recording": 0.0003446106566341997
+      },
+      {
+        "id": 1096,
+        "acronym": "AMd",
+        "name": "Anteromedial nucleus, dorsal part",
+        "division": "TH",
+        "n_voxels": 1473,
+        "fraction_of_recording": 0.0003446106566341997
+      },
+      {
+        "id": 1088,
+        "acronym": "MGm",
+        "name": "Medial geniculate complex, medial part",
+        "division": "TH",
+        "n_voxels": 1471,
+        "fraction_of_recording": 0.0003441427535023134
+      },
+      {
+        "id": 902,
+        "acronym": "VISpl5",
+        "name": "Posterolateral visual area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1436,
+        "fraction_of_recording": 0.0003359544486943046
+      },
+      {
+        "id": 970,
+        "acronym": "PGRNd",
+        "name": "Paragigantocellular reticular nucleus, dorsal part",
+        "division": "MY",
+        "n_voxels": 1432,
+        "fraction_of_recording": 0.0003350186424305322
+      },
+      {
+        "id": 804,
+        "acronym": "FF",
+        "name": "Fields of Forel",
+        "division": "HY",
+        "n_voxels": 1428,
+        "fraction_of_recording": 0.0003340828361667597
+      },
+      {
+        "id": 312782616,
+        "acronym": "VISrl5",
+        "name": "Rostrolateral area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1428,
+        "fraction_of_recording": 0.0003340828361667597
+      },
+      {
+        "id": 169,
+        "acronym": "PRP",
+        "name": "Nucleus prepositus",
+        "division": "MY",
+        "n_voxels": 1422,
+        "fraction_of_recording": 0.0003326791267711011
+      },
+      {
+        "id": 560581551,
+        "acronym": "Eth",
+        "name": "Ethmoid nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 1418,
+        "fraction_of_recording": 0.00033174332050732864
+      },
+      {
+        "id": 15,
+        "acronym": "PT",
+        "name": "Parataenial nucleus",
+        "division": "TH",
+        "n_voxels": 1414,
+        "fraction_of_recording": 0.00033080751424355623
+      },
+      {
+        "id": 9,
+        "acronym": "SSp-tr6a",
+        "name": "Primary somatosensory area, trunk, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1412,
+        "fraction_of_recording": 0.00033033961111166997
+      },
+      {
+        "id": 816,
+        "acronym": "AUDp4",
+        "name": "Primary auditory area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 1400,
+        "fraction_of_recording": 0.0003275321923203527
+      },
+      {
+        "id": 907,
+        "acronym": "PCN",
+        "name": "Paracentral nucleus",
+        "division": "TH",
+        "n_voxels": 1400,
+        "fraction_of_recording": 0.0003275321923203527
+      },
+      {
+        "id": 312782550,
+        "acronym": "VISa1",
+        "name": "Anterior area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1388,
+        "fraction_of_recording": 0.0003247247735290354
+      },
+      {
+        "id": 413,
+        "acronym": "vVIIIn",
+        "name": "vestibular nerve",
+        "division": "",
+        "n_voxels": 1366,
+        "fraction_of_recording": 0.000319577839078287
+      },
+      {
+        "id": 433,
+        "acronym": "VISam5",
+        "name": "Anteromedial visual area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1346,
+        "fraction_of_recording": 0.0003148988077594248
+      },
+      {
+        "id": 957,
+        "acronym": "UVU",
+        "name": "Uvula (IX)",
+        "division": "CB",
+        "n_voxels": 1344,
+        "fraction_of_recording": 0.0003144309046275386
+      },
+      {
+        "id": 312782566,
+        "acronym": "VISa6a",
+        "name": "Anterior area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1301,
+        "fraction_of_recording": 0.0003043709872919849
+      },
+      {
+        "id": 269,
+        "acronym": "VISpl2/3",
+        "name": "Posterolateral visual area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 1292,
+        "fraction_of_recording": 0.0003022654231984969
+      },
+      {
+        "id": 990,
+        "acronym": "AUDv4",
+        "name": "Ventral auditory area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 1292,
+        "fraction_of_recording": 0.0003022654231984969
+      },
+      {
+        "id": 741,
+        "acronym": "VPMpc",
+        "name": "Ventral posteromedial nucleus of the thalamus, parvicellular part",
+        "division": "TH",
+        "n_voxels": 1287,
+        "fraction_of_recording": 0.00030109566536878137
+      },
+      {
+        "id": 540,
+        "acronym": "PERI1",
+        "name": "Perirhinal area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1279,
+        "fraction_of_recording": 0.0002992240528412365
+      },
+      {
+        "id": 576073704,
+        "acronym": "PeF",
+        "name": "Perifornical nucleus",
+        "division": "HY",
+        "n_voxels": 1271,
+        "fraction_of_recording": 0.0002973524403136916
+      },
+      {
+        "id": 606826647,
+        "acronym": "MMl",
+        "name": "Medial mammillary nucleus, lateral part",
+        "division": "HY",
+        "n_voxels": 1269,
+        "fraction_of_recording": 0.0002968845371818054
+      },
+      {
+        "id": 1066,
+        "acronym": "VISam2/3",
+        "name": "Anteromedial visual area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 1251,
+        "fraction_of_recording": 0.00029267340899482945
+      },
+      {
+        "id": 908,
+        "acronym": "act",
+        "name": "anterior commissure, temporal limb",
+        "division": "",
+        "n_voxels": 1248,
+        "fraction_of_recording": 0.0002919715542970001
+      },
+      {
+        "id": 628,
+        "acronym": "NOT",
+        "name": "Nucleus of the optic tract",
+        "division": "MB",
+        "n_voxels": 1243,
+        "fraction_of_recording": 0.0002908017964672846
+      },
+      {
+        "id": 496345664,
+        "acronym": "LGd-sh",
+        "name": "Dorsal part of the lateral geniculate complex, shell",
+        "division": "TH",
+        "n_voxels": 1242,
+        "fraction_of_recording": 0.0002905678449013415
+      },
+      {
+        "id": 162,
+        "acronym": "LDT",
+        "name": "Laterodorsal tegmental nucleus",
+        "division": "P",
+        "n_voxels": 1227,
+        "fraction_of_recording": 0.0002870585714121948
+      },
+      {
+        "id": 1054,
+        "acronym": "ILA6a",
+        "name": "Infralimbic area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1224,
+        "fraction_of_recording": 0.0002863567167143655
+      },
+      {
+        "id": 74,
+        "acronym": "VISl6a",
+        "name": "Lateral visual area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1215,
+        "fraction_of_recording": 0.0002842511526208775
+      },
+      {
+        "id": 118,
+        "acronym": "PVi",
+        "name": "Periventricular hypothalamic nucleus, intermediate part",
+        "division": "HY",
+        "n_voxels": 1213,
+        "fraction_of_recording": 0.0002837832494889913
+      },
+      {
+        "id": 233,
+        "acronym": "VISal5",
+        "name": "Anterolateral visual area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1207,
+        "fraction_of_recording": 0.00028237954009333266
+      },
+      {
+        "id": 1029,
+        "acronym": "POL",
+        "name": "Posterior limiting nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 1204,
+        "fraction_of_recording": 0.0002816776853955033
+      },
+      {
+        "id": 608,
+        "acronym": "ORBvl6a",
+        "name": "Orbital area, ventrolateral part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1203,
+        "fraction_of_recording": 0.0002814437338295602
+      },
+      {
+        "id": 916,
+        "acronym": "bsc",
+        "name": "brachium of the superior colliculus",
+        "division": "",
+        "n_voxels": 1202,
+        "fraction_of_recording": 0.0002812097822636171
+      },
+      {
+        "id": 527,
+        "acronym": "AUDd1",
+        "name": "Dorsal auditory area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1195,
+        "fraction_of_recording": 0.0002795721213020153
+      },
+      {
+        "id": 1006,
+        "acronym": "SSp-tr1",
+        "name": "Primary somatosensory area, trunk, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1185,
+        "fraction_of_recording": 0.00027723260564258424
+      },
+      {
+        "id": 470,
+        "acronym": "STN",
+        "name": "Subthalamic nucleus",
+        "division": "HY",
+        "n_voxels": 1181,
+        "fraction_of_recording": 0.00027629679937881183
+      },
+      {
+        "id": 374,
+        "acronym": "SNc",
+        "name": "Substantia nigra, compact part",
+        "division": "MB",
+        "n_voxels": 1177,
+        "fraction_of_recording": 0.00027536099311503936
+      },
+      {
+        "id": 893,
+        "acronym": "SSs6b",
+        "name": "Supplemental somatosensory area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 1177,
+        "fraction_of_recording": 0.00027536099311503936
+      },
+      {
+        "id": 750,
+        "acronym": "VISpl1",
+        "name": "Posterolateral visual area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1176,
+        "fraction_of_recording": 0.00027512704154909626
+      },
+      {
+        "id": 36,
+        "acronym": "GU1",
+        "name": "Gustatory areas, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1173,
+        "fraction_of_recording": 0.00027442518685126695
+      },
+      {
+        "id": 905,
+        "acronym": "VISal2/3",
+        "name": "Anterolateral visual area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 1169,
+        "fraction_of_recording": 0.0002734893805874945
+      },
+      {
+        "id": 882,
+        "acronym": "MOp6b",
+        "name": "Primary motor area, Layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 1160,
+        "fraction_of_recording": 0.0002713838164940065
+      },
+      {
+        "id": 1004,
+        "acronym": "PMv",
+        "name": "Ventral premammillary nucleus",
+        "division": "HY",
+        "n_voxels": 1153,
+        "fraction_of_recording": 0.00026974615553240473
+      },
+      {
+        "id": 1125,
+        "acronym": "ORBvl5",
+        "name": "Orbital area, ventrolateral part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1134,
+        "fraction_of_recording": 0.0002653010757794857
+      },
+      {
+        "id": 156,
+        "acronym": "AUDd6a",
+        "name": "Dorsal auditory area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1126,
+        "fraction_of_recording": 0.0002634294632519408
+      },
+      {
+        "id": 182305701,
+        "acronym": "SSp-un4",
+        "name": "Primary somatosensory area, unassigned, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 1115,
+        "fraction_of_recording": 0.0002608559960265666
+      },
+      {
+        "id": 272,
+        "acronym": "AVPV",
+        "name": "Anteroventral periventricular nucleus",
+        "division": "HY",
+        "n_voxels": 1114,
+        "fraction_of_recording": 0.0002606220444606235
+      },
+      {
+        "id": 38,
+        "acronym": "PVH",
+        "name": "Paraventricular hypothalamic nucleus",
+        "division": "HY",
+        "n_voxels": 1110,
+        "fraction_of_recording": 0.00025968623819685104
+      },
+      {
+        "id": 805,
+        "acronym": "VISpm1",
+        "name": "posteromedial visual area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1103,
+        "fraction_of_recording": 0.00025804857723524927
+      },
+      {
+        "id": 573,
+        "acronym": "VISl4",
+        "name": "Lateral visual area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 1095,
+        "fraction_of_recording": 0.00025617696470770445
+      },
+      {
+        "id": 620,
+        "acronym": "ORBm5",
+        "name": "Orbital area, medial part, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1092,
+        "fraction_of_recording": 0.0002554751100098751
+      },
+      {
+        "id": 421,
+        "acronym": "VISl1",
+        "name": "Lateral visual area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1085,
+        "fraction_of_recording": 0.0002538374490482733
+      },
+      {
+        "id": 791,
+        "acronym": "AUDpo5",
+        "name": "Posterior auditory area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1083,
+        "fraction_of_recording": 0.0002533695459163871
+      },
+      {
+        "id": 1010,
+        "acronym": "VISC4",
+        "name": "Visceral area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 1083,
+        "fraction_of_recording": 0.0002533695459163871
+      },
+      {
+        "id": 312782648,
+        "acronym": "VISpor6a",
+        "name": "Postrhinal area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1078,
+        "fraction_of_recording": 0.0002521997880866716
+      },
+      {
+        "id": 1105,
+        "acronym": "IA",
+        "name": "Intercalated amygdalar nucleus",
+        "division": "STR",
+        "n_voxels": 1072,
+        "fraction_of_recording": 0.0002507960786910129
+      },
+      {
+        "id": 910,
+        "acronym": "ORBm6a",
+        "name": "Orbital area, medial part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1068,
+        "fraction_of_recording": 0.00024986027242724046
+      },
+      {
+        "id": 325,
+        "acronym": "SGN",
+        "name": "Suprageniculate nucleus",
+        "division": "TH",
+        "n_voxels": 1067,
+        "fraction_of_recording": 0.00024962632086129736
+      },
+      {
+        "id": 305,
+        "acronym": "VISp6b",
+        "name": "Primary visual area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 1065,
+        "fraction_of_recording": 0.00024915841772941115
+      },
+      {
+        "id": 560581563,
+        "acronym": "PIL",
+        "name": "Posterior intralaminar thalamic nucleus",
+        "division": "TH",
+        "n_voxels": 1062,
+        "fraction_of_recording": 0.00024845656303158184
+      },
+      {
+        "id": 223,
+        "acronym": "ARH",
+        "name": "Arcuate hypothalamic nucleus",
+        "division": "HY",
+        "n_voxels": 1047,
+        "fraction_of_recording": 0.0002449472895424352
+      },
+      {
+        "id": 59,
+        "acronym": "IMD",
+        "name": "Intermediodorsal nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 1046,
+        "fraction_of_recording": 0.0002447133379764921
+      },
+      {
+        "id": 996,
+        "acronym": "AId1",
+        "name": "Agranular insular area, dorsal part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1043,
+        "fraction_of_recording": 0.00024401148327866275
+      },
+      {
+        "id": 1072,
+        "acronym": "MGd",
+        "name": "Medial geniculate complex, dorsal part",
+        "division": "TH",
+        "n_voxels": 1029,
+        "fraction_of_recording": 0.00024073616135545923
+      },
+      {
+        "id": 182305693,
+        "acronym": "SSp-un1",
+        "name": "Primary somatosensory area, unassigned, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1028,
+        "fraction_of_recording": 0.0002405022097895161
+      },
+      {
+        "id": 50,
+        "acronym": "PRC",
+        "name": "Precommissural nucleus",
+        "division": "MB",
+        "n_voxels": 1020,
+        "fraction_of_recording": 0.00023863059726197125
+      },
+      {
+        "id": 692,
+        "acronym": "PERI5",
+        "name": "Perirhinal area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 1019,
+        "fraction_of_recording": 0.00023839664569602813
+      },
+      {
+        "id": 675,
+        "acronym": "AIv6a",
+        "name": "Agranular insular area, ventral part, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 1006,
+        "fraction_of_recording": 0.0002353552753387677
+      },
+      {
+        "id": 312782604,
+        "acronym": "VISrl1",
+        "name": "Rostrolateral area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 1005,
+        "fraction_of_recording": 0.0002351213237728246
+      },
+      {
+        "id": 123,
+        "acronym": "KF",
+        "name": "Koelliker-Fuse subnucleus",
+        "division": "P",
+        "n_voxels": 1001,
+        "fraction_of_recording": 0.00023418551750905217
+      },
+      {
+        "id": 884,
+        "acronym": "amc",
+        "name": "amygdalar capsule",
+        "division": "",
+        "n_voxels": 972,
+        "fraction_of_recording": 0.000227400922096702
+      },
+      {
+        "id": 364,
+        "acronym": "PSTN",
+        "name": "Parasubthalamic nucleus",
+        "division": "HY",
+        "n_voxels": 970,
+        "fraction_of_recording": 0.0002269330189648158
+      },
+      {
+        "id": 1104,
+        "acronym": "AMv",
+        "name": "Anteromedial nucleus, ventral part",
+        "division": "TH",
+        "n_voxels": 959,
+        "fraction_of_recording": 0.00022435955173944158
+      },
+      {
+        "id": 773,
+        "acronym": "XII",
+        "name": "Hypoglossal nucleus",
+        "division": "MY",
+        "n_voxels": 958,
+        "fraction_of_recording": 0.00022412560017349848
+      },
+      {
+        "id": 595,
+        "acronym": "fr",
+        "name": "fasciculus retroflexus",
+        "division": "",
+        "n_voxels": 951,
+        "fraction_of_recording": 0.0002224879392118967
+      },
+      {
+        "id": 64,
+        "acronym": "AD",
+        "name": "Anterodorsal nucleus",
+        "division": "TH",
+        "n_voxels": 941,
+        "fraction_of_recording": 0.00022014842355246562
+      },
+      {
+        "id": 412,
+        "acronym": "ORBl2/3",
+        "name": "Orbital area, lateral part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 925,
+        "fraction_of_recording": 0.00021640519849737587
+      },
+      {
+        "id": 312782558,
+        "acronym": "VISa4",
+        "name": "Anterior area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 925,
+        "fraction_of_recording": 0.00021640519849737587
+      },
+      {
+        "id": 872,
+        "acronym": "DR",
+        "name": "Dorsal nucleus raphe",
+        "division": "MB",
+        "n_voxels": 921,
+        "fraction_of_recording": 0.00021546939223360346
+      },
+      {
+        "id": 312782620,
+        "acronym": "VISrl6a",
+        "name": "Rostrolateral area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 917,
+        "fraction_of_recording": 0.00021453358596983102
+      },
+      {
+        "id": 1077,
+        "acronym": "PR",
+        "name": "Perireunensis nucleus",
+        "division": "TH",
+        "n_voxels": 911,
+        "fraction_of_recording": 0.00021312987657417235
+      },
+      {
+        "id": 173,
+        "acronym": "RCH",
+        "name": "Retrochiasmatic area",
+        "division": "HY",
+        "n_voxels": 910,
+        "fraction_of_recording": 0.00021289592500822925
+      },
+      {
+        "id": 257,
+        "acronym": "VISpm6a",
+        "name": "posteromedial visual area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 897,
+        "fraction_of_recording": 0.00020985455465096883
+      },
+      {
+        "id": 268,
+        "acronym": "NLOT2",
+        "name": "Nucleus of the lateral olfactory tract, pyramidal layer",
+        "division": "OLF",
+        "n_voxels": 897,
+        "fraction_of_recording": 0.00020985455465096883
+      },
+      {
+        "id": 1086,
+        "acronym": "SSp-tr4",
+        "name": "Primary somatosensory area, trunk, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 897,
+        "fraction_of_recording": 0.00020985455465096883
+      },
+      {
+        "id": 707,
+        "acronym": "ILA1",
+        "name": "Infralimbic area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 895,
+        "fraction_of_recording": 0.0002093866515190826
+      },
+      {
+        "id": 312782590,
+        "acronym": "VISli5",
+        "name": "Laterointermediate area, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 889,
+        "fraction_of_recording": 0.00020798294212342395
+      },
+      {
+        "id": 312782612,
+        "acronym": "VISrl4",
+        "name": "Rostrolateral area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 883,
+        "fraction_of_recording": 0.0002065792327277653
+      },
+      {
+        "id": 1062,
+        "acronym": "SSp-bfd6b",
+        "name": "Primary somatosensory area, barrel field, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 878,
+        "fraction_of_recording": 0.00020540947489804974
+      },
+      {
+        "id": 148,
+        "acronym": "GU4",
+        "name": "Gustatory areas, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 875,
+        "fraction_of_recording": 0.00020470762020022043
+      },
+      {
+        "id": 643,
+        "acronym": "AUDpo2/3",
+        "name": "Posterior auditory area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 874,
+        "fraction_of_recording": 0.00020447366863427733
+      },
+      {
+        "id": 429,
+        "acronym": "SPVC",
+        "name": "Spinal nucleus of the trigeminal, caudal part",
+        "division": "MY",
+        "n_voxels": 871,
+        "fraction_of_recording": 0.000203771813936448
+      },
+      {
+        "id": 1061,
+        "acronym": "PPT",
+        "name": "Posterior pretectal nucleus",
+        "division": "MB",
+        "n_voxels": 859,
+        "fraction_of_recording": 0.00020096439514513068
+      },
+      {
+        "id": 556,
+        "acronym": "ILA2/3",
+        "name": "Infralimbic area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 853,
+        "fraction_of_recording": 0.00019956068574947204
+      },
+      {
+        "id": 98,
+        "acronym": "SEZ",
+        "name": "subependymal zone",
+        "division": "",
+        "n_voxels": 830,
+        "fraction_of_recording": 0.0001941797997327805
+      },
+      {
+        "id": 246,
+        "acronym": "RR",
+        "name": "Midbrain reticular nucleus, retrorubral area",
+        "division": "MB",
+        "n_voxels": 822,
+        "fraction_of_recording": 0.00019230818720523564
+      },
+      {
+        "id": 422,
+        "acronym": "SPFp",
+        "name": "Subparafascicular nucleus, parvicellular part",
+        "division": "TH",
+        "n_voxels": 810,
+        "fraction_of_recording": 0.00018950076841391835
+      },
+      {
+        "id": 133,
+        "acronym": "PVpo",
+        "name": "Periventricular hypothalamic nucleus, preoptic part",
+        "division": "HY",
+        "n_voxels": 808,
+        "fraction_of_recording": 0.00018903286528203212
+      },
+      {
+        "id": 62,
+        "acronym": "mlf",
+        "name": "medial longitudinal fascicle",
+        "division": "",
+        "n_voxels": 804,
+        "fraction_of_recording": 0.00018809705901825968
+      },
+      {
+        "id": 606826651,
+        "acronym": "MMm",
+        "name": "Medial mammillary nucleus, medial part",
+        "division": "HY",
+        "n_voxels": 800,
+        "fraction_of_recording": 0.00018716125275448724
+      },
+      {
+        "id": 1046,
+        "acronym": "VISam6a",
+        "name": "Anteromedial visual area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 795,
+        "fraction_of_recording": 0.0001859914949247717
+      },
+      {
+        "id": 678,
+        "acronym": "AUDd4",
+        "name": "Dorsal auditory area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 794,
+        "fraction_of_recording": 0.0001857575433588286
+      },
+      {
+        "id": 63,
+        "acronym": "PVHd",
+        "name": "Paraventricular hypothalamic nucleus, descending division",
+        "division": "HY",
+        "n_voxels": 785,
+        "fraction_of_recording": 0.00018365197926534062
+      },
+      {
+        "id": 980,
+        "acronym": "PMd",
+        "name": "Dorsal premammillary nucleus",
+        "division": "HY",
+        "n_voxels": 783,
+        "fraction_of_recording": 0.00018318407613345439
+      },
+      {
+        "id": 281,
+        "acronym": "VISam1",
+        "name": "Anteromedial visual area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 778,
+        "fraction_of_recording": 0.00018201431830373884
+      },
+      {
+        "id": 704,
+        "acronym": "AIv1",
+        "name": "Agranular insular area, ventral part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 768,
+        "fraction_of_recording": 0.00017967480264430776
+      },
+      {
+        "id": 690,
+        "acronym": "mtt",
+        "name": "mammillothalamic tract",
+        "division": "",
+        "n_voxels": 758,
+        "fraction_of_recording": 0.00017733528698487668
+      },
+      {
+        "id": 609,
+        "acronym": "SPA",
+        "name": "Subparafascicular area",
+        "division": "TH",
+        "n_voxels": 737,
+        "fraction_of_recording": 0.0001724223041000714
+      },
+      {
+        "id": 912,
+        "acronym": "LING",
+        "name": "Lingula (I)",
+        "division": "CB",
+        "n_voxels": 728,
+        "fraction_of_recording": 0.0001703167400065834
+      },
+      {
+        "id": 19,
+        "acronym": "IG",
+        "name": "Induseum griseum",
+        "division": "HPF",
+        "n_voxels": 708,
+        "fraction_of_recording": 0.00016563770868772122
+      },
+      {
+        "id": 312782582,
+        "acronym": "VISli2/3",
+        "name": "Laterointermediate area, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 704,
+        "fraction_of_recording": 0.00016470190242394878
+      },
+      {
+        "id": 1074,
+        "acronym": "VISal1",
+        "name": "Anterolateral visual area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 703,
+        "fraction_of_recording": 0.00016446795085800568
+      },
+      {
+        "id": 1113,
+        "acronym": "IAD",
+        "name": "Interanterodorsal nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 703,
+        "fraction_of_recording": 0.00016446795085800568
+      },
+      {
+        "id": 2,
+        "acronym": "SSp-m6b",
+        "name": "Primary somatosensory area, mouth, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 696,
+        "fraction_of_recording": 0.0001628302898964039
+      },
+      {
+        "id": 1,
+        "acronym": "TMv",
+        "name": "Tuberomammillary nucleus, ventral part",
+        "division": "HY",
+        "n_voxels": 670,
+        "fraction_of_recording": 0.00015674754918188307
+      },
+      {
+        "id": 696,
+        "acronym": "AUDpo1",
+        "name": "Posterior auditory area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 669,
+        "fraction_of_recording": 0.00015651359761593997
+      },
+      {
+        "id": 102,
+        "acronym": "nst",
+        "name": "nigrostriatal tract",
+        "division": "",
+        "n_voxels": 667,
+        "fraction_of_recording": 0.00015604569448405373
+      },
+      {
+        "id": 347,
+        "acronym": "SBPV",
+        "name": "Subparaventricular zone",
+        "division": "HY",
+        "n_voxels": 665,
+        "fraction_of_recording": 0.00015557779135216753
+      },
+      {
+        "id": 1092,
+        "acronym": "em",
+        "name": "external medullary lamina of the thalamus",
+        "division": "",
+        "n_voxels": 659,
+        "fraction_of_recording": 0.00015417408195650886
+      },
+      {
+        "id": 601,
+        "acronym": "VISal6a",
+        "name": "Anterolateral visual area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 656,
+        "fraction_of_recording": 0.00015347222725867955
+      },
+      {
+        "id": 1098,
+        "acronym": "MDRNd",
+        "name": "Medullary reticular nucleus, dorsal part",
+        "division": "MY",
+        "n_voxels": 655,
+        "fraction_of_recording": 0.00015323827569273645
+      },
+      {
+        "id": 604,
+        "acronym": "NI",
+        "name": "Nucleus incertus",
+        "division": "P",
+        "n_voxels": 633,
+        "fraction_of_recording": 0.00014809134124198802
+      },
+      {
+        "id": 1114,
+        "acronym": "VISal4",
+        "name": "Anterolateral visual area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 633,
+        "fraction_of_recording": 0.00014809134124198802
+      },
+      {
+        "id": 880,
+        "acronym": "DTN",
+        "name": "Dorsal tegmental nucleus",
+        "division": "P",
+        "n_voxels": 620,
+        "fraction_of_recording": 0.0001450499708847276
+      },
+      {
+        "id": 725,
+        "acronym": "VPLpc",
+        "name": "Ventral posterolateral nucleus of the thalamus, parvicellular part",
+        "division": "TH",
+        "n_voxels": 610,
+        "fraction_of_recording": 0.00014271045522529653
+      },
+      {
+        "id": 377,
+        "acronym": "VISpl6a",
+        "name": "Posterolateral visual area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 607,
+        "fraction_of_recording": 0.0001420086005274672
+      },
+      {
+        "id": 1109,
+        "acronym": "PS",
+        "name": "Parastrial nucleus",
+        "division": "HY",
+        "n_voxels": 604,
+        "fraction_of_recording": 0.00014130674582963788
+      },
+      {
+        "id": 126,
+        "acronym": "PVp",
+        "name": "Periventricular hypothalamic nucleus, posterior part",
+        "division": "HY",
+        "n_voxels": 600,
+        "fraction_of_recording": 0.00014037093956586544
+      },
+      {
+        "id": 72,
+        "acronym": "ADP",
+        "name": "Anterodorsal preoptic nucleus",
+        "division": "HY",
+        "n_voxels": 589,
+        "fraction_of_recording": 0.00013779747234049123
+      },
+      {
+        "id": 501,
+        "acronym": "VISpm4",
+        "name": "posteromedial visual area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 588,
+        "fraction_of_recording": 0.00013756352077454813
+      },
+      {
+        "id": 271,
+        "acronym": "SAG",
+        "name": "Nucleus sagulum",
+        "division": "MB",
+        "n_voxels": 584,
+        "fraction_of_recording": 0.0001366277145107757
+      },
+      {
+        "id": 964,
+        "acronym": "ee",
+        "name": "corpus callosum, extreme capsule",
+        "division": "",
+        "n_voxels": 568,
+        "fraction_of_recording": 0.00013288448945568594
+      },
+      {
+        "id": 496345672,
+        "acronym": "LGd-ip",
+        "name": "Dorsal part of the lateral geniculate complex, ipsilateral zone",
+        "division": "TH",
+        "n_voxels": 568,
+        "fraction_of_recording": 0.00013288448945568594
+      },
+      {
+        "id": 866,
+        "acronym": "sctv",
+        "name": "ventral spinocerebellar tract",
+        "division": "",
+        "n_voxels": 563,
+        "fraction_of_recording": 0.0001317147316259704
+      },
+      {
+        "id": 263,
+        "acronym": "AVP",
+        "name": "Anteroventral preoptic nucleus",
+        "division": "HY",
+        "n_voxels": 562,
+        "fraction_of_recording": 0.0001314807800600273
+      },
+      {
+        "id": 189,
+        "acronym": "RH",
+        "name": "Rhomboid nucleus",
+        "division": "TH",
+        "n_voxels": 557,
+        "fraction_of_recording": 0.00013031102223031175
+      },
+      {
+        "id": 580,
+        "acronym": "NB",
+        "name": "Nucleus of the brachium of the inferior colliculus",
+        "division": "MB",
+        "n_voxels": 549,
+        "fraction_of_recording": 0.00012843940970276688
+      },
+      {
+        "id": 238,
+        "acronym": "RPO",
+        "name": "Nucleus raphe pontis",
+        "division": "P",
+        "n_voxels": 545,
+        "fraction_of_recording": 0.00012750360343899444
+      },
+      {
+        "id": 587,
+        "acronym": "ND",
+        "name": "Nucleus of Darkschewitsch",
+        "division": "MB",
+        "n_voxels": 541,
+        "fraction_of_recording": 0.000126567797175222
+      },
+      {
+        "id": 839,
+        "acronym": "DMX",
+        "name": "Dorsal motor nucleus of the vagus nerve",
+        "division": "MY",
+        "n_voxels": 536,
+        "fraction_of_recording": 0.00012539803934550646
+      },
+      {
+        "id": 260,
+        "acronym": "NLOT1",
+        "name": "Nucleus of the lateral olfactory tract, molecular layer",
+        "division": "OLF",
+        "n_voxels": 525,
+        "fraction_of_recording": 0.00012282457212013225
+      },
+      {
+        "id": 850,
+        "acronym": "uf",
+        "name": "uncinate fascicle",
+        "division": "",
+        "n_voxels": 525,
+        "fraction_of_recording": 0.00012282457212013225
+      },
+      {
+        "id": 903,
+        "acronym": "ECU",
+        "name": "External cuneate nucleus",
+        "division": "MY",
+        "n_voxels": 523,
+        "fraction_of_recording": 0.00012235666898824604
+      },
+      {
+        "id": 12,
+        "acronym": "IF",
+        "name": "Interfascicular nucleus raphe",
+        "division": "MB",
+        "n_voxels": 508,
+        "fraction_of_recording": 0.00011884739549909941
+      },
+      {
+        "id": 560581559,
+        "acronym": "Xi",
+        "name": "Xiphoid thalamic nucleus",
+        "division": "TH",
+        "n_voxels": 502,
+        "fraction_of_recording": 0.00011744368610344075
+      },
+      {
+        "id": 526157196,
+        "acronym": "FRP6a",
+        "name": "Frontal pole, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 496,
+        "fraction_of_recording": 0.0001160399767077821
+      },
+      {
+        "id": 591,
+        "acronym": "CLI",
+        "name": "Central linear nucleus raphe",
+        "division": "MB",
+        "n_voxels": 486,
+        "fraction_of_recording": 0.000113700461048351
+      },
+      {
+        "id": 589508455,
+        "acronym": "VeCB",
+        "name": "Vestibulocerebellar nucleus",
+        "division": "CB",
+        "n_voxels": 486,
+        "fraction_of_recording": 0.000113700461048351
+      },
+      {
+        "id": 786,
+        "acronym": "TEa6b",
+        "name": "Temporal association areas, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 480,
+        "fraction_of_recording": 0.00011229675165269236
+      },
+      {
+        "id": 312782594,
+        "acronym": "VISli6a",
+        "name": "Laterointermediate area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 465,
+        "fraction_of_recording": 0.00010878747816354572
+      },
+      {
+        "id": 759,
+        "acronym": "AUDpo4",
+        "name": "Posterior auditory area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 464,
+        "fraction_of_recording": 0.0001085535265976026
+      },
+      {
+        "id": 607344834,
+        "acronym": "IPR",
+        "name": "Interpeduncular nucleus, rostral",
+        "division": "MB",
+        "n_voxels": 463,
+        "fraction_of_recording": 0.0001083195750316595
+      },
+      {
+        "id": 249,
+        "acronym": "AUDpo6a",
+        "name": "Posterior auditory area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 462,
+        "fraction_of_recording": 0.00010808562346571638
+      },
+      {
+        "id": 210,
+        "acronym": "LM",
+        "name": "Lateral mammillary nucleus",
+        "division": "HY",
+        "n_voxels": 461,
+        "fraction_of_recording": 0.00010785167189977328
+      },
+      {
+        "id": 67,
+        "acronym": "INC",
+        "name": "Interstitial nucleus of Cajal",
+        "division": "MB",
+        "n_voxels": 459,
+        "fraction_of_recording": 0.00010738376876788706
+      },
+      {
+        "id": 1085,
+        "acronym": "MOs6b",
+        "name": "Secondary motor area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 459,
+        "fraction_of_recording": 0.00010738376876788706
+      },
+      {
+        "id": 606826659,
+        "acronym": "MMd",
+        "name": "Medial mammillary nucleus, dorsal part",
+        "division": "HY",
+        "n_voxels": 459,
+        "fraction_of_recording": 0.00010738376876788706
+      },
+      {
+        "id": 732,
+        "acronym": "MMme",
+        "name": "Medial mammillary nucleus, median part",
+        "division": "HY",
+        "n_voxels": 456,
+        "fraction_of_recording": 0.00010668191407005773
+      },
+      {
+        "id": 312782578,
+        "acronym": "VISli1",
+        "name": "Laterointermediate area, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 452,
+        "fraction_of_recording": 0.0001057461078062853
+      },
+      {
+        "id": 798,
+        "acronym": "VIIn",
+        "name": "facial nerve",
+        "division": "",
+        "n_voxels": 446,
+        "fraction_of_recording": 0.00010434239841062664
+      },
+      {
+        "id": 1026,
+        "acronym": "SSp-ul6b",
+        "name": "Primary somatosensory area, upper limb, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 433,
+        "fraction_of_recording": 0.00010130102805336623
+      },
+      {
+        "id": 848,
+        "acronym": "IIn",
+        "name": "optic nerve",
+        "division": "",
+        "n_voxels": 429,
+        "fraction_of_recording": 0.00010036522178959379
+      },
+      {
+        "id": 607344838,
+        "acronym": "IPC",
+        "name": "Interpeduncular nucleus, caudal",
+        "division": "MB",
+        "n_voxels": 424,
+        "fraction_of_recording": 9.919546395987825e-05
+      },
+      {
+        "id": 681,
+        "acronym": "mtg",
+        "name": "mammillotegmental tract",
+        "division": "",
+        "n_voxels": 416,
+        "fraction_of_recording": 9.732385143233337e-05
+      },
+      {
+        "id": 744,
+        "acronym": "cbc",
+        "name": "cerebellar commissure",
+        "division": "",
+        "n_voxels": 416,
+        "fraction_of_recording": 9.732385143233337e-05
+      },
+      {
+        "id": 27,
+        "acronym": "IGL",
+        "name": "Intergeniculate leaflet of the lateral geniculate complex",
+        "division": "TH",
+        "n_voxels": 413,
+        "fraction_of_recording": 9.662199673450404e-05
+      },
+      {
+        "id": 414,
+        "acronym": "SPFm",
+        "name": "Subparafascicular nucleus, magnocellular part",
+        "division": "TH",
+        "n_voxels": 411,
+        "fraction_of_recording": 9.615409360261782e-05
+      },
+      {
+        "id": 689,
+        "acronym": "VLPO",
+        "name": "Ventrolateral preoptic nucleus",
+        "division": "HY",
+        "n_voxels": 404,
+        "fraction_of_recording": 9.451643264101606e-05
+      },
+      {
+        "id": 286,
+        "acronym": "SCH",
+        "name": "Suprachiasmatic nucleus",
+        "division": "HY",
+        "n_voxels": 402,
+        "fraction_of_recording": 9.404852950912984e-05
+      },
+      {
+        "id": 449,
+        "acronym": "vhc",
+        "name": "ventral hippocampal commissure",
+        "division": "",
+        "n_voxels": 392,
+        "fraction_of_recording": 9.170901384969876e-05
+      },
+      {
+        "id": 549009223,
+        "acronym": "PC5",
+        "name": "Parvicellular motor 5 nucleus",
+        "division": "P",
+        "n_voxels": 386,
+        "fraction_of_recording": 9.03053044540401e-05
+      },
+      {
+        "id": 982,
+        "acronym": "FC",
+        "name": "Fasciola cinerea",
+        "division": "HPF",
+        "n_voxels": 378,
+        "fraction_of_recording": 8.843369192649522e-05
+      },
+      {
+        "id": 1044,
+        "acronym": "PP",
+        "name": "Peripeduncular nucleus",
+        "division": "TH",
+        "n_voxels": 377,
+        "fraction_of_recording": 8.819974036055212e-05
+      },
+      {
+        "id": 93,
+        "acronym": "moV",
+        "name": "motor root of the trigeminal nerve",
+        "division": "",
+        "n_voxels": 376,
+        "fraction_of_recording": 8.7965788794609e-05
+      },
+      {
+        "id": 312782640,
+        "acronym": "VISpor4",
+        "name": "Postrhinal area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 375,
+        "fraction_of_recording": 8.77318372286659e-05
+      },
+      {
+        "id": 549009203,
+        "acronym": "RPF",
+        "name": "Retroparafascicular nucleus",
+        "division": "MB",
+        "n_voxels": 373,
+        "fraction_of_recording": 8.726393409677968e-05
+      },
+      {
+        "id": 819,
+        "acronym": "ACAv6b",
+        "name": "Anterior cingulate area, ventral part, 6b",
+        "division": "Isocortex",
+        "n_voxels": 371,
+        "fraction_of_recording": 8.679603096489346e-05
+      },
+      {
+        "id": 401,
+        "acronym": "VISam4",
+        "name": "Anteromedial visual area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 359,
+        "fraction_of_recording": 8.398861217357615e-05
+      },
+      {
+        "id": 607344846,
+        "acronym": "IPL",
+        "name": "Interpeduncular nucleus, lateral",
+        "division": "MB",
+        "n_voxels": 349,
+        "fraction_of_recording": 8.164909651414507e-05
+      },
+      {
+        "id": 589508451,
+        "acronym": "Pa5",
+        "name": "Paratrigeminal nucleus",
+        "division": "MY",
+        "n_voxels": 348,
+        "fraction_of_recording": 8.141514494820195e-05
+      },
+      {
+        "id": 784,
+        "acronym": "cst",
+        "name": "corticospinal tract",
+        "division": "",
+        "n_voxels": 342,
+        "fraction_of_recording": 8.00114355525433e-05
+      },
+      {
+        "id": 1139,
+        "acronym": "NLOT3",
+        "name": "Nucleus of the lateral olfactory tract, layer 3",
+        "division": "OLF",
+        "n_voxels": 339,
+        "fraction_of_recording": 7.930958085471397e-05
+      },
+      {
+        "id": 706,
+        "acronym": "OP",
+        "name": "Olivary pretectal nucleus",
+        "division": "MB",
+        "n_voxels": 338,
+        "fraction_of_recording": 7.907562928877086e-05
+      },
+      {
+        "id": 312782586,
+        "acronym": "VISli4",
+        "name": "Laterointermediate area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 325,
+        "fraction_of_recording": 7.603425893151044e-05
+      },
+      {
+        "id": 622,
+        "acronym": "RSPv6b",
+        "name": "Retrosplenial area, ventral part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 324,
+        "fraction_of_recording": 7.580030736556734e-05
+      },
+      {
+        "id": 54,
+        "acronym": "mfb",
+        "name": "medial forebrain bundle",
+        "division": "",
+        "n_voxels": 319,
+        "fraction_of_recording": 7.46305495358518e-05
+      },
+      {
+        "id": 197,
+        "acronym": "RL",
+        "name": "Rostral linear nucleus raphe",
+        "division": "MB",
+        "n_voxels": 318,
+        "fraction_of_recording": 7.439659796990868e-05
+      },
+      {
+        "id": 929,
+        "acronym": "SSp-n6b",
+        "name": "Primary somatosensory area, nose, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 315,
+        "fraction_of_recording": 7.369474327207936e-05
+      },
+      {
+        "id": 582,
+        "acronym": "ORBm2/3",
+        "name": "Orbital area, medial part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 314,
+        "fraction_of_recording": 7.346079170613624e-05
+      },
+      {
+        "id": 372,
+        "acronym": "ICB",
+        "name": "Infracerebellar nucleus",
+        "division": "MY",
+        "n_voxels": 313,
+        "fraction_of_recording": 7.322684014019314e-05
+      },
+      {
+        "id": 335,
+        "acronym": "PERI6a",
+        "name": "Perirhinal area, layer 6a",
+        "division": "Isocortex",
+        "n_voxels": 312,
+        "fraction_of_recording": 7.299288857425002e-05
+      },
+      {
+        "id": 812,
+        "acronym": "dscp",
+        "name": "superior cerebellar peduncle decussation",
+        "division": "",
+        "n_voxels": 311,
+        "fraction_of_recording": 7.275893700830692e-05
+      },
+      {
+        "id": 1045,
+        "acronym": "ECT6b",
+        "name": "Ectorhinal area/Layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 310,
+        "fraction_of_recording": 7.25249854423638e-05
+      },
+      {
+        "id": 114,
+        "acronym": "SOCl",
+        "name": "Superior olivary complex, lateral part",
+        "division": "P",
+        "n_voxels": 309,
+        "fraction_of_recording": 7.22910338764207e-05
+      },
+      {
+        "id": 158,
+        "acronym": "pc",
+        "name": "posterior commissure",
+        "division": "",
+        "n_voxels": 309,
+        "fraction_of_recording": 7.22910338764207e-05
+      },
+      {
+        "id": 765,
+        "acronym": "x",
+        "name": "Nucleus x",
+        "division": "MY",
+        "n_voxels": 306,
+        "fraction_of_recording": 7.158917917859138e-05
+      },
+      {
+        "id": 1005,
+        "acronym": "AUDp6b",
+        "name": "Primary auditory area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 304,
+        "fraction_of_recording": 7.112127604670516e-05
+      },
+      {
+        "id": 576073699,
+        "acronym": "VMPO",
+        "name": "Ventromedial preoptic nucleus",
+        "division": "HY",
+        "n_voxels": 296,
+        "fraction_of_recording": 6.924966351916028e-05
+      },
+      {
+        "id": 488,
+        "acronym": "ORBl6b",
+        "name": "Orbital area, lateral part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 294,
+        "fraction_of_recording": 6.878176038727406e-05
+      },
+      {
+        "id": 936,
+        "acronym": "DEC",
+        "name": "Declive (VI)",
+        "division": "CB",
+        "n_voxels": 292,
+        "fraction_of_recording": 6.831385725538785e-05
+      },
+      {
+        "id": 831,
+        "acronym": "AId6b",
+        "name": "Agranular insular area, dorsal part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 291,
+        "fraction_of_recording": 6.807990568944474e-05
+      },
+      {
+        "id": 30,
+        "acronym": "PVa",
+        "name": "Periventricular hypothalamic nucleus, anterior part",
+        "division": "HY",
+        "n_voxels": 289,
+        "fraction_of_recording": 6.761200255755852e-05
+      },
+      {
+        "id": 358,
+        "acronym": "SLD",
+        "name": "Sublaterodorsal nucleus",
+        "division": "P",
+        "n_voxels": 288,
+        "fraction_of_recording": 6.737805099161541e-05
+      },
+      {
+        "id": 849,
+        "acronym": "VISC6b",
+        "name": "Visceral area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 286,
+        "fraction_of_recording": 6.691014785972919e-05
+      },
+      {
+        "id": 390,
+        "acronym": "SO",
+        "name": "Supraoptic nucleus",
+        "division": "HY",
+        "n_voxels": 283,
+        "fraction_of_recording": 6.620829316189987e-05
+      },
+      {
+        "id": 599626927,
+        "acronym": "PDTg",
+        "name": "Posterodorsal tegmental nucleus",
+        "division": "P",
+        "n_voxels": 274,
+        "fraction_of_recording": 6.410272906841189e-05
+      },
+      {
+        "id": 231,
+        "acronym": "AT",
+        "name": "Anterior tegmental nucleus",
+        "division": "MB",
+        "n_voxels": 273,
+        "fraction_of_recording": 6.386877750246877e-05
+      },
+      {
+        "id": 288,
+        "acronym": "ORBvl2/3",
+        "name": "Orbital area, ventrolateral part, layer 2/3",
+        "division": "Isocortex",
+        "n_voxels": 273,
+        "fraction_of_recording": 6.386877750246877e-05
+      },
+      {
+        "id": 611,
+        "acronym": "hbc",
+        "name": "habenular commissure",
+        "division": "",
+        "n_voxels": 272,
+        "fraction_of_recording": 6.363482593652567e-05
+      },
+      {
+        "id": 1120,
+        "acronym": "IAM",
+        "name": "Interanteromedial nucleus of the thalamus",
+        "division": "TH",
+        "n_voxels": 265,
+        "fraction_of_recording": 6.19971649749239e-05
+      },
+      {
+        "id": 510,
+        "acronym": "SSp-ll6b",
+        "name": "Primary somatosensory area, lower limb, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 263,
+        "fraction_of_recording": 6.152926184303769e-05
+      },
+      {
+        "id": 58,
+        "acronym": "MT",
+        "name": "Medial terminal nucleus of the accessory optic tract",
+        "division": "MB",
+        "n_voxels": 258,
+        "fraction_of_recording": 6.0359504013322136e-05
+      },
+      {
+        "id": 874,
+        "acronym": "PBG",
+        "name": "Parabigeminal nucleus",
+        "division": "MB",
+        "n_voxels": 258,
+        "fraction_of_recording": 6.0359504013322136e-05
+      },
+      {
+        "id": 614454277,
+        "acronym": "Su3",
+        "name": "Supraoculomotor periaqueductal gray",
+        "division": "MB",
+        "n_voxels": 257,
+        "fraction_of_recording": 6.0125552447379026e-05
+      },
+      {
+        "id": 531,
+        "acronym": "MPT",
+        "name": "Medial pretectal area",
+        "division": "MB",
+        "n_voxels": 254,
+        "fraction_of_recording": 5.9423697749549704e-05
+      },
+      {
+        "id": 549009227,
+        "acronym": "I5",
+        "name": "Intertrigeminal nucleus",
+        "division": "P",
+        "n_voxels": 254,
+        "fraction_of_recording": 5.9423697749549704e-05
+      },
+      {
+        "id": 598,
+        "acronym": "AUDv6b",
+        "name": "Ventral auditory area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 248,
+        "fraction_of_recording": 5.801998835389105e-05
+      },
+      {
+        "id": 312782570,
+        "acronym": "VISa6b",
+        "name": "Anterior area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 248,
+        "fraction_of_recording": 5.801998835389105e-05
+      },
+      {
+        "id": 452,
+        "acronym": "MEPO",
+        "name": "Median preoptic nucleus",
+        "division": "HY",
+        "n_voxels": 245,
+        "fraction_of_recording": 5.731813365606172e-05
+      },
+      {
+        "id": 530,
+        "acronym": "df",
+        "name": "dorsal fornix",
+        "division": "",
+        "n_voxels": 239,
+        "fraction_of_recording": 5.591442426040307e-05
+      },
+      {
+        "id": 121,
+        "acronym": "VISl6b",
+        "name": "Lateral visual area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 237,
+        "fraction_of_recording": 5.544652112851685e-05
+      },
+      {
+        "id": 333,
+        "acronym": "SH",
+        "name": "Septohippocampal nucleus",
+        "division": "STR",
+        "n_voxels": 232,
+        "fraction_of_recording": 5.42767632988013e-05
+      },
+      {
+        "id": 397,
+        "acronym": "vtd",
+        "name": "ventral tegmental decussation",
+        "division": "",
+        "n_voxels": 232,
+        "fraction_of_recording": 5.42767632988013e-05
+      },
+      {
+        "id": 662,
+        "acronym": "GU6b",
+        "name": "Gustatory areas, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 231,
+        "fraction_of_recording": 5.404281173285819e-05
+      },
+      {
+        "id": 607344858,
+        "acronym": "IPDL",
+        "name": "Interpeduncular nucleus, dorsolateral",
+        "division": "MB",
+        "n_voxels": 231,
+        "fraction_of_recording": 5.404281173285819e-05
+      },
+      {
+        "id": 279,
+        "acronym": "RSPagl6b",
+        "name": "Retrosplenial area, lateral agranular part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 226,
+        "fraction_of_recording": 5.287305390314265e-05
+      },
+      {
+        "id": 122,
+        "acronym": "POR",
+        "name": "Superior olivary complex, periolivary region",
+        "division": "P",
+        "n_voxels": 218,
+        "fraction_of_recording": 5.1001441375597775e-05
+      },
+      {
+        "id": 757,
+        "acronym": "VTN",
+        "name": "Ventral tegmental nucleus",
+        "division": "MB",
+        "n_voxels": 218,
+        "fraction_of_recording": 5.1001441375597775e-05
+      },
+      {
+        "id": 711,
+        "acronym": "CU",
+        "name": "Cuneate nucleus",
+        "division": "MY",
+        "n_voxels": 217,
+        "fraction_of_recording": 5.0767489809654665e-05
+      },
+      {
+        "id": 1126,
+        "acronym": "TMd",
+        "name": "Tuberomammillary nucleus, dorsal part",
+        "division": "HY",
+        "n_voxels": 217,
+        "fraction_of_recording": 5.0767489809654665e-05
+      },
+      {
+        "id": 606826655,
+        "acronym": "MMp",
+        "name": "Medial mammillary nucleus, posterior part",
+        "division": "HY",
+        "n_voxels": 216,
+        "fraction_of_recording": 5.0533538243711556e-05
+      },
+      {
+        "id": 484682528,
+        "acronym": "stc",
+        "name": "commissural branch of stria terminalis",
+        "division": "",
+        "n_voxels": 205,
+        "fraction_of_recording": 4.796007101833736e-05
+      },
+      {
+        "id": 461,
+        "acronym": "SSp-tr6b",
+        "name": "Primary somatosensory area, trunk, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 204,
+        "fraction_of_recording": 4.772611945239425e-05
+      },
+      {
+        "id": 330,
+        "acronym": "RSPd6b",
+        "name": "Retrosplenial area, dorsal part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 202,
+        "fraction_of_recording": 4.725821632050803e-05
+      },
+      {
+        "id": 753,
+        "acronym": "pm",
+        "name": "principal mammillary tract",
+        "division": "",
+        "n_voxels": 200,
+        "fraction_of_recording": 4.679031318862181e-05
+      },
+      {
+        "id": 869,
+        "acronym": "VISpl4",
+        "name": "Posterolateral visual area, layer 4",
+        "division": "Isocortex",
+        "n_voxels": 199,
+        "fraction_of_recording": 4.65563616226787e-05
+      },
+      {
+        "id": 441,
+        "acronym": "VISam6b",
+        "name": "Anteromedial visual area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 195,
+        "fraction_of_recording": 4.562055535890627e-05
+      },
+      {
+        "id": 243,
+        "acronym": "AUDd6b",
+        "name": "Dorsal auditory area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 192,
+        "fraction_of_recording": 4.491870066107694e-05
+      },
+      {
+        "id": 206,
+        "acronym": "RM",
+        "name": "Nucleus raphe magnus",
+        "division": "MY",
+        "n_voxels": 191,
+        "fraction_of_recording": 4.468474909513383e-05
+      },
+      {
+        "id": 607344850,
+        "acronym": "IPI",
+        "name": "Interpeduncular nucleus, intermediate",
+        "division": "MB",
+        "n_voxels": 190,
+        "fraction_of_recording": 4.445079752919072e-05
+      },
+      {
+        "id": 35,
+        "acronym": "III",
+        "name": "Oculomotor nucleus",
+        "division": "MB",
+        "n_voxels": 187,
+        "fraction_of_recording": 4.374894283136139e-05
+      },
+      {
+        "id": 653,
+        "acronym": "VI",
+        "name": "Abducens nucleus",
+        "division": "MY",
+        "n_voxels": 186,
+        "fraction_of_recording": 4.3514991265418284e-05
+      },
+      {
+        "id": 312782652,
+        "acronym": "VISpor6b",
+        "name": "Postrhinal area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 185,
+        "fraction_of_recording": 4.3281039699475174e-05
+      },
+      {
+        "id": 469,
+        "acronym": "VISpm6b",
+        "name": "posteromedial visual area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 182,
+        "fraction_of_recording": 4.257918500164585e-05
+      },
+      {
+        "id": 349,
+        "acronym": "sup",
+        "name": "supraoptic commissures",
+        "division": "",
+        "n_voxels": 180,
+        "fraction_of_recording": 4.211128186975963e-05
+      },
+      {
+        "id": 484,
+        "acronym": "ORBm1",
+        "name": "Orbital area, medial part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 179,
+        "fraction_of_recording": 4.1877330303816524e-05
+      },
+      {
+        "id": 1116,
+        "acronym": "gVIIn",
+        "name": "genu of the facial nerve",
+        "division": "",
+        "n_voxels": 179,
+        "fraction_of_recording": 4.1877330303816524e-05
+      },
+      {
+        "id": 312782624,
+        "acronym": "VISrl6b",
+        "name": "Rostrolateral area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 179,
+        "fraction_of_recording": 4.1877330303816524e-05
+      },
+      {
+        "id": 673,
+        "acronym": "mp",
+        "name": "mammillary peduncle",
+        "division": "",
+        "n_voxels": 174,
+        "fraction_of_recording": 4.0707572474100976e-05
+      },
+      {
+        "id": 350,
+        "acronym": "SLC",
+        "name": "Subceruleus nucleus",
+        "division": "P",
+        "n_voxels": 166,
+        "fraction_of_recording": 3.883595994655611e-05
+      },
+      {
+        "id": 975,
+        "acronym": "EW",
+        "name": "Edinger-Westphal nucleus",
+        "division": "MB",
+        "n_voxels": 165,
+        "fraction_of_recording": 3.8602008380613e-05
+      },
+      {
+        "id": 336,
+        "acronym": "csc",
+        "name": "superior colliculus commissure",
+        "division": "",
+        "n_voxels": 163,
+        "fraction_of_recording": 3.813410524872678e-05
+      },
+      {
+        "id": 321,
+        "acronym": "SubG",
+        "name": "Subgeniculate nucleus",
+        "division": "TH",
+        "n_voxels": 156,
+        "fraction_of_recording": 3.649644428712501e-05
+      },
+      {
+        "id": 607344842,
+        "acronym": "IPA",
+        "name": "Interpeduncular nucleus, apical",
+        "division": "MB",
+        "n_voxels": 155,
+        "fraction_of_recording": 3.62624927211819e-05
+      },
+      {
+        "id": 927,
+        "acronym": "ACAd6b",
+        "name": "Anterior cingulate area, dorsal part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 150,
+        "fraction_of_recording": 3.509273489146636e-05
+      },
+      {
+        "id": 781,
+        "acronym": "y",
+        "name": "Nucleus y",
+        "division": "MY",
+        "n_voxels": 145,
+        "fraction_of_recording": 3.392297706175081e-05
+      },
+      {
+        "id": 182305713,
+        "acronym": "SSp-un6b",
+        "name": "Primary somatosensory area, unassigned, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 141,
+        "fraction_of_recording": 3.2987170797978375e-05
+      },
+      {
+        "id": 563807439,
+        "acronym": "IntG",
+        "name": "Intermediate geniculate nucleus",
+        "division": "TH",
+        "n_voxels": 141,
+        "fraction_of_recording": 3.2987170797978375e-05
+      },
+      {
+        "id": 649,
+        "acronym": "VISal6b",
+        "name": "Anterolateral visual area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 135,
+        "fraction_of_recording": 3.1583461402319725e-05
+      },
+      {
+        "id": 607344830,
+        "acronym": "PN",
+        "name": "Paranigral nucleus",
+        "division": "MB",
+        "n_voxels": 135,
+        "fraction_of_recording": 3.1583461402319725e-05
+      },
+      {
+        "id": 292,
+        "acronym": "BA",
+        "name": "Bed nucleus of the accessory olfactory tract",
+        "division": "STR",
+        "n_voxels": 126,
+        "fraction_of_recording": 2.9477897308831743e-05
+      },
+      {
+        "id": 355,
+        "acronym": "AIp6b",
+        "name": "Agranular insular area, posterior part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 123,
+        "fraction_of_recording": 2.8776042611002414e-05
+      },
+      {
+        "id": 132,
+        "acronym": "PL6b",
+        "name": "Prelimbic area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 121,
+        "fraction_of_recording": 2.8308139479116195e-05
+      },
+      {
+        "id": 338,
+        "acronym": "SFO",
+        "name": "Subfornical organ",
+        "division": "HY",
+        "n_voxels": 121,
+        "fraction_of_recording": 2.8308139479116195e-05
+      },
+      {
+        "id": 607344854,
+        "acronym": "IPDM",
+        "name": "Interpeduncular nucleus, dorsomedial",
+        "division": "MB",
+        "n_voxels": 111,
+        "fraction_of_recording": 2.5968623819685106e-05
+      },
+      {
+        "id": 66,
+        "acronym": "LT",
+        "name": "Lateral terminal nucleus of the accessory optic tract",
+        "division": "MB",
+        "n_voxels": 110,
+        "fraction_of_recording": 2.5734672253741997e-05
+      },
+      {
+        "id": 607344862,
+        "acronym": "IPRL",
+        "name": "Interpeduncular nucleus, rostrolateral",
+        "division": "MB",
+        "n_voxels": 110,
+        "fraction_of_recording": 2.5734672253741997e-05
+      },
+      {
+        "id": 318,
+        "acronym": "SG",
+        "name": "Supragenual nucleus",
+        "division": "P",
+        "n_voxels": 108,
+        "fraction_of_recording": 2.5266769121855778e-05
+      },
+      {
+        "id": 605,
+        "acronym": "TTv",
+        "name": "Taenia tecta, ventral part",
+        "division": "OLF",
+        "n_voxels": 108,
+        "fraction_of_recording": 2.5266769121855778e-05
+      },
+      {
+        "id": 859,
+        "acronym": "PAS",
+        "name": "Parasolitary nucleus",
+        "division": "MY",
+        "n_voxels": 104,
+        "fraction_of_recording": 2.4330962858083343e-05
+      },
+      {
+        "id": 456,
+        "acronym": "AUDpo6b",
+        "name": "Posterior auditory area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 101,
+        "fraction_of_recording": 2.3629108160254015e-05
+      },
+      {
+        "id": 633,
+        "acronym": "cic",
+        "name": "inferior colliculus commissure",
+        "division": "",
+        "n_voxels": 100,
+        "fraction_of_recording": 2.3395156594310905e-05
+      },
+      {
+        "id": 177,
+        "acronym": "NR",
+        "name": "Nucleus of Roller",
+        "division": "MY",
+        "n_voxels": 97,
+        "fraction_of_recording": 2.269330189648158e-05
+      },
+      {
+        "id": 312782598,
+        "acronym": "VISli6b",
+        "name": "Laterointermediate area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 97,
+        "fraction_of_recording": 2.269330189648158e-05
+      },
+      {
+        "id": 606826663,
+        "acronym": "Pa4",
+        "name": "Paratrochlear nucleus",
+        "division": "MB",
+        "n_voxels": 95,
+        "fraction_of_recording": 2.222539876459536e-05
+      },
+      {
+        "id": 549009219,
+        "acronym": "Acs5",
+        "name": "Accessory trigeminal nucleus",
+        "division": "P",
+        "n_voxels": 92,
+        "fraction_of_recording": 2.1523544066766032e-05
+      },
+      {
+        "id": 549009211,
+        "acronym": "MA3",
+        "name": "Medial accesory oculomotor nucleus",
+        "division": "MB",
+        "n_voxels": 91,
+        "fraction_of_recording": 2.1289592500822926e-05
+      },
+      {
+        "id": 147,
+        "acronym": "LC",
+        "name": "Locus ceruleus",
+        "division": "P",
+        "n_voxels": 88,
+        "fraction_of_recording": 2.0587737802993598e-05
+      },
+      {
+        "id": 599626923,
+        "acronym": "SCO",
+        "name": "Subcommissural organ",
+        "division": "MB",
+        "n_voxels": 88,
+        "fraction_of_recording": 2.0587737802993598e-05
+      },
+      {
+        "id": 356,
+        "acronym": "PST",
+        "name": "Preparasubthalamic nucleus",
+        "division": "HY",
+        "n_voxels": 85,
+        "fraction_of_recording": 1.988588310516427e-05
+      },
+      {
+        "id": 280,
+        "acronym": "B",
+        "name": "Barrington's nucleus",
+        "division": "P",
+        "n_voxels": 83,
+        "fraction_of_recording": 1.9417979973278053e-05
+      },
+      {
+        "id": 100,
+        "acronym": "IPN",
+        "name": "Interpeduncular nucleus",
+        "division": "MB",
+        "n_voxels": 82,
+        "fraction_of_recording": 1.9184028407334944e-05
+      },
+      {
+        "id": 105,
+        "acronym": "SOCm",
+        "name": "Superior olivary complex, medial part",
+        "division": "P",
+        "n_voxels": 80,
+        "fraction_of_recording": 1.8716125275448725e-05
+      },
+      {
+        "id": 914,
+        "acronym": "PD",
+        "name": "Posterodorsal preoptic nucleus",
+        "division": "HY",
+        "n_voxels": 77,
+        "fraction_of_recording": 1.8014270577619396e-05
+      },
+      {
+        "id": 368,
+        "acronym": "PERI6b",
+        "name": "Perirhinal area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 75,
+        "fraction_of_recording": 1.754636744573318e-05
+      },
+      {
+        "id": 448,
+        "acronym": "ORBl1",
+        "name": "Orbital area, lateral part, layer 1",
+        "division": "Isocortex",
+        "n_voxels": 74,
+        "fraction_of_recording": 1.731241587979007e-05
+      },
+      {
+        "id": 680,
+        "acronym": "ORBvl6b",
+        "name": "Orbital area, ventrolateral part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 71,
+        "fraction_of_recording": 1.6610561181960742e-05
+      },
+      {
+        "id": 1081,
+        "acronym": "ILA6b",
+        "name": "Infralimbic area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 68,
+        "fraction_of_recording": 1.5908706484131417e-05
+      },
+      {
+        "id": 75,
+        "acronym": "DT",
+        "name": "Dorsal terminal nucleus of the accessory optic tract",
+        "division": "MB",
+        "n_voxels": 67,
+        "fraction_of_recording": 1.5674754918188308e-05
+      },
+      {
+        "id": 460,
+        "acronym": "MEV",
+        "name": "Midbrain trigeminal nucleus",
+        "division": "MB",
+        "n_voxels": 62,
+        "fraction_of_recording": 1.4504997088472762e-05
+      },
+      {
+        "id": 506,
+        "acronym": "das",
+        "name": "dorsal acoustic stria",
+        "division": "",
+        "n_voxels": 57,
+        "fraction_of_recording": 1.3335239258757216e-05
+      },
+      {
+        "id": 428,
+        "acronym": "mct",
+        "name": "medial corticohypothalamic tract",
+        "division": "",
+        "n_voxels": 56,
+        "fraction_of_recording": 1.3101287692814108e-05
+      },
+      {
+        "id": 393,
+        "acronym": "VISpl6b",
+        "name": "Posterolateral visual area, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 53,
+        "fraction_of_recording": 1.2399432994984781e-05
+      },
+      {
+        "id": 763,
+        "acronym": "OV",
+        "name": "Vascular organ of the lamina terminalis",
+        "division": "HY",
+        "n_voxels": 53,
+        "fraction_of_recording": 1.2399432994984781e-05
+      },
+      {
+        "id": 106,
+        "acronym": "ISN",
+        "name": "Inferior salivatory nucleus",
+        "division": "MY",
+        "n_voxels": 48,
+        "fraction_of_recording": 1.1229675165269235e-05
+      },
+      {
+        "id": 832,
+        "acronym": "IIIn",
+        "name": "oculomotor nerve",
+        "division": "",
+        "n_voxels": 47,
+        "fraction_of_recording": 1.0995723599326126e-05
+      },
+      {
+        "id": 287,
+        "acronym": "BAC",
+        "name": "Bed nucleus of the anterior commissure",
+        "division": "PAL",
+        "n_voxels": 46,
+        "fraction_of_recording": 1.0761772033383016e-05
+      },
+      {
+        "id": 911,
+        "acronym": "IVn",
+        "name": "trochlear nerve",
+        "division": "",
+        "n_voxels": 46,
+        "fraction_of_recording": 1.0761772033383016e-05
+      },
+      {
+        "id": 115,
+        "acronym": "IV",
+        "name": "Trochlear nucleus",
+        "division": "MB",
+        "n_voxels": 42,
+        "fraction_of_recording": 9.825965769610581e-06
+      },
+      {
+        "id": 526157192,
+        "acronym": "FRP5",
+        "name": "Frontal pole, layer 5",
+        "division": "Isocortex",
+        "n_voxels": 37,
+        "fraction_of_recording": 8.656207939895035e-06
+      },
+      {
+        "id": 1060,
+        "acronym": "dtd",
+        "name": "doral tegmental decussation",
+        "division": "",
+        "n_voxels": 35,
+        "fraction_of_recording": 8.188304808008816e-06
+      },
+      {
+        "id": 332,
+        "acronym": "ASO",
+        "name": "Accessory supraoptic group",
+        "division": "HY",
+        "n_voxels": 34,
+        "fraction_of_recording": 7.954353242065709e-06
+      },
+      {
+        "id": 207,
+        "acronym": "AP",
+        "name": "Area postrema",
+        "division": "MY",
+        "n_voxels": 25,
+        "fraction_of_recording": 5.848789148577726e-06
+      },
+      {
+        "id": 642,
+        "acronym": "NTB",
+        "name": "Nucleus of the trapezoid body",
+        "division": "MY",
+        "n_voxels": 21,
+        "fraction_of_recording": 4.912982884805291e-06
+      },
+      {
+        "id": 527696977,
+        "acronym": "ORBm6b",
+        "name": "Orbital area, medial part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 21,
+        "fraction_of_recording": 4.912982884805291e-06
+      },
+      {
+        "id": 699,
+        "acronym": "AIv6b",
+        "name": "Agranular insular area, ventral part, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 20,
+        "fraction_of_recording": 4.679031318862181e-06
+      },
+      {
+        "id": 203,
+        "acronym": "LIN",
+        "name": "Linear nucleus of the medulla",
+        "division": "MY",
+        "n_voxels": 13,
+        "fraction_of_recording": 3.041370357260418e-06
+      },
+      {
+        "id": 237,
+        "acronym": "ts",
+        "name": "solitary tract",
+        "division": "",
+        "n_voxels": 13,
+        "fraction_of_recording": 3.041370357260418e-06
+      },
+      {
+        "id": 576,
+        "acronym": "ACVII",
+        "name": "Accessory facial motor nucleus",
+        "division": "MY",
+        "n_voxels": 9,
+        "fraction_of_recording": 2.1055640934879815e-06
+      },
+      {
+        "id": 526322264,
+        "acronym": "FRP6b",
+        "name": "Frontal pole, layer 6b",
+        "division": "Isocortex",
+        "n_voxels": 4,
+        "fraction_of_recording": 9.358062637724362e-07
+      },
+      {
+        "id": 164,
+        "acronym": "unknown_164",
+        "name": "Structure id 164 is not in the structure graph",
+        "division": "",
+        "n_voxels": 1,
+        "fraction_of_recording": 2.3395156594310905e-07
+      },
+      {
+        "id": 661,
+        "acronym": "VII",
+        "name": "Facial motor nucleus",
+        "division": "MY",
+        "n_voxels": 1,
+        "fraction_of_recording": 2.3395156594310905e-07
+      }
+    ]
+  }
+}
