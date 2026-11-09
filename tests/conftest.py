@@ -20,6 +20,12 @@ def pytest_collection_modifyitems(items):
             item.add_marker(skip_data)
 
 
+@pytest.fixture(scope='session')
+def data_dir():
+    """The real data folder next to FusiConverter"""
+    return DATA_DIR
+
+
 @pytest.fixture
 def random_similarity_transform():
     """Builds a known 4x4 transform (random rotation, uniform 'scale', random translation), the same for the same 'seed'"""
