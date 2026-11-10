@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 FusiConverter is a Napari-based tool for FUSi (functional ultrasound) recordings. It aligns `.mat` recordings to a vascular reference atlas and the Allen CCF atlas, then labels each voxel with the brain structure it sits in. It's a small internal lab tool: the reusable code lives in the `fusiconverter` package under `src/`, driven by one thin entry-point script in `scripts/`. `README.md` is the end-user guide (written for non-technical users); this file is for developers.
 
-The old `.mat` → `.h5` conversion script (`convert_mat_to_h5.py`) and its `.bat` wrapper no longer exist. The viewer reads `.mat` files directly. Some leftovers still mention `.h5` (`utils.load_image`, `utils.get_voxel_size_mm`, the data README) and are legacy.
+The old `.mat` → `.h5` conversion script (`convert_mat_to_h5.py`) and its `.bat` wrapper no longer exist. The viewer reads `.mat` files directly. The only `.h5` files left in `../data` are the `burst_corrected/` ones, which FusiConverter doesn't use.
 
 ## Environment & running
 
@@ -24,7 +24,14 @@ For notebook work, the ipykernel may need registering once:
 uv run python -m ipykernel install --name fusi
 ```
 
-Tests are in `tests/` (pytest, run with `uv run python -m pytest` from the repo root). So far there is only `test_readers.py`, which reads real files from `../data` and has no synthetic fixtures. No pytest config, linter, or build step is set up.
+Tests are in `tests/` (pytest, in the `dev` dependency group; run with `uv run python -m pytest` from the repo root, configured in `pyproject.toml`):
+- `tests/unit/`: one file per package module (`test_loading.py`, `test_landmarks.py`, `test_transforms.py`, `test_areas.py`), on synthetic data built by the fixtures in `tests/conftest.py`.
+- `tests/integration/`: the reader, the widgets (in a napari viewer), and the whole landmarks → alignment → area map chain on synthetic data with a known answer. `test_readers_real_data.py` reads every recording and atlas in `../data`.
+- `tests/e2e/`: `test_golden.py` reruns the pipeline on one real session and compares it with `tests/e2e/golden/golden.json`, the output recorded from the code by `tests/e2e/make_golden.py` ("golden" means what the code produced then, not checked to be correct). Rerun `make_golden.py` only when a change in the outputs is intended. `test_launch_script.py` runs the launch script with `napari.run` patched out.
+- Markers: `data` (needs `../data`; every such test is skipped, with its reason, when the folder is missing) and `gui` (needs a Qt viewer). `-m "not data"` runs only the quick synthetic tests.
+- Known bugs are strict `xfail` tests that expect the correct behaviour. Fixing a bug means removing its `xfail`.
+
+No linter or build step is set up.
 
 ## Data
 
@@ -43,16 +50,16 @@ Always import the package as `fusiconverter` (scripts, tests, notebooks) and use
 
 **`src/fusiconverter/`** is the package holding everything reusable:
 - **`reader.py`** + **`napari.yaml`**: Napari plugin reader for `*.mat`, `*.nii`, `*.nii.gz`.
-  - `read_mat`: takes `np.abs` of the image (ultrasound data can be complex) and passes it through `utils.prepare_image_for_layer`, which moves a trailing time axis to the front so the spatial axes line up with the 3D atlas. It stores `source_path` and `spatial_axes` in the layer metadata.
+  - `read_mat`: takes `np.abs` of the image (ultrasound data can be complex) and passes it through `loading.prepare_image_for_layer`, which moves a trailing time axis to the front so the spatial axes line up with the 3D atlas. It stores `source_path` and `spatial_axes` in the layer metadata.
   - `read_atlas`: scales the atlas to mm and uses additive blending so a recording inside the atlas volume stays visible in 3D.
   - **Auto-align on open**: if `<source>.alignment.json` exists, a Qt prompt asks whether to apply it, and if so the saved transform is set as the layer affine. The **vascular atlas is the reference frame**. Only atlases whose parent folder is named `Allen_CCF` get moved onto it, and recordings are aligned to it too.
-- **`utils.py`**: Tkinter file/folder pickers and prompts (`prompt_load_annotation`), `.mat` loading (`load_mat_image`; `load_image` dispatches on extension but `.h5` is an unimplemented stub), `load_atlas_image`, `prepare_image_for_layer`, and `load_structure_graph` (maps Allen structure ids to acronym/name/colour/major division from the structure-graph CSV). `load_atlas_image` converts voxel sizes to mm by guessing the unit from the header zoom, because the headers all say "mm" but don't all mean it: Allen CCF is in µm, the 78 µm Keliris vascular atlas is 10× inflated, and the Keliris VascularProbabilisticAtlas is real mm.
-- **`viewer_ops.py`**: the alignment and registration math, Napari-independent enough to test on arrays.
-  - Landmarks: save/load (`<source>.landmarks.json`), `match_landmarks`.
-  - Fitting: `fit_similarity_transform` (Kabsch-Umeyama: rotation + uniform scale + translation), `transform_residuals`, `compose_transform_matrix`, `rotate_about_axis_matrix`.
-  - Transforms: save/load (`<source>.alignment.json`), and conversion between a 4x4 transform matrix and a Napari layer affine (`put_transform_matrix_in_layer_affine` / `get_transform_matrix_from_layer_affine`, which leave non-spatial axes such as time untouched).
-  - Voxel-level registration: `annotate_volume`, `summarize_areas`, `save_area_map` → `<source>.areas.json` plus a `.areas.npz` of per-structure voxel indices.
-- **`widgets.py`**: the Qt dock widgets.
+- **`loading.py`**: reading recordings and atlases from disk: `load_mat_image` (see the `.mat` quirks below), `load_atlas_image` and `prepare_image_for_layer`. `load_atlas_image` converts voxel sizes to mm by guessing the unit from the header zoom, because the headers all say "mm" but don't all mean it: Allen CCF is in µm, the 78 µm Keliris vascular atlas is 10× inflated, and the Keliris VascularProbabilisticAtlas is real mm. The comment at the top of the module lists which atlas files are which.
+- **`landmarks.py`**: save/load (`<source>.landmarks.json`), `get_or_create_landmarks_layer` and `match_landmarks`.
+- **`transforms.py`**: the alignment maths, napari-independent and testable on arrays.
+  - Fitting: `fit_similarity_transform` (Kabsch-Umeyama: rotation + translation, plus a uniform scale with `allow_scaling=True`), `transform_residuals`, `compose_transform_matrix`, `rotate_about_axis_matrix`.
+  - Saving and loading `<source>.alignment.json`, and conversion between a 4x4 transform matrix and a Napari layer affine (`put_transform_matrix_in_layer_affine` / `get_transform_matrix_from_layer_affine`, which leave non-spatial axes such as time untouched). `atlas_index_transform` maps recording voxel indices to atlas voxel indices.
+- **`areas.py`**: voxel-level registration. `annotate_volume`, `summarize_areas`, `save_area_map` → `<source>.areas.json` plus a `.areas.npz` of per-structure voxel indices, and `load_structure_graph` (maps Allen structure ids to acronym/name/colour/major division from the structure-graph CSV).
+- **`widgets.py`**: the Qt dock widgets, plus `prompt_load_annotation`, the Tk file dialog `RegisterToAreasWidget` uses to ask for the annotation file.
   - `AddLandmark`: place/name/save/load landmarks on a layer.
   - `AlignmentWidget`: fit a transform from landmarks matched between an HQ volume and the atlas, then save it.
   - `ManualAlignmentWidget`: spinboxes (translate/rotate/scale) and a 3D mouse drag mode to adjust a layer by hand on top of whatever transform it already has, pivoting about the recording's centre, with reset and save to the same `.alignment.json`.
@@ -73,8 +80,9 @@ Results are saved next to the source file as `<source>.landmarks.json`, `.alignm
 
 ## Notes on the .mat format quirks
 
-The FUSi-exported MATLAB files are inconsistent. The loader in `utils.load_mat_image` copes with this (the `scratch/` scripts show how these were discovered):
+The FUSi-exported MATLAB files are inconsistent. The loader in `loading.load_mat_image` copes with this (the `scratch/` scripts show how these were discovered):
 - The main image variable's name differs by acquisition mode: `bmode`, `doppler`, `Ihq`, or (in older/other files) `I`.
 - `metadata` is a MATLAB struct-array; each field must be accessed as `data['metadata'][name].item().flatten()`.
 - `origen` is a misspelling of `origin` in some files.
+- Some files (e.g. in `../data/20260624-0`) are MATLAB v7.3 (HDF5), which `scipy.io.loadmat` can't read, so they're read with h5py. Which branch runs is decided by `'2026'` appearing in the path, not by the file format. This branch is untested and has known problems (see `notes/claude_notes/2026-11-09-follow-ups.md`).
 - `tag` metadata exists in tagged/stimulus recordings but is not handled. `load_mat_image` reads it with the rest of the metadata and then ignores it.
