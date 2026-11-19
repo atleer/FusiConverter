@@ -646,7 +646,7 @@ class RegisterToAreasWidget(QWidget):
         transform_matrix = np.linalg.inv(allen_transform_matrix) @ transform_matrix
 
         # assuming the data folder sits next to FusiConverter. If it's not, user is asked to locate it manually
-        annotation_path = Path(__file__).resolve().parents[3] / 'data' / 'Allen_CCF' / 'annotation' / 'annotation_50.nii.gz'
+        annotation_path = Path(__file__).resolve().parents[3] / 'data' / '00_ReferenceAtlas' / 'Allen_CCF' / 'annotation' / 'annotation_50.nii.gz'
         if not annotation_path.exists():
             annotation_path = prompt_load_annotation()
         if not annotation_path:

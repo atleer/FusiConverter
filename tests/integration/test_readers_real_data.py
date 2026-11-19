@@ -14,9 +14,9 @@ pytestmark = pytest.mark.data # every test here reads real files from ../data
 
 # %% Get paths to data files
 
-session_date_id = '20251211-2'
-recorded_data_dir = Path(__file__).parents[3] / Path('data') / session_date_id
-paths_mat = sorted([path for path in recorded_data_dir.glob('*/*.mat') if '_BM' not in path.stem and '_DP' not in path.stem and '_HQ' not in path.stem])
+session_dir = Path('Raw', 'GEYP659', '20251211_Session_16_reg')
+recorded_data_dir = Path(__file__).parents[3] / Path('data') / session_dir
+paths_mat = sorted([path for path in recorded_data_dir.glob('*.mat') if '_BM' not in path.stem and '_DP' not in path.stem and '_HQ' not in path.stem])
 
 def test_mat_files_found():
     if not paths_mat:
@@ -28,7 +28,7 @@ def read_mat_file(request):
 
 # %%
 
-atlas_data_dir = Path(__file__).parents[3] / Path('data')
+atlas_data_dir = Path(__file__).parents[3] / Path('data') / '00_ReferenceAtlas'
 
 # inside each tuple in the list of atlases: (path to atlas, expected voxel size in mm, whether an alignment.json file exists and the atlas should be moved onto the vascular reference atlas)
 atlases = [

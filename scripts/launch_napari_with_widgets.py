@@ -33,8 +33,8 @@ viewer.window.add_dock_widget(register_to_atlas_areas_widget, area='right')
 # The data folder sits next to FusiConverter.
 data_dir = root_dir.parent / 'data'
 atlas_paths = [
-    data_dir / 'Keliris_vasc_atlas' / 'VascularProbabilisticAtlas.nii',  # reference frame, so load it first
-    data_dir / 'Allen_CCF' / 'average_template_50.nii.gz',
+    data_dir / '00_ReferenceAtlas' / 'Keliris_vasc_atlas' / 'VascularProbabilisticAtlas.nii',  # reference frame, so load it first
+    data_dir / '00_ReferenceAtlas' / 'Allen_CCF' / 'average_template_50.nii.gz',
 ]
 for atlas_path in atlas_paths:
     if atlas_path.exists():

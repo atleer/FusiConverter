@@ -36,7 +36,8 @@ No linter or build step is set up.
 ## Data
 
 - The data folder sits at the same level as the FusiConverter folder (`../data`), not inside it.
-- The Allen atlases live in `data/Allen_CCF/`, and `reader.py` relies on that folder name (see below). The Keliris vascular atlases (the reference frame) live in `data/Keliris_vasc_atlas/`.
+- The Allen atlases live in `data/00_ReferenceAtlas/Allen_CCF/`, and `reader.py` relies on that folder name (see below). The Keliris vascular atlases (the reference frame) live in `data/00_ReferenceAtlas/Keliris_vasc_atlas/`.
+- Recordings live in `data/Raw/<animal>/<date>_Session_XX[_reg]/` (flat, e.g. `Raw/GEYP659/20251211_Session_14_reg/GEYP659_20251211_1406_fUS_HQ.mat`).
 
 ### Read the README.md in the data folder before handling/reading the data itself to get an overview of its content.
 
@@ -63,7 +64,7 @@ Always import the package as `fusiconverter` (scripts, tests, notebooks) and use
   - `AddLandmark`: place/name/save/load landmarks on a layer.
   - `AlignmentWidget`: fit a transform from landmarks matched between an HQ volume and the atlas, then save it.
   - `ManualAlignmentWidget`: spinboxes (translate/rotate/scale) and a 3D mouse drag mode to adjust a layer by hand on top of whatever transform it already has, pivoting about the recording's centre, with reset and save to the same `.alignment.json`.
-  - `RegisterToAreasWidget`: label every voxel of an aligned recording with its Allen structure (uses `../data/Allen_CCF/annotation/annotation_50.nii.gz` automatically, or asks the user for the annotation file if it's missing; `allen_mouse_connectivity_structure_graph.csv` must sit next to it) and add it as a Labels layer. Results are saved automatically.
+  - `RegisterToAreasWidget`: label every voxel of an aligned recording with its Allen structure (uses `../data/00_ReferenceAtlas/Allen_CCF/annotation/annotation_50.nii.gz` automatically, or asks the user for the annotation file if it's missing; `allen_mouse_connectivity_structure_graph.csv` must sit next to it) and add it as a Labels layer. Results are saved automatically.
 - **`__init__.py`**: only a placeholder `main()`, which `pyproject.toml` wires up as the `fusiconverter` script and as the `napari.manifest` entry point.
 
 Coordinate conventions worth keeping straight when editing: images are (Z, X, Y) with an optional trailing time axis in the file, which becomes a *leading* time axis in the layer. `scale` and voxel sizes are in mm. Transform matrices are 4x4 homogeneous and map recording mm → vascular reference atlas mm. A Napari layer must have its spatial axes last to line up with 3D layers.
@@ -84,5 +85,5 @@ The FUSi-exported MATLAB files are inconsistent. The loader in `loading.load_mat
 - The main image variable's name differs by acquisition mode: `bmode`, `doppler`, `Ihq`, or (in older/other files) `I`.
 - `metadata` is a MATLAB struct-array; each field must be accessed as `data['metadata'][name].item().flatten()`.
 - `origen` is a misspelling of `origin` in some files.
-- Some files (e.g. in `../data/20260624-0`) are MATLAB v7.3 (HDF5), which `scipy.io.loadmat` can't read, so they're read with h5py. Which branch runs is decided by `'2026'` appearing in the path, not by the file format. This branch is untested and has known problems (see `notes/claude_notes/2026-11-09-follow-ups.md`).
+- Some files (e.g. in `../data/Raw/BECU184/20260624_Session_01`) are MATLAB v7.3 (HDF5), which `scipy.io.loadmat` can't read, so they're read with h5py. Which branch runs is decided by `'2026'` appearing in the path, not by the file format. This branch is untested and has known problems (see `notes/claude_notes/2026-11-09-follow-ups.md`).
 - `tag` metadata exists in tagged/stimulus recordings but is not handled. `load_mat_image` reads it with the rest of the metadata and then ignores it.

@@ -30,10 +30,10 @@ from fusiconverter.transforms import (
 GOLDEN_PATH = Path(__file__).parent / 'golden' / 'golden.json'
 
 # relative to the data folder
-HQ_PATH = Path('20251211-0', '20251211-0_GEY-P659', '03_OBac+_GEY-P659_fUS_251211_140600_3d_HQ.mat')
-VASCULAR_ATLAS_PATH = Path('Keliris_vasc_atlas', 'VascularProbabilisticAtlas.nii')
-ALLEN_TEMPLATE_PATH = Path('Allen_CCF', 'average_template_50.nii.gz')
-ANNOTATION_PATH = Path('Allen_CCF', 'annotation', 'annotation_50.nii.gz')
+HQ_PATH = Path('Raw', 'GEYP659', '20251211_Session_14_reg', 'GEYP659_20251211_1406_fUS_HQ.mat')
+VASCULAR_ATLAS_PATH = Path('00_ReferenceAtlas', 'Keliris_vasc_atlas', 'VascularProbabilisticAtlas.nii')
+ALLEN_TEMPLATE_PATH = Path('00_ReferenceAtlas', 'Allen_CCF', 'average_template_50.nii.gz')
+ANNOTATION_PATH = Path('00_ReferenceAtlas', 'Allen_CCF', 'annotation', 'annotation_50.nii.gz')
 STRUCTURE_GRAPH_PATH = ANNOTATION_PATH.parent / 'allen_mouse_connectivity_structure_graph.csv'
 
 
