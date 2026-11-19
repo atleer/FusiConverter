@@ -82,7 +82,7 @@ Use this to fine-tune the alignment after the automatic fit using landmarks.
 ### 6. Label brain areas (*Register to Atlas Areas* panel)
 
 1. Choose the aligned recording and click **Register to Atlas Areas**.
-2. The Allen **annotation** file (`data/Allen_CCF/annotation/annotation_50.nii.gz`) is picked automatically. Only if it can't be found are you asked to pick it yourself (click on the folder named "annotation"). The file `allen_mouse_connectivity_structure_graph.csv` must be in the same folder.
+2. The Allen **annotation** file (`data/00_ReferenceAtlas/Allen_CCF/annotation/annotation_50.nii.gz`) is picked automatically. Only if it can't be found are you asked to pick it yourself (click on the folder named "annotation"). The file `allen_mouse_connectivity_structure_graph.csv` must be in the same folder.
 3. A coloured layer showing the brain areas appears on top of the recording. Hover over it to see each area's name in the bar at the bottom of the window.
 
 The panel shows which areas the recording covers most. The full list is printed in the terminal window.
