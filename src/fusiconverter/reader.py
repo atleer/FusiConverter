@@ -10,6 +10,7 @@ from qtpy.QtWidgets import QMessageBox
 
 from .loading import load_atlas_image, load_mat_image, prepare_image_for_layer
 from .transforms import load_transform_matrix, put_transform_matrix_in_layer_affine
+from .paths import registration_file_path
 
 
 def napari_get_reader(path):
@@ -23,7 +24,7 @@ def napari_get_reader(path):
 
 def _saved_alignment_affine(source_path, ndim, spatial_axes=(0, 1, 2), ask=True):
     """Affine from <source>.alignment.json (maps to the vascular reference atlas's mm), or None if there is none or the user declines."""
-    alignment_path = Path(f'{source_path}.alignment.json')
+    alignment_path = registration_file_path(source_path, 'alignment.json')
     if not alignment_path.exists():
         return None
     if ask:

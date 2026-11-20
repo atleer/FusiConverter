@@ -5,6 +5,7 @@ from pathlib import Path
 import json
 from datetime import datetime, timezone
 from .transforms import atlas_index_transform
+from .paths import registration_file_path
 
 
 def annotate_volume(spatial_shape, voxel_size_mm, transform_matrix, annotation, annotation_voxel_size_mm):
@@ -53,8 +54,9 @@ def save_area_map(source_path, summary, labels, annotation_source_path, fraction
     one flat index array per structure, keyed by structure id. 'hq_shape' is stored
     alongside them so the flat indices can be unravelled without the labels volume.
     """
-    json_path = Path(f'{source_path}.areas.json')
-    npz_path = Path(f'{source_path}.areas.npz')
+    json_path = registration_file_path(source_path, 'areas.json')
+    npz_path = registration_file_path(source_path, 'areas.npz')
+    json_path.parent.mkdir(parents=True, exist_ok=True)
 
     voxel_indices = {str(structure['id']): structure['voxel_indices']
                      for structure in summary if 'voxel_indices' in structure}

@@ -69,7 +69,7 @@ Always import the package as `fusiconverter` (scripts, tests, notebooks) and use
 
 Coordinate conventions worth keeping straight when editing: images are (Z, X, Y) with an optional trailing time axis in the file, which becomes a *leading* time axis in the layer. `scale` and voxel sizes are in mm. Transform matrices are 4x4 homogeneous and map recording mm → vascular reference atlas mm. A Napari layer must have its spatial axes last to line up with 3D layers.
 
-Results are saved next to the source file as `<source>.landmarks.json`, `.alignment.json`, `.areas.json` and `.areas.npz`.
+Results are saved as `<source>.landmarks.json`, `.alignment.json`, `.areas.json` and `.areas.npz` (`paths.registration_file_path`). For a source in `Raw/<animal>/<session>/` they go to `Processed/<animal>/<session>/registration_files/`; any other source (e.g. the atlases) gets them next to the file.
 
 **`inspect-data-online/`**: notebooks for looking at recordings after registration (currently `visualize-recording-after-registration.ipynb`, which reads the `*areas*.json` / `.npz` files from `../data/<session>`). It expects to run from the repo root (it `chdir`s there).
 

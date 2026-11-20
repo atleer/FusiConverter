@@ -24,6 +24,7 @@ from .transforms import (
     load_transform_matrix,
 )
 from .loading import load_atlas_image
+from .paths import registration_file_path
 import sys
 from pathlib import Path
 import tkinter as tk
@@ -126,7 +127,7 @@ class AddLandmark(QWidget):
 
         # check with user if they want to overwrite or append
         points_layer = self.viewer.layers[points_name]
-        json_path = Path(f"{points_layer.metadata.get('source_path')}.landmarks.json")
+        json_path = registration_file_path(points_layer.metadata.get('source_path'), 'landmarks.json')
         mode = 'overwrite'
         if json_path.exists():
             mode = self._ask_save_mode(json_path)
@@ -293,7 +294,7 @@ class AlignmentWidget(QWidget):
             self.status_label.setText("Run 'Align to Atlas' before saving.")
             return
 
-        json_path = Path(f"{self._last_alignment['hq_source_path']}.alignment.json")
+        json_path = registration_file_path(self._last_alignment['hq_source_path'], 'alignment.json')
         if not json_path.exists() :
             save_transform_matrix(**self._last_alignment)
             print(f'Saved transformation matrix for alignment to {json_path}')
@@ -549,7 +550,7 @@ class ManualAlignmentWidget(QWidget):
             'method': 'manual',
         }
 
-        json_path = Path(f'{source_path}.alignment.json')
+        json_path = registration_file_path(source_path, 'alignment.json')
         if json_path.exists() and _ask_overwrite_alignment(self, json_path) is None:
             return
         save_transform_matrix(**alignment)
@@ -750,7 +751,7 @@ class RegisterToAreasWidget(QWidget):
             print(f"No source path for '{image_layer.name}', not writing an area map.")
             return
 
-        json_path = Path(f'{source_path}.areas.json')
+        json_path = registration_file_path(source_path, 'areas.json')
         if json_path.exists() and not self._ask_overwrite(json_path):
             return
 

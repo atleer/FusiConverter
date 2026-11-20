@@ -1,12 +1,12 @@
 import napari
 import numpy as np
-from pathlib import Path
 import json
+from .paths import registration_file_path
 
 
 def load_landmarks(source_path):
     """Load landmarks that have already been written to file, if there are any"""
-    json_path = Path(f'{source_path}.landmarks.json')
+    json_path = registration_file_path(source_path, 'landmarks.json')
     if not json_path.exists():
         return {}
     with open(json_path) as f:
@@ -27,7 +27,9 @@ def save_landmarks(points_layer, mode='append'):
         merged.update(landmarks)
         landmarks = merged
 
-    with open(Path(f'{source_path}.landmarks.json'), 'w') as f:
+    json_path = registration_file_path(source_path, 'landmarks.json')
+    json_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(json_path, 'w') as f:
         json.dump(landmarks, f, indent=2)
 
 def get_or_create_landmarks_layer(viewer, image_layer) -> napari.layers.Points:

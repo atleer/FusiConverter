@@ -3,6 +3,7 @@ from pathlib import Path
 import json
 from datetime import datetime, timezone
 from scipy.spatial.transform import Rotation
+from .paths import registration_file_path
 
 
 def fit_similarity_transform(moving: np.ndarray, fixed: np.ndarray, allow_scaling: bool = False):
@@ -69,7 +70,8 @@ def rotate_about_axis_matrix(axis, angle_deg, centre_mm=(0, 0, 0)):
 
 def save_transform_matrix(hq_source_path, atlas_source_path, transform_matrix, hq_voxel_size_in_mm, atlas_voxel_size_in_mm, landmark_names=(), residuals_mm=(), method='landmarks'):
     """Save transformation matrix used for alignement. Landmarks/residuals are absent for a manual alignment."""
-    json_path = Path(f'{hq_source_path}.alignment.json')
+    json_path = registration_file_path(hq_source_path, 'alignment.json')
+    json_path.parent.mkdir(parents=True, exist_ok=True)
     residuals_mm = np.asarray(residuals_mm, dtype=float)
     alignment = {
         'hq_source_path': str(hq_source_path),

@@ -89,7 +89,7 @@ The panel shows which areas the recording covers most. The full list is printed 
 
 ## Files the program creates
 
-Results are saved **next to the original recording**, with extra endings added to its name:
+For a recording in `data/Raw/<animal>/<session>/`, results are saved in **`data/Processed/<animal>/<session>/registration_files/`**, which is created if it doesn't exist. Each file is named after the recording, with an extra ending added:
 
 | File | Contains |
 |---|---|
