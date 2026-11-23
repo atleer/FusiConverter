@@ -6,15 +6,18 @@ readme = "README.md"
 authors = [
     { name = "atleer", email = "atle.rimehaug@gmail.com" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.13, <3.14"
 dependencies = [
     "h5py>=3.16.0",
     "ipykernel>=7.3.0",
+    "ipywidgets>=8.1.9",
     "matplotlib>=3.11.1",
     "napari[pyqt5]>=0.5.6,<0.6",
+    "nbformat>=5.11.1",
     "nibabel>=5.4.2,<6",
     "numpy>=2.5.2",
     "pandas>=3.0.5",
+    "plotly>=7.1.0",
     "qtpy>=2.4.3,<3",
     "scipy>=1.18.0",
     "tqdm>=4.70.0",
@@ -33,4 +36,20 @@ build-backend = "uv_build"
 
 [tool.uv]
 required-environments = ["sys_platform == 'win32' and platform_machine == 'AMD64'"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-rs" # list every skipped test with its reason, so data tests can't silently drop out
+markers = [
+    "data: needs the real recordings/atlases in ../data (skipped if that folder is missing)",
+    "gui: needs a Qt napari viewer",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "debugpy>=1.8.21",
+    "pytest-cov>=7.1.0",
+    "pytest-qt>=4.5.0",
+]
 

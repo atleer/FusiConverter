@@ -1,33 +1,49 @@
 import numpy as np
 import napari
 from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QMessageBox, QCheckBox, QDoubleSpinBox
-from src.fusiconverter.viewer_ops import (
+from .landmarks import (
     save_landmarks,
     load_landmarks,
     get_or_create_landmarks_layer,
-    match_landmarks, fit_similarity_transform,
+    match_landmarks,
+)
+from .areas import (
+    annotate_volume,
+    summarize_areas,
+    save_area_map,
+    load_structure_graph,
+)
+from .transforms import (
+    fit_similarity_transform,
     transform_residuals,
     compose_transform_matrix,
     rotate_about_axis_matrix,
-    put_transform_matrix_in_layer_affine, 
-    get_transform_matrix_from_layer_affine, 
-    save_transform_matrix, 
-    load_transform_matrix, 
-    annotate_volume,
-    summarize_areas,
-    save_area_map
+    put_transform_matrix_in_layer_affine,
+    get_transform_matrix_from_layer_affine,
+    save_transform_matrix,
+    load_transform_matrix,
 )
-from src.fusiconverter.utils import (
-    select_files_from_gui,
-    select_save_dir_from_gui,
-    load_atlas_image,
-    load_image,
-    prompt_load_annotation,
-    load_structure_graph,
-)
+from .loading import load_atlas_image
+from .paths import registration_file_path
 import sys
 from pathlib import Path
+import tkinter as tk
+from tkinter import filedialog
 from napari.utils.colormaps import DirectLabelColormap
+
+
+def _hq_layer_name(viewer, event):
+    """Name of the HQ image layer to select by default: the one just added, or on startup (no event) the first one already open"""
+    if event is None:
+        layers = viewer.layers
+    elif event.type == 'inserted':
+        layers = [event.value]
+    else:
+        layers = []
+    for layer in layers:
+        if isinstance(layer, napari.layers.Image) and 'hq' in layer.name.lower():
+            return layer.name
+    return None
 
 class AddLandmark(QWidget):
     def __init__(self, viewer):
@@ -63,7 +79,7 @@ class AddLandmark(QWidget):
         self.layout().addWidget(self.status_label)
 
 
-    def _refresh_layer_choices(self):
+    def _refresh_layer_choices(self, event=None):
         """Used to refresh widget when a new layer is added or removed in napari so that it shows up in dropdown menu where you pick a layer to add the landmark to"""
         current = self.layer_landmarks_added.currentText()
         image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
@@ -72,6 +88,9 @@ class AddLandmark(QWidget):
         self.layer_landmarks_added.addItems(image_layer_names)
         if current in image_layer_names:
             self.layer_landmarks_added.setCurrentText(current)
+        hq_name = _hq_layer_name(self.viewer, event)
+        if hq_name:
+            self.layer_landmarks_added.setCurrentText(hq_name)
         self.layer_landmarks_added.blockSignals(False)
 
     def add_landmark(self):
@@ -108,7 +127,7 @@ class AddLandmark(QWidget):
 
         # check with user if they want to overwrite or append
         points_layer = self.viewer.layers[points_name]
-        json_path = Path(f"{points_layer.metadata.get('source_path')}.landmarks.json")
+        json_path = registration_file_path(points_layer.metadata.get('source_path'), 'landmarks.json')
         mode = 'overwrite'
         if json_path.exists():
             mode = self._ask_save_mode(json_path)
@@ -164,7 +183,7 @@ class AlignmentWidget(QWidget):
         self.viewer = viewer
         self.setLayout(QVBoxLayout())
 
-        self.layout().addWidget(QLabel('Layer to be moved (HQ file)'))
+        self.layout().addWidget(QLabel('Layer to be moved'))
         self.moving_layer = QComboBox()
         self.layout().addWidget(self.moving_layer)
 
@@ -190,7 +209,7 @@ class AlignmentWidget(QWidget):
 
         self._last_alignment = None
 
-    def _refresh_layer_choices(self):
+    def _refresh_layer_choices(self, event=None):
         """Used to refresh widget when a new layer is added or removed in napari so that it shows up in dropdown menu where you pick a layer to add the landmark to"""
         image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
         for hq_and_atlas in (self.moving_layer, self.fixed_layer):
@@ -201,6 +220,9 @@ class AlignmentWidget(QWidget):
             if current in image_layer_names:
                 hq_and_atlas.setCurrentText(current)
             hq_and_atlas.blockSignals(False)
+        hq_name = _hq_layer_name(self.viewer, event)
+        if hq_name:
+            self.moving_layer.setCurrentText(hq_name)
 
     def align(self):
         moving_layer_name = self.moving_layer.currentText()
@@ -272,7 +294,7 @@ class AlignmentWidget(QWidget):
             self.status_label.setText("Run 'Align to Atlas' before saving.")
             return
 
-        json_path = Path(f"{self._last_alignment['hq_source_path']}.alignment.json")
+        json_path = registration_file_path(self._last_alignment['hq_source_path'], 'alignment.json')
         if not json_path.exists() :
             save_transform_matrix(**self._last_alignment)
             print(f'Saved transformation matrix for alignment to {json_path}')
@@ -322,7 +344,7 @@ class ManualAlignmentWidget(QWidget):
         self.viewer = viewer
         self.setLayout(QVBoxLayout())
 
-        self.layout().addWidget(QLabel('Layer to adjust (HQ file)'))
+        self.layout().addWidget(QLabel('Layer to adjust'))
         self.layer_choice = QComboBox()
         self.layer_choice.currentTextChanged.connect(self._on_layer_changed)
         self.layout().addWidget(self.layer_choice)
@@ -374,7 +396,7 @@ class ManualAlignmentWidget(QWidget):
         self.viewer.layers.events.inserted.connect(self._refresh_layer_choices)
         self.viewer.layers.events.removed.connect(self._refresh_layer_choices)
 
-    def _refresh_layer_choices(self):
+    def _refresh_layer_choices(self, event=None):
         image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
         current = self.layer_choice.currentText()
         self.layer_choice.blockSignals(True)
@@ -382,6 +404,9 @@ class ManualAlignmentWidget(QWidget):
         self.layer_choice.addItems(image_layer_names)
         if current in image_layer_names:
             self.layer_choice.setCurrentText(current)
+        hq_name = _hq_layer_name(self.viewer, event)
+        if hq_name:
+            self.layer_choice.setCurrentText(hq_name)
         self.layer_choice.blockSignals(False)
         if self.layer_choice.currentText() != current:
             self._on_layer_changed()
@@ -525,12 +550,25 @@ class ManualAlignmentWidget(QWidget):
             'method': 'manual',
         }
 
-        json_path = Path(f'{source_path}.alignment.json')
+        json_path = registration_file_path(source_path, 'alignment.json')
         if json_path.exists() and _ask_overwrite_alignment(self, json_path) is None:
             return
         save_transform_matrix(**alignment)
         self.status_label.setText(f'Saved to {json_path.name}')
         print(f'Saved transformation matrix for alignment to {json_path}')
+
+def prompt_load_annotation() -> str | None:
+    """Ask the user for the Allen CCF annotation volume file that says which structure each atlas voxel is in."""
+    root = tk.Tk()
+    root.withdraw()  # Hide the main window
+    root.attributes('-topmost', True)   # force child dialogs to the front
+    annotation_path = filedialog.askopenfilename(
+        title="Select Allen CCF Annotation File (pick the resolution you aligned to, e.g. annotation_50.nii.gz)",
+        filetypes=[("NIfTI files", "*.nii.gz *.nii"), ("All files", "*.*")],
+    )
+    root.destroy()
+    return annotation_path or None
+
 
 class RegisterToAreasWidget(QWidget):
     """Label every voxel of an aligned recording with the Allen brain structure it sits in.
@@ -565,7 +603,7 @@ class RegisterToAreasWidget(QWidget):
         self.status_label.setWordWrap(True)
         self.layout().addWidget(self.status_label)
 
-    def _refresh_layer_choices(self):
+    def _refresh_layer_choices(self, event=None):
         """Used to refresh widget when a new layer is added or removed in napari so that it shows up in the dropdown menu"""
         current = self.image_layer.currentText()
         image_layer_names = [layer.name for layer in self.viewer.layers if isinstance(layer, napari.layers.Image)]
@@ -574,6 +612,9 @@ class RegisterToAreasWidget(QWidget):
         self.image_layer.addItems(image_layer_names)
         if current in image_layer_names:
             self.image_layer.setCurrentText(current)
+        hq_name = _hq_layer_name(self.viewer, event)
+        if hq_name:
+            self.image_layer.setCurrentText(hq_name)
         self.image_layer.blockSignals(False)
 
     def register(self):
@@ -595,7 +636,20 @@ class RegisterToAreasWidget(QWidget):
             )
             return
 
-        annotation_path = prompt_load_annotation()
+        allen_transform_matrix = self._get_allen_transform_matrix()
+        if allen_transform_matrix is None:
+            self._report(
+                "Open the Allen atlas (from the Allen_CCF folder) and apply its saved alignment "
+                "before registering, so the areas follow the aligned Allen atlas."
+            )
+            return
+        # recording mm -> vascular atlas mm -> Allen mm, since the annotation is in Allen space
+        transform_matrix = np.linalg.inv(allen_transform_matrix) @ transform_matrix
+
+        # assuming the data folder sits next to FusiConverter. If it's not, user is asked to locate it manually
+        annotation_path = Path(__file__).resolve().parents[3] / 'data' / '00_ReferenceAtlas' / 'Allen_CCF' / 'annotation' / 'annotation_50.nii.gz'
+        if not annotation_path.exists():
+            annotation_path = prompt_load_annotation()
         if not annotation_path:
             self._report("No annotation file selected. Registration skipped.")
             return
@@ -629,6 +683,16 @@ class RegisterToAreasWidget(QWidget):
         if np.allclose(layer_affine, np.eye(image_layer.ndim + 1)):
             return None
         return get_transform_matrix_from_layer_affine(layer_affine, spatial_axes)
+
+    def _get_allen_transform_matrix(self):
+        """Matrix that moved the Allen atlas onto the vascular atlas (from its layer in the viewer), or None if no aligned Allen layer is open."""
+        for layer in self.viewer.layers:
+            source_path = layer.metadata.get('source_path')
+            if isinstance(layer, napari.layers.Image) and source_path and Path(source_path).parent.name == 'Allen_CCF':
+                transform_matrix = self._get_transform_matrix(layer, (0, 1, 2))
+                if transform_matrix is not None:
+                    return transform_matrix
+        return None
 
     def _add_labels_layer(self, image_layer, labels, structures, annotation_path):
         "Put the structure ids on screen in colours on top of the recording"
@@ -687,7 +751,7 @@ class RegisterToAreasWidget(QWidget):
             print(f"No source path for '{image_layer.name}', not writing an area map.")
             return
 
-        json_path = Path(f'{source_path}.areas.json')
+        json_path = registration_file_path(source_path, 'areas.json')
         if json_path.exists() and not self._ask_overwrite(json_path):
             return
 
